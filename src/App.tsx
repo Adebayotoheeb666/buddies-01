@@ -22,6 +22,11 @@ import {
   AssignmentDetail,
   GroupProjectBoard,
   QAForum,
+  NoteLibrary,
+  ProjectListings,
+  TutoringBrowser,
+  ResourceLibrary,
+  QuestionDetail,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
