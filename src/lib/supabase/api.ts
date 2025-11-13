@@ -13,6 +13,28 @@ import {
   Skill,
   UserSkill,
 } from "@/types/academic.types";
+import {
+  ClassYearGroup,
+  ClassYearMember,
+  DepartmentNetwork,
+  DepartmentMember,
+  InternationalStudentProfile,
+  CommuterProfile,
+  CampusPoll,
+  PollOption,
+  PollVote,
+  InterestGroup,
+  InterestGroupMember,
+  MemePost,
+  AnonymousConfession,
+  StudentOrganization,
+  OrganizationMember,
+  OrganizationEvent,
+  EventRSVP,
+  EventCheckIn,
+  RecruitmentPeriod,
+  RecruitmentApplication,
+} from "@/types/social.types";
 
 // ============================================================
 // AUTH
