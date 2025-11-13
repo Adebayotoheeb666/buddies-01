@@ -60,7 +60,14 @@ const EventCard = ({ event }: EventCardProps) => {
       <div className="space-y-2 text-sm text-light-3 mb-4">
         <div>
           <span className="font-semibold text-white">Date & Time:</span>{" "}
-          {format(eventDate, "MMM d, yyyy h:mm a")}
+          {eventDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}
         </div>
         {event.location_name && (
           <div>
