@@ -55,3 +55,28 @@ export type INewUser = {
   username: string;
   password: string;
 };
+
+// Export social networking and club management types
+export type {
+  ClassYearGroup,
+  ClassYearMember,
+  DepartmentNetwork,
+  DepartmentMember,
+  InternationalStudentProfile,
+  CommuterProfile,
+  CampusPoll,
+  PollOption,
+  PollVote,
+  InterestGroup,
+  InterestGroupMember,
+  MemePost,
+  AnonymousConfession,
+  StudentOrganization,
+  OrganizationMember,
+  OrganizationEvent,
+  EventRSVP,
+  EventCheckIn,
+  RecruitmentPeriod,
+  RecruitmentApplication,
+  NetworkDiscoveryCard,
+} from "./social.types";
