@@ -27,3 +27,12 @@ export { default as ProjectListings } from "./ProjectListings";
 export { default as TutoringBrowser } from "./TutoringBrowser";
 export { default as ResourceLibrary } from "./ResourceLibrary";
 export { default as QuestionDetail } from "./QuestionDetail";
+
+// Phase 4 - Social Networking & Club Management
+export { default as ClubDirectory } from "./ClubDirectory";
+export { default as ClubDetail } from "./ClubDetail";
+export { default as InterestGroups } from "./InterestGroups";
+export { default as CampusPolls } from "./CampusPolls";
+export { default as MemeBoard } from "./MemeBoard";
+export { default as AnonymousConfessions } from "./AnonymousConfessions";
+export { default as NetworkDiscovery } from "./NetworkDiscovery";

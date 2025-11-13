@@ -84,6 +84,36 @@ export const sidebarLinks = [
     route: "/resources",
     label: "Resources",
   },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/clubs",
+    label: "Clubs",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/interest-groups",
+    label: "Interest Groups",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/polls",
+    label: "Polls",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/memes",
+    label: "Memes",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/confessions",
+    label: "Confessions",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/network",
+    label: "Network",
+  },
 ];
 
 export const bottombarLinks = [

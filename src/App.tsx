@@ -27,6 +27,13 @@ import {
   TutoringBrowser,
   ResourceLibrary,
   QuestionDetail,
+  ClubDirectory,
+  ClubDetail,
+  InterestGroups,
+  CampusPolls,
+  MemeBoard,
+  AnonymousConfessions,
+  NetworkDiscovery,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
@@ -101,6 +108,25 @@ const App = () => {
 
           {/* Phase 2 Academic Collaboration - Resources */}
           <Route path="/resources" element={<ResourceLibrary />} />
+
+          {/* Phase 4 Social Networking - Clubs & Organizations */}
+          <Route path="/clubs" element={<ClubDirectory />} />
+          <Route path="/clubs/:organizationId" element={<ClubDetail />} />
+
+          {/* Phase 4 Social Networking - Interest Groups */}
+          <Route path="/interest-groups" element={<InterestGroups />} />
+
+          {/* Phase 4 Social Networking - Campus Polls */}
+          <Route path="/polls" element={<CampusPolls />} />
+
+          {/* Phase 4 Social Networking - Meme Board */}
+          <Route path="/memes" element={<MemeBoard />} />
+
+          {/* Phase 4 Social Networking - Anonymous Confessions */}
+          <Route path="/confessions" element={<AnonymousConfessions />} />
+
+          {/* Phase 4 Social Networking - Network Discovery */}
+          <Route path="/network" element={<NetworkDiscovery />} />
         </Route>
       </Routes>
 
