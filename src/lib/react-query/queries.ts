@@ -27,6 +27,16 @@ import {
   deleteSavedPost,
 } from "@/lib/supabase/api";
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import {
+  mockClassYearGroups,
+  mockDepartmentNetworks,
+  mockInterestGroups,
+  mockCampusPolls,
+  mockPollOptions,
+  mockMemePosts,
+  mockStudentOrganizations,
+  mockOrganizationEvents,
+} from "@/lib/mockData/phase1MockData";
 
 // ============================================================
 // AUTH QUERIES
