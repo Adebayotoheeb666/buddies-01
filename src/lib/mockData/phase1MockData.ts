@@ -1100,4 +1100,12 @@ export const getAllMockData = () => ({
   resources: mockResources,
   qaQuestions: mockQAQuestions,
   qaAnswers: mockQAAnswers,
+  classYearGroups: mockClassYearGroups,
+  departmentNetworks: mockDepartmentNetworks,
+  interestGroups: mockInterestGroups,
+  campusPolls: mockCampusPolls,
+  pollOptions: mockPollOptions,
+  memePosts: mockMemePosts,
+  studentOrganizations: mockStudentOrganizations,
+  organizationEvents: mockOrganizationEvents,
 });
