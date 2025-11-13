@@ -11,6 +11,14 @@ import {
   QAAnswer,
   Skill,
   UserSkill,
+  ClassYearGroup,
+  DepartmentNetwork,
+  InterestGroup,
+  CampusPoll,
+  PollOption,
+  MemePost,
+  StudentOrganization,
+  OrganizationEvent,
 } from "@/types/academic.types";
 import { IUser } from "@/types";
 
