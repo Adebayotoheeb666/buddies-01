@@ -798,7 +798,8 @@ export const mockDepartmentNetworks: DepartmentNetwork[] = [
   {
     id: "jj0e8400-e29b-41d4-a716-446655440004",
     department: "Engineering",
-    description: "Engineering students collaborating on design projects and technical challenges",
+    description:
+      "Engineering students collaborating on design projects and technical challenges",
     member_count: 167,
     created_at: new Date("2024-02-01").toISOString(),
   },
@@ -822,7 +823,8 @@ export const mockInterestGroups: InterestGroup[] = [
   {
     id: "kk0e8400-e29b-41d4-a716-446655440002",
     name: "Fitness Enthusiasts",
-    description: "Health and fitness focused group for gym buddies and fitness challenges",
+    description:
+      "Health and fitness focused group for gym buddies and fitness challenges",
     interests: ["fitness", "health", "wellness"],
     creator_id: mockUsers[1].id,
     member_count: 124,
@@ -832,7 +834,8 @@ export const mockInterestGroups: InterestGroup[] = [
   {
     id: "kk0e8400-e29b-41d4-a716-446655440003",
     name: "Photography Club",
-    description: "Passionate photographers sharing tips, hosting photo walks, and contests",
+    description:
+      "Passionate photographers sharing tips, hosting photo walks, and contests",
     interests: ["photography", "art", "visual"],
     creator_id: mockUsers[2].id,
     member_count: 56,
@@ -938,8 +941,7 @@ export const mockMemePosts: MemePost[] = [
   {
     id: "nn0e8400-e29b-41d4-a716-446655440001",
     creator_id: mockUsers[3].id,
-    image_url:
-      "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme1&size=400",
+    image_url: "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme1&size=400",
     caption: "Me after finishing one assignment",
     likes: 342,
     shares: 45,
@@ -948,8 +950,7 @@ export const mockMemePosts: MemePost[] = [
   {
     id: "nn0e8400-e29b-41d4-a716-446655440002",
     creator_id: mockUsers[4].id,
-    image_url:
-      "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme2&size=400",
+    image_url: "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme2&size=400",
     caption: "Waiting for the professor to finish class early",
     likes: 521,
     shares: 67,
@@ -958,8 +959,7 @@ export const mockMemePosts: MemePost[] = [
   {
     id: "nn0e8400-e29b-41d4-a716-446655440003",
     creator_id: mockUsers[0].id,
-    image_url:
-      "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme3&size=400",
+    image_url: "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme3&size=400",
     caption: "When you realize an assignment is due tomorrow",
     likes: 687,
     shares: 89,
@@ -1057,7 +1057,8 @@ export const mockOrganizationEvents: OrganizationEvent[] = [
     id: "pp0e8400-e29b-41d4-a716-446655440003",
     organization_id: mockStudentOrganizations[2].id,
     title: "International Food Festival",
-    description: "Try cuisines from around the world and celebrate global cultures",
+    description:
+      "Try cuisines from around the world and celebrate global cultures",
     event_date: new Date("2024-10-25").toISOString(),
     location: "Student Center Courtyard",
     event_type: "social",

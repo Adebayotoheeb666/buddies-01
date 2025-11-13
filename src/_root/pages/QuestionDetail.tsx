@@ -86,7 +86,9 @@ const QuestionDetail = () => {
 
         {answers.length === 0 ? (
           <div className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7 text-center">
-            <p className="text-light-3">No answers yet. Be the first to answer!</p>
+            <p className="text-light-3">
+              No answers yet. Be the first to answer!
+            </p>
           </div>
         ) : (
           answers.map((answer) => (
@@ -96,7 +98,9 @@ const QuestionDetail = () => {
               <div className="flex gap-4 mb-4">
                 <div className="flex flex-col items-center gap-2 text-center">
                   <div className="flex items-center justify-center w-10 h-10 bg-primary-500/20 rounded">
-                    <span className="text-primary-500 font-bold text-sm">↑</span>
+                    <span className="text-primary-500 font-bold text-sm">
+                      ↑
+                    </span>
                   </div>
                   <p className="text-small-medium text-light-3">
                     {answer.upvotes}

@@ -613,7 +613,9 @@ export const useGetOrganizationEvents = (orgId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ORGANIZATION_EVENTS, orgId],
     queryFn: () => {
-      const events = mockOrganizationEvents.filter((e) => e.organization_id === orgId);
+      const events = mockOrganizationEvents.filter(
+        (e) => e.organization_id === orgId
+      );
       return Promise.resolve({
         documents: events,
         total: events.length,

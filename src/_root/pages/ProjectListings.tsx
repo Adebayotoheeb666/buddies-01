@@ -88,7 +88,9 @@ const ProjectListings = () => {
                 className={`px-3 py-1 rounded-full text-tiny-medium font-medium whitespace-nowrap ml-4 ${getStatusColor(
                   project.status
                 )}`}>
-                {project.status === "recruiting" ? "Recruiting" : project.status}
+                {project.status === "recruiting"
+                  ? "Recruiting"
+                  : project.status}
               </span>
             </div>
 

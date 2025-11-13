@@ -84,7 +84,9 @@ const TutoringBrowser = () => {
                     <span className="text-primary-500 font-semibold">
                       ${tutor.hourly_rate}/hr
                     </span>
-                    <span className="text-yellow-400 text-tiny-medium">★ 4.8</span>
+                    <span className="text-yellow-400 text-tiny-medium">
+                      ★ 4.8
+                    </span>
                   </div>
                 </div>
               </div>
@@ -94,9 +96,7 @@ const TutoringBrowser = () => {
               </p>
 
               <div className="mb-4">
-                <p className="text-light-3 text-tiny-medium mb-2">
-                  Subjects:
-                </p>
+                <p className="text-light-3 text-tiny-medium mb-2">Subjects:</p>
                 <div className="flex gap-2 flex-wrap">
                   {tutor.subjects_tutored.map((subject) => (
                     <span
@@ -109,9 +109,7 @@ const TutoringBrowser = () => {
               </div>
 
               <div className="mb-4 py-3 border-t border-dark-4">
-                <p className="text-light-3 text-tiny-medium mb-2">
-                  Available:
-                </p>
+                <p className="text-light-3 text-tiny-medium mb-2">Available:</p>
                 <div className="flex gap-2 flex-wrap">
                   {availability.map((day) => (
                     <span

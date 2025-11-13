@@ -123,7 +123,9 @@ const ResourceLibrary = () => {
               key={resource.id}
               className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7 hover:bg-dark-3 transition">
               <div className="flex items-start justify-between mb-4">
-                <span className="text-3xl">{getTypeIcon(resource.resource_type)}</span>
+                <span className="text-3xl">
+                  {getTypeIcon(resource.resource_type)}
+                </span>
                 <span className="text-tiny-medium bg-dark-4 px-2 py-1 rounded capitalize">
                   {resource.resource_type}
                 </span>
@@ -136,7 +138,8 @@ const ResourceLibrary = () => {
 
               {course && (
                 <p className="text-light-3 text-tiny-medium mb-4">
-                  Course: <span className="text-light-1">{course.course_code}</span>
+                  Course:{" "}
+                  <span className="text-light-1">{course.course_code}</span>
                 </p>
               )}
 
@@ -147,7 +150,9 @@ const ResourceLibrary = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-light-3 text-tiny-medium">Downloads</p>
-                  <p className="h3-bold text-primary-500">{resource.downloads}</p>
+                  <p className="h3-bold text-primary-500">
+                    {resource.downloads}
+                  </p>
                 </div>
               </div>
 
