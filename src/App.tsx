@@ -27,6 +27,13 @@ import {
   TutoringBrowser,
   ResourceLibrary,
   QuestionDetail,
+  ClubDirectory,
+  ClubDetail,
+  InterestGroups,
+  CampusPolls,
+  MemeBoard,
+  AnonymousConfessions,
+  NetworkDiscovery,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
