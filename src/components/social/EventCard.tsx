@@ -4,7 +4,6 @@ import { useAuthContext } from "@/context/AuthContext";
 import { rsvpEvent, getUserEventRSVP } from "@/lib/supabase/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { format } from "date-fns";
 
 interface EventCardProps {
   event: OrganizationEvent;
