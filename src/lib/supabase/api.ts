@@ -553,3 +553,875 @@ export async function updateUser(user: IUpdateUser) {
     console.log(error);
   }
 }
+
+// ============================================================
+// PHASE 4: SOCIAL NETWORKING & CLUB MANAGEMENT
+// ============================================================
+
+// ============================================================
+// CLASS YEAR NETWORKS
+// ============================================================
+
+export async function getClassYearGroup(classYear: string) {
+  try {
+    const { data, error } = await supabase
+      .from("class_year_groups")
+      .select("*")
+      .eq("class_year", classYear)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function joinClassYearGroup(groupId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("class_year_members")
+      .insert({ group_id: groupId, user_id: userId })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function isUserInClassYearGroup(groupId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("class_year_members")
+      .select("*")
+      .eq("group_id", groupId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return !!data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+// ============================================================
+// DEPARTMENT NETWORKS
+// ============================================================
+
+export async function getDepartmentNetworks() {
+  try {
+    const { data, error } = await supabase
+      .from("department_networks")
+      .select("*")
+      .order("department", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getDepartmentNetwork(networkId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("department_networks")
+      .select("*")
+      .eq("id", networkId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function joinDepartmentNetwork(networkId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("department_members")
+      .insert({ network_id: networkId, user_id: userId })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function leaveDepartmentNetwork(networkId: string, userId: string) {
+  try {
+    const { error } = await supabase
+      .from("department_members")
+      .delete()
+      .eq("network_id", networkId)
+      .eq("user_id", userId);
+
+    if (error) throw error;
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function isUserInDepartmentNetwork(networkId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("department_members")
+      .select("*")
+      .eq("network_id", networkId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return !!data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+// ============================================================
+// CAMPUS POLLS
+// ============================================================
+
+export async function getPolls() {
+  try {
+    const { data, error } = await supabase
+      .from("campus_polls")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getPoll(pollId: string) {
+  try {
+    const { data: poll, error: pollError } = await supabase
+      .from("campus_polls")
+      .select("*")
+      .eq("id", pollId)
+      .single();
+
+    if (pollError) throw pollError;
+
+    const { data: options, error: optionsError } = await supabase
+      .from("poll_options")
+      .select("*")
+      .eq("poll_id", pollId);
+
+    if (optionsError) throw optionsError;
+
+    return { ...poll, options: options || [] };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createPoll(
+  creatorId: string,
+  title: string,
+  description: string,
+  pollType: string,
+  expiresAt: string,
+  options: string[]
+) {
+  try {
+    const { data: poll, error: pollError } = await supabase
+      .from("campus_polls")
+      .insert({
+        creator_id: creatorId,
+        title,
+        description,
+        poll_type: pollType,
+        expires_at: expiresAt,
+      })
+      .select()
+      .single();
+
+    if (pollError) throw pollError;
+
+    const pollOptions = options.map((option) => ({
+      poll_id: poll.id,
+      option_text: option,
+    }));
+
+    const { data, error: optionsError } = await supabase
+      .from("poll_options")
+      .insert(pollOptions)
+      .select();
+
+    if (optionsError) throw optionsError;
+
+    return { ...poll, options: data || [] };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function votePoll(pollId: string, optionId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("poll_votes")
+      .insert({ poll_id: pollId, option_id: optionId, user_id: userId })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// INTEREST GROUPS
+// ============================================================
+
+export async function getInterestGroups() {
+  try {
+    const { data, error } = await supabase
+      .from("interest_groups")
+      .select("*")
+      .eq("is_private", false)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getInterestGroup(groupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("interest_groups")
+      .select("*")
+      .eq("id", groupId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createInterestGroup(
+  name: string,
+  description: string,
+  interests: string[],
+  creatorId: string,
+  isPrivate: boolean = false
+) {
+  try {
+    const { data, error } = await supabase
+      .from("interest_groups")
+      .insert({
+        name,
+        description,
+        interests,
+        creator_id: creatorId,
+        is_private: isPrivate,
+        member_count: 1,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    await supabase
+      .from("interest_group_members")
+      .insert({ group_id: data.id, user_id: creatorId });
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function joinInterestGroup(groupId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("interest_group_members")
+      .insert({ group_id: groupId, user_id: userId })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function leaveInterestGroup(groupId: string, userId: string) {
+  try {
+    const { error } = await supabase
+      .from("interest_group_members")
+      .delete()
+      .eq("group_id", groupId)
+      .eq("user_id", userId);
+
+    if (error) throw error;
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function isUserInInterestGroup(groupId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("interest_group_members")
+      .select("*")
+      .eq("group_id", groupId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return !!data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+// ============================================================
+// MEME BOARD
+// ============================================================
+
+export async function getMemeBoard() {
+  try {
+    const { data, error } = await supabase
+      .from("meme_posts")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createMemePost(creatorId: string, imageUrl: string, caption: string) {
+  try {
+    const { data, error } = await supabase
+      .from("meme_posts")
+      .insert({ creator_id: creatorId, image_url: imageUrl, caption })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function likeMemePost(postId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("meme_posts")
+      .update({ likes: supabase.rpc("increment") })
+      .eq("id", postId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// ANONYMOUS CONFESSIONS
+// ============================================================
+
+export async function getConfessions() {
+  try {
+    const { data, error } = await supabase
+      .from("anonymous_confessions")
+      .select("*")
+      .eq("moderation_status", "approved")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createConfession(
+  posterId: string,
+  content: string,
+  anonymityStatus: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("anonymous_confessions")
+      .insert({
+        poster_id: posterId,
+        content,
+        anonymity_status: anonymityStatus,
+        moderation_status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// STUDENT ORGANIZATIONS
+// ============================================================
+
+export async function getOrganizations() {
+  try {
+    const { data, error } = await supabase
+      .from("student_organizations")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getOrganization(organizationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("student_organizations")
+      .select("*")
+      .eq("id", organizationId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createOrganization(
+  name: string,
+  acronym: string,
+  description: string,
+  category: string,
+  presidentId: string,
+  email: string,
+  meetingSchedule: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("student_organizations")
+      .insert({
+        name,
+        acronym,
+        description,
+        category,
+        president_id: presidentId,
+        email,
+        meeting_schedule: meetingSchedule,
+        total_members: 1,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    await supabase.from("organization_members").insert({
+      organization_id: data.id,
+      user_id: presidentId,
+      role: "president",
+    });
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function joinOrganization(organizationId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_members")
+      .insert({ organization_id: organizationId, user_id: userId, role: "member" })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function leaveOrganization(organizationId: string, userId: string) {
+  try {
+    const { error } = await supabase
+      .from("organization_members")
+      .delete()
+      .eq("organization_id", organizationId)
+      .eq("user_id", userId);
+
+    if (error) throw error;
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function isUserInOrganization(organizationId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_members")
+      .select("*")
+      .eq("organization_id", organizationId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return !!data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function getUserOrganizations(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_members")
+      .select("organization_id")
+      .eq("user_id", userId);
+
+    if (error) throw error;
+
+    const orgIds = data?.map((m) => m.organization_id) || [];
+
+    if (orgIds.length === 0) return [];
+
+    const { data: orgs, error: orgsError } = await supabase
+      .from("student_organizations")
+      .select("*")
+      .in("id", orgIds);
+
+    if (orgsError) throw orgsError;
+
+    return orgs || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// ORGANIZATION EVENTS
+// ============================================================
+
+export async function getOrganizationEvents(organizationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_events")
+      .select("*")
+      .eq("organization_id", organizationId)
+      .order("event_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getEvent(eventId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_events")
+      .select("*")
+      .eq("id", eventId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createEvent(
+  organizationId: string,
+  title: string,
+  description: string,
+  eventDate: string,
+  locationId: string | null,
+  eventType: string,
+  capacity: number,
+  createdById: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_events")
+      .insert({
+        organization_id: organizationId,
+        title,
+        description,
+        event_date: eventDate,
+        location_id: locationId,
+        event_type: eventType,
+        capacity,
+        created_by_id: createdById,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// EVENT RSVP
+// ============================================================
+
+export async function rsvpEvent(eventId: string, userId: string, status: string) {
+  try {
+    const { data, error } = await supabase
+      .from("event_rsvps")
+      .insert({ event_id: eventId, user_id: userId, status })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getEventRSVPs(eventId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("event_rsvps")
+      .select("*")
+      .eq("event_id", eventId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getUserEventRSVP(eventId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("event_rsvps")
+      .select("*")
+      .eq("event_id", eventId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+// ============================================================
+// EVENT CHECK-IN
+// ============================================================
+
+export async function checkInEvent(eventId: string, userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("event_check_ins")
+      .insert({ event_id: eventId, user_id: userId })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getEventCheckIns(eventId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("event_check_ins")
+      .select("*")
+      .eq("event_id", eventId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// ORGANIZATION RECRUITMENT
+// ============================================================
+
+export async function createRecruitmentPeriod(
+  organizationId: string,
+  startDate: string,
+  endDate: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("recruitment_periods")
+      .insert({ organization_id: organizationId, start_date: startDate, end_date: endDate })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getRecruitmentPeriods(organizationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("recruitment_periods")
+      .select("*")
+      .eq("organization_id", organizationId)
+      .order("start_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function applyToRecruitment(recruitmentPeriodId: string, applicantId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("recruitment_applications")
+      .insert({ recruitment_period_id: recruitmentPeriodId, applicant_id: applicantId })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getRecruitmentApplications(recruitmentPeriodId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("recruitment_applications")
+      .select("*")
+      .eq("recruitment_period_id", recruitmentPeriodId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function updateApplicationStatus(applicationId: string, status: string) {
+  try {
+    const { data, error } = await supabase
+      .from("recruitment_applications")
+      .update({ status })
+      .eq("id", applicationId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
