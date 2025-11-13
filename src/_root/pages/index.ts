@@ -20,3 +20,10 @@ export { default as Assignments } from "./Assignments";
 export { default as AssignmentDetail } from "./AssignmentDetail";
 export { default as GroupProjectBoard } from "./GroupProjectBoard";
 export { default as QAForum } from "./QAForum";
+
+// Phase 2 - Academic Collaboration
+export { default as NoteLibrary } from "./NoteLibrary";
+export { default as ProjectListings } from "./ProjectListings";
+export { default as TutoringBrowser } from "./TutoringBrowser";
+export { default as ResourceLibrary } from "./ResourceLibrary";
+export { default as QuestionDetail } from "./QuestionDetail";
