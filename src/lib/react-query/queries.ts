@@ -27,6 +27,16 @@ import {
   deleteSavedPost,
 } from "@/lib/supabase/api";
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import {
+  mockClassYearGroups,
+  mockDepartmentNetworks,
+  mockInterestGroups,
+  mockCampusPolls,
+  mockPollOptions,
+  mockMemePosts,
+  mockStudentOrganizations,
+  mockOrganizationEvents,
+} from "@/lib/mockData/phase1MockData";
 
 // ============================================================
 // AUTH QUERIES
@@ -485,5 +495,132 @@ export const useGetUserFollowers = (userId?: string) => {
       return Promise.resolve({ documents: followers, total: followers.length });
     },
     enabled: !!userId,
+  });
+};
+
+// ============================================================
+// PHASE 4: SOCIAL & NETWORKING QUERIES
+// ============================================================
+
+// CLASS YEAR GROUPS
+export const useGetClassYearGroups = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CLASS_YEAR_GROUPS],
+    queryFn: () =>
+      Promise.resolve({
+        documents: mockClassYearGroups,
+        total: mockClassYearGroups.length,
+      }),
+  });
+};
+
+// DEPARTMENT NETWORKS
+export const useGetDepartmentNetworks = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_DEPARTMENT_NETWORKS],
+    queryFn: () =>
+      Promise.resolve({
+        documents: mockDepartmentNetworks,
+        total: mockDepartmentNetworks.length,
+      }),
+  });
+};
+
+// INTEREST GROUPS
+export const useGetInterestGroups = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_INTEREST_GROUPS],
+    queryFn: () =>
+      Promise.resolve({
+        documents: mockInterestGroups,
+        total: mockInterestGroups.length,
+      }),
+  });
+};
+
+export const useGetInterestGroupById = (groupId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_BY_ID, groupId],
+    queryFn: () => {
+      const group = mockInterestGroups.find((g) => g.id === groupId);
+      return Promise.resolve(group);
+    },
+    enabled: !!groupId,
+  });
+};
+
+// CAMPUS POLLS
+export const useGetCampusPolls = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CAMPUS_POLLS],
+    queryFn: () =>
+      Promise.resolve({
+        documents: mockCampusPolls,
+        total: mockCampusPolls.length,
+      }),
+  });
+};
+
+export const useGetPollById = (pollId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POLL_BY_ID, pollId],
+    queryFn: () => {
+      const poll = mockCampusPolls.find((p) => p.id === pollId);
+      const options = mockPollOptions.filter((o) => o.poll_id === pollId);
+      return Promise.resolve({ poll, options });
+    },
+    enabled: !!pollId,
+  });
+};
+
+// MEME POSTS
+export const useGetMemePosts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_MEME_POSTS],
+    queryFn: () =>
+      Promise.resolve({
+        documents: mockMemePosts,
+        total: mockMemePosts.length,
+      }),
+  });
+};
+
+// STUDENT ORGANIZATIONS
+export const useGetStudentOrganizations = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_STUDENT_ORGANIZATIONS],
+    queryFn: () =>
+      Promise.resolve({
+        documents: mockStudentOrganizations,
+        total: mockStudentOrganizations.length,
+      }),
+  });
+};
+
+export const useGetOrganizationById = (orgId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ORGANIZATION_BY_ID, orgId],
+    queryFn: () => {
+      const org = mockStudentOrganizations.find((o) => o.id === orgId);
+      return Promise.resolve(org);
+    },
+    enabled: !!orgId,
+  });
+};
+
+// ORGANIZATION EVENTS
+export const useGetOrganizationEvents = (orgId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ORGANIZATION_EVENTS, orgId],
+    queryFn: () => {
+      const events = mockOrganizationEvents.filter(
+        (e) => e.organization_id === orgId
+      );
+      return Promise.resolve({
+        documents: events,
+        total: events.length,
+      });
+    },
+    enabled: !!orgId,
   });
 };

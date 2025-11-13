@@ -436,3 +436,162 @@ export interface QuestionFollower {
   question_id: string;
   created_at: string;
 }
+
+// ============================================================
+// PHASE 4: SOCIAL & NETWORKING TYPES
+// ============================================================
+
+export interface ClassYearGroup {
+  id: string;
+  class_year: "Freshman" | "Sophomore" | "Junior" | "Senior";
+  member_count: number;
+  created_at: string;
+}
+
+export interface ClassYearMember {
+  id: string;
+  group_id: string;
+  user_id: string;
+  joined_at: string;
+}
+
+export interface DepartmentNetwork {
+  id: string;
+  department: string;
+  description: string;
+  member_count: number;
+  created_at: string;
+}
+
+export interface DepartmentMember {
+  id: string;
+  network_id: string;
+  user_id: string;
+  joined_at: string;
+}
+
+export interface InternationalStudentInfo {
+  id: string;
+  user_id: string;
+  country_of_origin: string;
+  language_spoken: string[];
+  needs_visa_support: boolean;
+  created_at: string;
+}
+
+export interface CommuterNetworkProfile {
+  id: string;
+  user_id: string;
+  commute_area: string;
+  interested_in_carpool: boolean;
+  parking_info: string;
+  created_at: string;
+}
+
+export interface CampusPoll {
+  id: string;
+  creator_id: string;
+  title: string;
+  description: string;
+  poll_type: "campus_issue" | "event_preference" | "general";
+  expires_at: string;
+  created_at: string;
+  votes_count?: number;
+  user_voted?: boolean;
+}
+
+export interface PollOption {
+  id: string;
+  poll_id: string;
+  option_text: string;
+  vote_count: number;
+  created_at: string;
+}
+
+export interface InterestGroup {
+  id: string;
+  name: string;
+  description: string;
+  interests: string[];
+  creator_id: string;
+  member_count: number;
+  is_private: boolean;
+  created_at: string;
+}
+
+export interface InterestGroupMember {
+  id: string;
+  group_id: string;
+  user_id: string;
+  joined_at: string;
+}
+
+export interface MemePost {
+  id: string;
+  creator_id: string;
+  image_url: string;
+  caption: string;
+  likes: number;
+  shares: number;
+  created_at: string;
+}
+
+export interface AnonymousConfession {
+  id: string;
+  poster_id: string | null;
+  content: string;
+  anonymity_status: "fully_anonymous" | "visible_to_friends";
+  moderation_status: "pending" | "approved" | "rejected";
+  is_flagged: boolean;
+  created_at: string;
+}
+
+export interface StudentOrganization {
+  id: string;
+  name: string;
+  acronym: string;
+  description: string;
+  category: "academic" | "cultural" | "sports" | "greek" | "service" | "other";
+  president_id: string;
+  email: string;
+  meeting_schedule: string;
+  member_count: number;
+  created_at: string;
+}
+
+export interface OrganizationMember {
+  id: string;
+  organization_id: string;
+  user_id: string;
+  role: "member" | "officer" | "president";
+  joined_at: string;
+}
+
+export interface OrganizationEvent {
+  id: string;
+  organization_id: string;
+  title: string;
+  description: string;
+  event_date: string;
+  location: string;
+  event_type: "meeting" | "social" | "recruitment" | "workshop";
+  capacity: number;
+  rsvp_count: number;
+  created_by_id: string;
+  created_at: string;
+}
+
+export interface EventRSVP {
+  id: string;
+  event_id: string;
+  user_id: string;
+  status: "going" | "interested" | "not_going";
+  created_at: string;
+}
+
+export interface EventCheckIn {
+  id: string;
+  event_id: string;
+  user_id: string;
+  check_in_time: string;
+}

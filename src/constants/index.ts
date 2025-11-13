@@ -64,6 +64,26 @@ export const sidebarLinks = [
     route: "/qa-forum",
     label: "Q&A Forum",
   },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/notes",
+    label: "Notes",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/projects",
+    label: "Projects",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/tutoring",
+    label: "Tutoring",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/resources",
+    label: "Resources",
+  },
 ];
 
 export const bottombarLinks = [

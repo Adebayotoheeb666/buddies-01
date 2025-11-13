@@ -11,6 +11,14 @@ import {
   QAAnswer,
   Skill,
   UserSkill,
+  ClassYearGroup,
+  DepartmentNetwork,
+  InterestGroup,
+  CampusPoll,
+  PollOption,
+  MemePost,
+  StudentOrganization,
+  OrganizationEvent,
 } from "@/types/academic.types";
 import { IUser } from "@/types";
 
@@ -728,6 +736,353 @@ export const mockUserConnections: UserConnection[] = [
 ];
 
 // ============================================================
+// MOCK CLASS YEAR GROUPS (Phase 4)
+// ============================================================
+
+export const mockClassYearGroups: ClassYearGroup[] = [
+  {
+    id: "ii0e8400-e29b-41d4-a716-446655440001",
+    class_year: "Senior",
+    member_count: 245,
+    created_at: new Date("2024-01-15").toISOString(),
+  },
+  {
+    id: "ii0e8400-e29b-41d4-a716-446655440002",
+    class_year: "Junior",
+    member_count: 198,
+    created_at: new Date("2024-01-15").toISOString(),
+  },
+  {
+    id: "ii0e8400-e29b-41d4-a716-446655440003",
+    class_year: "Sophomore",
+    member_count: 212,
+    created_at: new Date("2024-01-15").toISOString(),
+  },
+  {
+    id: "ii0e8400-e29b-41d4-a716-446655440004",
+    class_year: "Freshman",
+    member_count: 267,
+    created_at: new Date("2024-01-15").toISOString(),
+  },
+];
+
+// ============================================================
+// MOCK DEPARTMENT NETWORKS (Phase 4)
+// ============================================================
+
+export const mockDepartmentNetworks: DepartmentNetwork[] = [
+  {
+    id: "jj0e8400-e29b-41d4-a716-446655440001",
+    department: "Computer Science",
+    description:
+      "Connect with fellow CS students, share coding projects, and collaborate on tech initiatives",
+    member_count: 156,
+    created_at: new Date("2024-02-01").toISOString(),
+  },
+  {
+    id: "jj0e8400-e29b-41d4-a716-446655440002",
+    department: "Business Administration",
+    description:
+      "Network with business majors, share entrepreneurship ideas, and discuss career opportunities",
+    member_count: 142,
+    created_at: new Date("2024-02-01").toISOString(),
+  },
+  {
+    id: "jj0e8400-e29b-41d4-a716-446655440003",
+    department: "Biology",
+    description:
+      "Biology students discussing research, lab work, and pre-medical requirements",
+    member_count: 98,
+    created_at: new Date("2024-02-01").toISOString(),
+  },
+  {
+    id: "jj0e8400-e29b-41d4-a716-446655440004",
+    department: "Engineering",
+    description:
+      "Engineering students collaborating on design projects and technical challenges",
+    member_count: 167,
+    created_at: new Date("2024-02-01").toISOString(),
+  },
+];
+
+// ============================================================
+// MOCK INTEREST GROUPS (Phase 4)
+// ============================================================
+
+export const mockInterestGroups: InterestGroup[] = [
+  {
+    id: "kk0e8400-e29b-41d4-a716-446655440001",
+    name: "Gaming Community",
+    description: "For students who love video games and esports",
+    interests: ["gaming", "esports", "streaming"],
+    creator_id: mockUsers[0].id,
+    member_count: 87,
+    is_private: false,
+    created_at: new Date("2024-03-10").toISOString(),
+  },
+  {
+    id: "kk0e8400-e29b-41d4-a716-446655440002",
+    name: "Fitness Enthusiasts",
+    description:
+      "Health and fitness focused group for gym buddies and fitness challenges",
+    interests: ["fitness", "health", "wellness"],
+    creator_id: mockUsers[1].id,
+    member_count: 124,
+    is_private: false,
+    created_at: new Date("2024-03-12").toISOString(),
+  },
+  {
+    id: "kk0e8400-e29b-41d4-a716-446655440003",
+    name: "Photography Club",
+    description:
+      "Passionate photographers sharing tips, hosting photo walks, and contests",
+    interests: ["photography", "art", "visual"],
+    creator_id: mockUsers[2].id,
+    member_count: 56,
+    is_private: false,
+    created_at: new Date("2024-03-15").toISOString(),
+  },
+  {
+    id: "kk0e8400-e29b-41d4-a716-446655440004",
+    name: "Anime Lovers",
+    description: "Discussing anime, manga, and Japanese culture",
+    interests: ["anime", "manga", "culture"],
+    creator_id: mockUsers[3].id,
+    member_count: 143,
+    is_private: false,
+    created_at: new Date("2024-03-18").toISOString(),
+  },
+];
+
+// ============================================================
+// MOCK CAMPUS POLLS (Phase 4)
+// ============================================================
+
+export const mockCampusPolls: CampusPoll[] = [
+  {
+    id: "ll0e8400-e29b-41d4-a716-446655440001",
+    creator_id: mockUsers[0].id,
+    title: "What should be the campus event for this semester?",
+    description: "Help us decide on the biggest campus gathering",
+    poll_type: "event_preference",
+    expires_at: new Date("2024-09-30").toISOString(),
+    created_at: new Date("2024-09-10").toISOString(),
+    votes_count: 542,
+  },
+  {
+    id: "ll0e8400-e29b-41d4-a716-446655440002",
+    creator_id: mockUsers[1].id,
+    title: "Should we extend library hours?",
+    description: "Vote on extending library hours during exam season",
+    poll_type: "campus_issue",
+    expires_at: new Date("2024-09-25").toISOString(),
+    created_at: new Date("2024-09-08").toISOString(),
+    votes_count: 876,
+  },
+  {
+    id: "ll0e8400-e29b-41d4-a716-446655440003",
+    creator_id: mockUsers[2].id,
+    title: "Best dining hall option?",
+    description: "Rate your favorite campus dining location",
+    poll_type: "general",
+    expires_at: new Date("2024-09-22").toISOString(),
+    created_at: new Date("2024-09-05").toISOString(),
+    votes_count: 634,
+  },
+];
+
+// ============================================================
+// MOCK CAMPUS POLL OPTIONS (Phase 4)
+// ============================================================
+
+export const mockPollOptions: PollOption[] = [
+  {
+    id: "mm0e8400-e29b-41d4-a716-446655440001",
+    poll_id: mockCampusPolls[0].id,
+    option_text: "Fall Music Festival",
+    vote_count: 234,
+    created_at: new Date("2024-09-10").toISOString(),
+  },
+  {
+    id: "mm0e8400-e29b-41d4-a716-446655440002",
+    poll_id: mockCampusPolls[0].id,
+    option_text: "Sports Tournament",
+    vote_count: 178,
+    created_at: new Date("2024-09-10").toISOString(),
+  },
+  {
+    id: "mm0e8400-e29b-41d4-a716-446655440003",
+    poll_id: mockCampusPolls[0].id,
+    option_text: "Carnival & Fair",
+    vote_count: 130,
+    created_at: new Date("2024-09-10").toISOString(),
+  },
+  {
+    id: "mm0e8400-e29b-41d4-a716-446655440004",
+    poll_id: mockCampusPolls[1].id,
+    option_text: "Yes, extend to 2am",
+    vote_count: 512,
+    created_at: new Date("2024-09-08").toISOString(),
+  },
+  {
+    id: "mm0e8400-e29b-41d4-a716-446655440005",
+    poll_id: mockCampusPolls[1].id,
+    option_text: "No, keep current hours",
+    vote_count: 364,
+    created_at: new Date("2024-09-08").toISOString(),
+  },
+];
+
+// ============================================================
+// MOCK MEME POSTS (Phase 4)
+// ============================================================
+
+export const mockMemePosts: MemePost[] = [
+  {
+    id: "nn0e8400-e29b-41d4-a716-446655440001",
+    creator_id: mockUsers[3].id,
+    image_url: "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme1&size=400",
+    caption: "Me after finishing one assignment",
+    likes: 342,
+    shares: 45,
+    created_at: new Date("2024-09-12").toISOString(),
+  },
+  {
+    id: "nn0e8400-e29b-41d4-a716-446655440002",
+    creator_id: mockUsers[4].id,
+    image_url: "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme2&size=400",
+    caption: "Waiting for the professor to finish class early",
+    likes: 521,
+    shares: 67,
+    created_at: new Date("2024-09-11").toISOString(),
+  },
+  {
+    id: "nn0e8400-e29b-41d4-a716-446655440003",
+    creator_id: mockUsers[0].id,
+    image_url: "https://api.dicebear.com/7.x/pixel-art/svg?seed=meme3&size=400",
+    caption: "When you realize an assignment is due tomorrow",
+    likes: 687,
+    shares: 89,
+    created_at: new Date("2024-09-10").toISOString(),
+  },
+];
+
+// ============================================================
+// MOCK STUDENT ORGANIZATIONS (Phase 4)
+// ============================================================
+
+export const mockStudentOrganizations: StudentOrganization[] = [
+  {
+    id: "oo0e8400-e29b-41d4-a716-446655440001",
+    name: "Robotics Club",
+    acronym: "RC",
+    description: "Building and competing with robots in national competitions",
+    category: "academic",
+    president_id: mockUsers[0].id,
+    email: "robotics@university.edu",
+    meeting_schedule: "Every Monday 6 PM",
+    member_count: 45,
+    created_at: new Date("2023-09-01").toISOString(),
+  },
+  {
+    id: "oo0e8400-e29b-41d4-a716-446655440002",
+    name: "Basketball Team",
+    acronym: "BBT",
+    description: "Competitive basketball team with games and tournaments",
+    category: "sports",
+    president_id: mockUsers[1].id,
+    email: "basketball@university.edu",
+    meeting_schedule: "Monday & Wednesday 5 PM",
+    member_count: 32,
+    created_at: new Date("2023-08-15").toISOString(),
+  },
+  {
+    id: "oo0e8400-e29b-41d4-a716-446655440003",
+    name: "Cultural Exchange Club",
+    acronym: "CEC",
+    description: "Celebrating diverse cultures and international traditions",
+    category: "cultural",
+    president_id: mockUsers[2].id,
+    email: "culture@university.edu",
+    meeting_schedule: "Every Thursday 7 PM",
+    member_count: 67,
+    created_at: new Date("2023-09-10").toISOString(),
+  },
+  {
+    id: "oo0e8400-e29b-41d4-a716-446655440004",
+    name: "Community Service Corps",
+    acronym: "CSC",
+    description: "Volunteering and community service initiatives",
+    category: "service",
+    president_id: mockUsers[3].id,
+    email: "service@university.edu",
+    meeting_schedule: "Saturday 10 AM",
+    member_count: 89,
+    created_at: new Date("2023-08-20").toISOString(),
+  },
+];
+
+// ============================================================
+// MOCK ORGANIZATION EVENTS (Phase 4)
+// ============================================================
+
+export const mockOrganizationEvents: OrganizationEvent[] = [
+  {
+    id: "pp0e8400-e29b-41d4-a716-446655440001",
+    organization_id: mockStudentOrganizations[0].id,
+    title: "Robotics Competition - Regional Finals",
+    description: "Our team competes in the regional robotics championship",
+    event_date: new Date("2024-10-15").toISOString(),
+    location: "Engineering Building, Room 201",
+    event_type: "meeting",
+    capacity: 150,
+    rsvp_count: 78,
+    created_by_id: mockUsers[0].id,
+    created_at: new Date("2024-09-05").toISOString(),
+  },
+  {
+    id: "pp0e8400-e29b-41d4-a716-446655440002",
+    organization_id: mockStudentOrganizations[1].id,
+    title: "Basketball Game vs State University",
+    description: "Home game - support our team!",
+    event_date: new Date("2024-10-20").toISOString(),
+    location: "Sports Arena",
+    event_type: "social",
+    capacity: 500,
+    rsvp_count: 234,
+    created_by_id: mockUsers[1].id,
+    created_at: new Date("2024-09-08").toISOString(),
+  },
+  {
+    id: "pp0e8400-e29b-41d4-a716-446655440003",
+    organization_id: mockStudentOrganizations[2].id,
+    title: "International Food Festival",
+    description:
+      "Try cuisines from around the world and celebrate global cultures",
+    event_date: new Date("2024-10-25").toISOString(),
+    location: "Student Center Courtyard",
+    event_type: "social",
+    capacity: 300,
+    rsvp_count: 145,
+    created_by_id: mockUsers[2].id,
+    created_at: new Date("2024-09-10").toISOString(),
+  },
+  {
+    id: "pp0e8400-e29b-41d4-a716-446655440004",
+    organization_id: mockStudentOrganizations[3].id,
+    title: "Volunteer Day - Local Food Bank",
+    description: "Help pack and distribute food to the community",
+    event_date: new Date("2024-10-22").toISOString(),
+    location: "Downtown Food Bank",
+    event_type: "workshop",
+    capacity: 100,
+    rsvp_count: 67,
+    created_by_id: mockUsers[3].id,
+    created_at: new Date("2024-09-12").toISOString(),
+  },
+];
+
+// ============================================================
 // EXPORT FUNCTION TO GET ALL MOCK DATA
 // ============================================================
 
@@ -746,4 +1101,12 @@ export const getAllMockData = () => ({
   resources: mockResources,
   qaQuestions: mockQAQuestions,
   qaAnswers: mockQAAnswers,
+  classYearGroups: mockClassYearGroups,
+  departmentNetworks: mockDepartmentNetworks,
+  interestGroups: mockInterestGroups,
+  campusPolls: mockCampusPolls,
+  pollOptions: mockPollOptions,
+  memePosts: mockMemePosts,
+  studentOrganizations: mockStudentOrganizations,
+  organizationEvents: mockOrganizationEvents,
 });
