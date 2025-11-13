@@ -13,9 +13,7 @@ const BookDetail = () => {
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <p className="text-light-3 mb-4">Book not found</p>
-          <Button onClick={() => navigate('/library')}>
-            Back to Library
-          </Button>
+          <Button onClick={() => navigate("/library")}>Back to Library</Button>
         </div>
       </div>
     );
@@ -28,10 +26,15 @@ const BookDetail = () => {
       <div className="w-full px-6 py-6 max-w-4xl mx-auto">
         {/* Back Button */}
         <Button
-          onClick={() => navigate('/library')}
-          className="mb-6 bg-dark-4 hover:bg-dark-3"
-        >
-          <img src="/assets/icons/back.svg" width={20} height={20} alt="back" className="mr-2" />
+          onClick={() => navigate("/library")}
+          className="mb-6 bg-dark-4 hover:bg-dark-3">
+          <img
+            src="/assets/icons/back.svg"
+            width={20}
+            height={20}
+            alt="back"
+            className="mr-2"
+          />
           Back to Library
         </Button>
 
@@ -49,7 +52,9 @@ const BookDetail = () => {
                 <div>
                   <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
                   <p className="text-xl text-light-3 mb-2">{book.author}</p>
-                  <p className="text-light-4">Published: {book.published_year}</p>
+                  <p className="text-light-4">
+                    Published: {book.published_year}
+                  </p>
                 </div>
                 <div>
                   {isAvailable ? (
@@ -92,23 +97,24 @@ const BookDetail = () => {
               <div className="flex gap-3">
                 {isAvailable ? (
                   <Button
-                    onClick={() => alert('Checkout functionality would be here')}
-                    className="flex-1 bg-primary-500 hover:bg-primary-600 text-white"
-                  >
+                    onClick={() =>
+                      alert("Checkout functionality would be here")
+                    }
+                    className="flex-1 bg-primary-500 hover:bg-primary-600 text-white">
                     Checkout This Book
                   </Button>
                 ) : (
                   <Button
-                    onClick={() => alert('Place hold functionality would be here')}
-                    className="flex-1 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30"
-                  >
+                    onClick={() =>
+                      alert("Place hold functionality would be here")
+                    }
+                    className="flex-1 bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30">
                     Place Hold
                   </Button>
                 )}
                 <Button
-                  onClick={() => alert('Add to wishlist functionality')}
-                  className="bg-dark-4 hover:bg-dark-2 px-6"
-                >
+                  onClick={() => alert("Add to wishlist functionality")}
+                  className="bg-dark-4 hover:bg-dark-2 px-6">
                   ⭐ Save
                 </Button>
               </div>
@@ -167,9 +173,10 @@ const BookDetail = () => {
         <div className="bg-dark-3 rounded-lg p-6 border border-dark-4 mb-6">
           <h2 className="text-xl font-bold mb-4">📖 About This Book</h2>
           <p className="text-light-3 leading-relaxed">
-            This is a comprehensive resource in {book.subject} written by {book.author}. 
-            Originally published in {book.published_year}, this book has become a fundamental 
-            text in its field. The library maintains {book.total_copies} copies to meet student demand.
+            This is a comprehensive resource in {book.subject} written by{" "}
+            {book.author}. Originally published in {book.published_year}, this
+            book has become a fundamental text in its field. The library
+            maintains {book.total_copies} copies to meet student demand.
           </p>
         </div>
 
@@ -228,14 +235,17 @@ const BookDetail = () => {
                 <div
                   key={relatedBook.id}
                   onClick={() => navigate(`/library/books/${relatedBook.id}`)}
-                  className="bg-dark-4 rounded-lg p-3 hover:bg-dark-2 transition-colors cursor-pointer flex gap-3"
-                >
+                  className="bg-dark-4 rounded-lg p-3 hover:bg-dark-2 transition-colors cursor-pointer flex gap-3">
                   <div className="w-12 h-16 bg-dark-3 rounded flex items-center justify-center flex-shrink-0">
                     📖
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{relatedBook.title}</p>
-                    <p className="text-xs text-light-4 truncate">{relatedBook.author}</p>
+                    <p className="font-semibold text-sm truncate">
+                      {relatedBook.title}
+                    </p>
+                    <p className="text-xs text-light-4 truncate">
+                      {relatedBook.author}
+                    </p>
                     <p className="text-xs mt-1">
                       {relatedBook.available_copies > 0 ? (
                         <span className="text-green-400">Available</span>

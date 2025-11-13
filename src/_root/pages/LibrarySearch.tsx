@@ -46,9 +46,8 @@ const LibrarySearch = () => {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Button
-            onClick={() => navigate('/library/checkouts')}
-            className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4"
-          >
+            onClick={() => navigate("/library/checkouts")}
+            className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4">
             <div>
               <div className="text-lg font-semibold mb-1">
                 📚 My Checkouts ({myCheckouts.length})
@@ -57,18 +56,16 @@ const LibrarySearch = () => {
             </div>
           </Button>
           <Button
-            onClick={() => navigate('/library/study-rooms')}
-            className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4"
-          >
+            onClick={() => navigate("/library/study-rooms")}
+            className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4">
             <div>
               <div className="text-lg font-semibold mb-1">🚪 Study Rooms</div>
               <div className="text-sm text-light-3">Book a study space</div>
             </div>
           </Button>
           <Button
-            onClick={() => navigate('/library/zones')}
-            className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4"
-          >
+            onClick={() => navigate("/library/zones")}
+            className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4">
             <div>
               <div className="text-lg font-semibold mb-1">📍 Library Zones</div>
               <div className="text-sm text-light-3">Find study areas</div>
@@ -99,8 +96,7 @@ const LibrarySearch = () => {
                   selectedSubject === null
                     ? "bg-primary-500 text-white"
                     : "bg-dark-4 text-light-3 hover:bg-dark-3"
-                }`}
-              >
+                }`}>
                 All Subjects
               </Button>
               {subjects.map((subject) => (
@@ -111,8 +107,7 @@ const LibrarySearch = () => {
                     selectedSubject === subject
                       ? "bg-primary-500 text-white"
                       : "bg-dark-4 text-light-3 hover:bg-dark-3"
-                  }`}
-                >
+                  }`}>
                   {subject}
                 </Button>
               ))}
@@ -128,7 +123,9 @@ const LibrarySearch = () => {
               onChange={(e) => setShowOnlyAvailable(e.target.checked)}
               className="w-4 h-4 accent-primary-500"
             />
-            <label htmlFor="available-only" className="text-light-2 cursor-pointer">
+            <label
+              htmlFor="available-only"
+              className="text-light-2 cursor-pointer">
               Show only available books
             </label>
           </div>
@@ -137,7 +134,8 @@ const LibrarySearch = () => {
         {/* Results Summary */}
         <div className="mb-4">
           <p className="text-light-3">
-            Found {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''}
+            Found {filteredBooks.length} book
+            {filteredBooks.length !== 1 ? "s" : ""}
           </p>
         </div>
 
@@ -147,8 +145,7 @@ const LibrarySearch = () => {
             <div
               key={book.id}
               onClick={() => navigate(`/library/books/${book.id}`)}
-              className="bg-dark-3 rounded-lg p-5 border border-dark-4 hover:border-primary-500 transition-colors cursor-pointer"
-            >
+              className="bg-dark-3 rounded-lg p-5 border border-dark-4 hover:border-primary-500 transition-colors cursor-pointer">
               <div className="flex gap-4">
                 {/* Book Cover Placeholder */}
                 <div className="w-20 h-28 bg-dark-4 rounded flex items-center justify-center text-3xl flex-shrink-0">
@@ -187,7 +184,9 @@ const LibrarySearch = () => {
                     </div>
                     <div>
                       <p className="text-xs text-light-4">Published</p>
-                      <p className="text-sm text-light-2">{book.published_year}</p>
+                      <p className="text-sm text-light-2">
+                        {book.published_year}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-light-4">Copies Available</p>
@@ -217,28 +216,25 @@ const LibrarySearch = () => {
                     e.stopPropagation();
                     navigate(`/library/books/${book.id}`);
                   }}
-                  className="bg-primary-500/20 text-primary-500 hover:bg-primary-500/30 text-sm py-2 px-4"
-                >
+                  className="bg-primary-500/20 text-primary-500 hover:bg-primary-500/30 text-sm py-2 px-4">
                   View Details
                 </Button>
                 {book.available_copies > 0 ? (
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert('Book checkout functionality would be here');
+                      alert("Book checkout functionality would be here");
                     }}
-                    className="bg-green-500/20 text-green-400 hover:bg-green-500/30 text-sm py-2 px-4"
-                  >
+                    className="bg-green-500/20 text-green-400 hover:bg-green-500/30 text-sm py-2 px-4">
                     Checkout Book
                   </Button>
                 ) : (
                   <Button
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert('Book hold functionality would be here');
+                      alert("Book hold functionality would be here");
                     }}
-                    className="bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 text-sm py-2 px-4"
-                  >
+                    className="bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 text-sm py-2 px-4">
                     Place Hold
                   </Button>
                 )}

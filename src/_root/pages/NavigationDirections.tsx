@@ -22,7 +22,8 @@ const NavigationDirections = () => {
   };
 
   const route = mockBuildingRoutes.find(
-    (r) => r.from_location_id === fromLocation && r.to_location_id === toLocation
+    (r) =>
+      r.from_location_id === fromLocation && r.to_location_id === toLocation
   );
 
   const fromLoc = mockCampusLocations.find((loc) => loc.id === fromLocation);
@@ -34,10 +35,15 @@ const NavigationDirections = () => {
         {/* Header */}
         <div className="mb-8">
           <Button
-            onClick={() => navigate('/campus')}
-            className="mb-4 bg-dark-4 hover:bg-dark-3"
-          >
-            <img src="/assets/icons/back.svg" width={20} height={20} alt="back" className="mr-2" />
+            onClick={() => navigate("/campus")}
+            className="mb-4 bg-dark-4 hover:bg-dark-3">
+            <img
+              src="/assets/icons/back.svg"
+              width={20}
+              height={20}
+              alt="back"
+              className="mr-2"
+            />
             Back to Campus Map
           </Button>
           <h1 className="text-3xl font-bold mb-2">Get Directions</h1>
@@ -55,8 +61,7 @@ const NavigationDirections = () => {
               <select
                 value={fromLocation}
                 onChange={(e) => setFromLocation(e.target.value)}
-                className="w-full px-4 py-3 bg-dark-4 border border-dark-4 rounded-lg focus:outline-none focus:border-primary-500 text-light-1"
-              >
+                className="w-full px-4 py-3 bg-dark-4 border border-dark-4 rounded-lg focus:outline-none focus:border-primary-500 text-light-1">
                 <option value="">Select starting location</option>
                 {mockCampusLocations.map((loc) => (
                   <option key={loc.id} value={loc.id}>
@@ -75,8 +80,7 @@ const NavigationDirections = () => {
                   setToLocation(temp);
                 }}
                 className="bg-dark-4 hover:bg-dark-2 rounded-full w-10 h-10 p-0"
-                disabled={!fromLocation || !toLocation}
-              >
+                disabled={!fromLocation || !toLocation}>
                 ⇅
               </Button>
             </div>
@@ -87,8 +91,7 @@ const NavigationDirections = () => {
               <select
                 value={toLocation}
                 onChange={(e) => setToLocation(e.target.value)}
-                className="w-full px-4 py-3 bg-dark-4 border border-dark-4 rounded-lg focus:outline-none focus:border-primary-500 text-light-1"
-              >
+                className="w-full px-4 py-3 bg-dark-4 border border-dark-4 rounded-lg focus:outline-none focus:border-primary-500 text-light-1">
                 <option value="">Select destination</option>
                 {mockCampusLocations.map((loc) => (
                   <option key={loc.id} value={loc.id}>
@@ -102,8 +105,7 @@ const NavigationDirections = () => {
             <Button
               onClick={handleGetDirections}
               className="w-full bg-primary-500 hover:bg-primary-600 text-white py-3"
-              disabled={!fromLocation || !toLocation}
-            >
+              disabled={!fromLocation || !toLocation}>
               Get Directions
             </Button>
           </div>
@@ -119,14 +121,14 @@ const NavigationDirections = () => {
                 <div className="bg-dark-4 rounded-lg p-4 text-center">
                   <div className="text-3xl mb-2">🚶</div>
                   <div className="text-2xl font-bold text-primary-500">
-                    {route ? route.walking_time_minutes : '5'} min
+                    {route ? route.walking_time_minutes : "5"} min
                   </div>
                   <div className="text-sm text-light-4">Walking Time</div>
                 </div>
                 <div className="bg-dark-4 rounded-lg p-4 text-center">
                   <div className="text-3xl mb-2">📏</div>
                   <div className="text-2xl font-bold text-primary-500">
-                    {route ? route.distance_meters : '300'}m
+                    {route ? route.distance_meters : "300"}m
                   </div>
                   <div className="text-sm text-light-4">Distance</div>
                 </div>
@@ -153,7 +155,9 @@ const NavigationDirections = () => {
 
             {/* Step-by-Step Directions */}
             <div className="bg-dark-3 rounded-lg p-6 border border-dark-4">
-              <h2 className="text-xl font-bold mb-4">Step-by-Step Directions</h2>
+              <h2 className="text-xl font-bold mb-4">
+                Step-by-Step Directions
+              </h2>
               <div className="space-y-4">
                 {/* Start */}
                 <div className="flex gap-4">
@@ -164,7 +168,9 @@ const NavigationDirections = () => {
                     <div className="w-0.5 h-full bg-dark-4 my-2"></div>
                   </div>
                   <div className="flex-1 pb-4">
-                    <p className="font-semibold mb-1">Start at {fromLoc.name}</p>
+                    <p className="font-semibold mb-1">
+                      Start at {fromLoc.name}
+                    </p>
                     <p className="text-sm text-light-3">{fromLoc.address}</p>
                   </div>
                 </div>
@@ -179,8 +185,12 @@ const NavigationDirections = () => {
                       <div className="w-0.5 h-full bg-dark-4 my-2"></div>
                     </div>
                     <div className="flex-1 pb-4">
-                      <p className="font-semibold mb-1">Walk {route.distance_meters}m</p>
-                      <p className="text-sm text-light-3">{route.route_description}</p>
+                      <p className="font-semibold mb-1">
+                        Walk {route.distance_meters}m
+                      </p>
+                      <p className="text-sm text-light-3">
+                        {route.route_description}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -204,8 +214,7 @@ const NavigationDirections = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
                 onClick={() => {}}
-                className="bg-dark-4 hover:bg-dark-3 h-auto py-4"
-              >
+                className="bg-dark-4 hover:bg-dark-3 h-auto py-4">
                 <div className="text-center">
                   <div className="text-2xl mb-1">📤</div>
                   <div className="font-semibold">Share Route</div>
@@ -213,8 +222,7 @@ const NavigationDirections = () => {
               </Button>
               <Button
                 onClick={() => {}}
-                className="bg-dark-4 hover:bg-dark-3 h-auto py-4"
-              >
+                className="bg-dark-4 hover:bg-dark-3 h-auto py-4">
                 <div className="text-center">
                   <div className="text-2xl mb-1">⭐</div>
                   <div className="font-semibold">Save Route</div>
@@ -230,7 +238,8 @@ const NavigationDirections = () => {
             <div className="text-4xl mb-3">⚠️</div>
             <p className="text-yellow-200 mb-2">Direct route not available</p>
             <p className="text-sm text-yellow-300">
-              We don't have a direct route between these locations yet, but you can still navigate using the campus map.
+              We don't have a direct route between these locations yet, but you
+              can still navigate using the campus map.
             </p>
           </div>
         )}

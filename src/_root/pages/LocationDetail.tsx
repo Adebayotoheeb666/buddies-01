@@ -14,7 +14,7 @@ const LocationDetail = () => {
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <p className="text-light-3 mb-4">Location not found</p>
-          <Button onClick={() => navigate('/campus')}>
+          <Button onClick={() => navigate("/campus")}>
             Back to Campus Map
           </Button>
         </div>
@@ -24,38 +24,48 @@ const LocationDetail = () => {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'library':
-        return '📚';
-      case 'building':
-        return '🏛️';
-      case 'dining':
-        return '🍽️';
-      case 'cafe':
-        return '☕';
-      case 'gym':
-        return '💪';
-      case 'parking':
-        return '🅿️';
+      case "library":
+        return "📚";
+      case "building":
+        return "🏛️";
+      case "dining":
+        return "🍽️";
+      case "cafe":
+        return "☕";
+      case "gym":
+        return "💪";
+      case "parking":
+        return "🅿️";
       default:
-        return '📍';
+        return "📍";
     }
   };
 
   const formatHours = (hours: any) => {
-    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    return days.map((day) => {
-      const dayHours = hours[day];
-      if (!dayHours) return null;
-      return {
-        day: day.charAt(0).toUpperCase() + day.slice(1),
-        hours: `${dayHours.opens} - ${dayHours.closes}`,
-      };
-    }).filter(Boolean);
+    const days = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ];
+    return days
+      .map((day) => {
+        const dayHours = hours[day];
+        if (!dayHours) return null;
+        return {
+          day: day.charAt(0).toUpperCase() + day.slice(1),
+          hours: `${dayHours.opens} - ${dayHours.closes}`,
+        };
+      })
+      .filter(Boolean);
   };
 
   const isOpenNow = () => {
     const now = new Date();
-    const day = now.toLocaleDateString('en-US', { weekday: 'lowercase' });
+    const day = now.toLocaleDateString("en-US", { weekday: "lowercase" });
     const currentTime = now.toTimeString().slice(0, 5);
 
     if (!location.hours[day]) return false;
@@ -69,10 +79,15 @@ const LocationDetail = () => {
       <div className="w-full px-6 py-6 max-w-5xl mx-auto">
         {/* Back Button */}
         <Button
-          onClick={() => navigate('/campus')}
-          className="mb-6 bg-dark-4 hover:bg-dark-3"
-        >
-          <img src="/assets/icons/back.svg" width={20} height={20} alt="back" className="mr-2" />
+          onClick={() => navigate("/campus")}
+          className="mb-6 bg-dark-4 hover:bg-dark-3">
+          <img
+            src="/assets/icons/back.svg"
+            width={20}
+            height={20}
+            alt="back"
+            className="mr-2"
+          />
           Back to Campus Map
         </Button>
 
@@ -80,10 +95,14 @@ const LocationDetail = () => {
         <div className="bg-dark-3 rounded-lg p-6 border border-dark-4 mb-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-4">
-              <span className="text-5xl">{getTypeIcon(location.location_type)}</span>
+              <span className="text-5xl">
+                {getTypeIcon(location.location_type)}
+              </span>
               <div>
                 <h1 className="text-3xl font-bold mb-2">{location.name}</h1>
-                <p className="text-light-3 capitalize">{location.location_type}</p>
+                <p className="text-light-3 capitalize">
+                  {location.location_type}
+                </p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -132,7 +151,9 @@ const LocationDetail = () => {
               {location.contact_info.email && (
                 <div>
                   <p className="text-light-4 text-sm mb-1">Email</p>
-                  <p className="text-primary-500">{location.contact_info.email}</p>
+                  <p className="text-primary-500">
+                    {location.contact_info.email}
+                  </p>
                 </div>
               )}
               {location.contact_info.website && (
@@ -142,8 +163,7 @@ const LocationDetail = () => {
                     href={location.contact_info.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary-500 hover:underline"
-                  >
+                    className="text-primary-500 hover:underline">
                     {location.contact_info.website}
                   </a>
                 </div>
@@ -156,15 +176,18 @@ const LocationDetail = () => {
             <h2 className="text-xl font-bold mb-4">🕒 Hours of Operation</h2>
             <div className="space-y-2">
               {formatHours(location.hours).map((item: any, index: number) => {
-                const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+                const today = new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                });
                 const isToday = item.day === today;
                 return (
                   <div
                     key={index}
                     className={`flex justify-between py-2 px-3 rounded ${
-                      isToday ? 'bg-primary-500/20 text-primary-500 font-semibold' : ''
-                    }`}
-                  >
+                      isToday
+                        ? "bg-primary-500/20 text-primary-500 font-semibold"
+                        : ""
+                    }`}>
                     <span>{item.day}</span>
                     <span>{item.hours}</span>
                   </div>
@@ -178,8 +201,7 @@ const LocationDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Button
             onClick={() => navigate(`/campus/directions?to=${location.id}`)}
-            className="bg-primary-500 hover:bg-primary-600 text-white h-auto py-4"
-          >
+            className="bg-primary-500 hover:bg-primary-600 text-white h-auto py-4">
             <div className="text-center">
               <div className="text-2xl mb-1">🗺️</div>
               <div className="font-semibold">Get Directions</div>
@@ -187,8 +209,7 @@ const LocationDetail = () => {
           </Button>
           <Button
             onClick={() => {}}
-            className="bg-dark-4 hover:bg-dark-3 h-auto py-4"
-          >
+            className="bg-dark-4 hover:bg-dark-3 h-auto py-4">
             <div className="text-center">
               <div className="text-2xl mb-1">⭐</div>
               <div className="font-semibold">Save to Favorites</div>
@@ -196,8 +217,7 @@ const LocationDetail = () => {
           </Button>
           <Button
             onClick={() => {}}
-            className="bg-dark-4 hover:bg-dark-3 h-auto py-4"
-          >
+            className="bg-dark-4 hover:bg-dark-3 h-auto py-4">
             <div className="text-center">
               <div className="text-2xl mb-1">📤</div>
               <div className="font-semibold">Share Location</div>
@@ -206,42 +226,45 @@ const LocationDetail = () => {
         </div>
 
         {/* Additional Info */}
-        {location.location_type === 'library' && (
+        {location.location_type === "library" && (
           <div className="bg-dark-3 rounded-lg p-6 border border-dark-4 mt-6">
             <h2 className="text-xl font-bold mb-4">📚 Library Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
-                onClick={() => navigate('/library')}
-                className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4"
-              >
+                onClick={() => navigate("/library")}
+                className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4">
                 <div>
                   <div className="font-semibold mb-1">Search Catalog</div>
-                  <div className="text-sm text-light-3">Find books and resources</div>
+                  <div className="text-sm text-light-3">
+                    Find books and resources
+                  </div>
                 </div>
               </Button>
               <Button
-                onClick={() => navigate('/library/study-rooms')}
-                className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4"
-              >
+                onClick={() => navigate("/library/study-rooms")}
+                className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4">
                 <div>
                   <div className="font-semibold mb-1">Book Study Room</div>
-                  <div className="text-sm text-light-3">Reserve a study space</div>
+                  <div className="text-sm text-light-3">
+                    Reserve a study space
+                  </div>
                 </div>
               </Button>
             </div>
           </div>
         )}
 
-        {location.location_type === 'building' && (
+        {location.location_type === "building" && (
           <div className="bg-dark-3 rounded-lg p-6 border border-dark-4 mt-6">
             <h2 className="text-xl font-bold mb-4">🏫 Building Services</h2>
             <Button
-              onClick={() => navigate('/campus/classrooms')}
-              className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4 w-full"
-            >
+              onClick={() => navigate("/campus/classrooms")}
+              className="bg-dark-4 hover:bg-dark-3 text-left justify-start h-auto p-4 w-full">
               <div>
                 <div className="font-semibold mb-1">Find Classrooms</div>
-                <div className="text-sm text-light-3">Search classrooms in this building</div>
+                <div className="text-sm text-light-3">
+                  Search classrooms in this building
+                </div>
               </div>
             </Button>
           </div>

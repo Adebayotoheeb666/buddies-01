@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { mockClassrooms, mockCampusLocations } from "@/lib/mockData/phase3MockData";
+import {
+  mockClassrooms,
+  mockCampusLocations,
+} from "@/lib/mockData/phase3MockData";
 
 const ClassroomFinder = () => {
   const navigate = useNavigate();
@@ -32,10 +35,15 @@ const ClassroomFinder = () => {
         {/* Header */}
         <div className="mb-8">
           <Button
-            onClick={() => navigate('/campus')}
-            className="mb-4 bg-dark-4 hover:bg-dark-3"
-          >
-            <img src="/assets/icons/back.svg" width={20} height={20} alt="back" className="mr-2" />
+            onClick={() => navigate("/campus")}
+            className="mb-4 bg-dark-4 hover:bg-dark-3">
+            <img
+              src="/assets/icons/back.svg"
+              width={20}
+              height={20}
+              alt="back"
+              className="mr-2"
+            />
             Back to Campus Map
           </Button>
           <h1 className="text-3xl font-bold mb-2">Classroom Finder</h1>
@@ -65,8 +73,7 @@ const ClassroomFinder = () => {
                 selectedBuilding === null
                   ? "bg-primary-500 text-white"
                   : "bg-dark-4 text-light-3 hover:bg-dark-3"
-              }`}
-            >
+              }`}>
               All Buildings
             </Button>
             {buildings.map((building) => (
@@ -77,8 +84,7 @@ const ClassroomFinder = () => {
                   selectedBuilding === building
                     ? "bg-primary-500 text-white"
                     : "bg-dark-4 text-light-3 hover:bg-dark-3"
-                }`}
-              >
+                }`}>
                 {building}
               </Button>
             ))}
@@ -88,7 +94,8 @@ const ClassroomFinder = () => {
         {/* Results Summary */}
         <div className="mb-4">
           <p className="text-light-3">
-            Found {filteredClassrooms.length} classroom{filteredClassrooms.length !== 1 ? 's' : ''}
+            Found {filteredClassrooms.length} classroom
+            {filteredClassrooms.length !== 1 ? "s" : ""}
           </p>
         </div>
 
@@ -99,11 +106,12 @@ const ClassroomFinder = () => {
             return (
               <div
                 key={classroom.id}
-                className="bg-dark-3 rounded-lg p-5 border border-dark-4 hover:border-primary-500 transition-colors"
-              >
+                className="bg-dark-3 rounded-lg p-5 border border-dark-4 hover:border-primary-500 transition-colors">
                 {/* Classroom Header */}
                 <div className="mb-4">
-                  <h3 className="text-xl font-bold mb-1">{classroom.room_number}</h3>
+                  <h3 className="text-xl font-bold mb-1">
+                    {classroom.room_number}
+                  </h3>
                   <p className="text-light-3">{classroom.building_name}</p>
                 </div>
 
@@ -117,7 +125,9 @@ const ClassroomFinder = () => {
 
                 {/* Amenities */}
                 <div className="mb-4">
-                  <p className="text-sm text-light-4 mb-2">Available Amenities:</p>
+                  <p className="text-sm text-light-4 mb-2">
+                    Available Amenities:
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {classroom.has_projector && (
                       <span className="bg-primary-500/20 text-primary-500 px-2 py-1 rounded text-xs">
@@ -142,15 +152,17 @@ const ClassroomFinder = () => {
                   {location && (
                     <>
                       <Button
-                        onClick={() => navigate(`/campus/locations/${location.id}`)}
-                        className="w-full bg-primary-500/20 text-primary-500 hover:bg-primary-500/30 text-sm py-2"
-                      >
+                        onClick={() =>
+                          navigate(`/campus/locations/${location.id}`)
+                        }
+                        className="w-full bg-primary-500/20 text-primary-500 hover:bg-primary-500/30 text-sm py-2">
                         View Building Info
                       </Button>
                       <Button
-                        onClick={() => navigate(`/campus/directions?to=${location.id}`)}
-                        className="w-full bg-dark-4 hover:bg-dark-2 text-sm py-2"
-                      >
+                        onClick={() =>
+                          navigate(`/campus/directions?to=${location.id}`)
+                        }
+                        className="w-full bg-dark-4 hover:bg-dark-2 text-sm py-2">
                         Get Directions
                       </Button>
                     </>
@@ -174,19 +186,29 @@ const ClassroomFinder = () => {
 
         {/* Help Section */}
         <div className="bg-dark-3 rounded-lg p-6 border border-dark-4 mt-8">
-          <h2 className="text-xl font-bold mb-4">💡 Tips for Finding Classrooms</h2>
+          <h2 className="text-xl font-bold mb-4">
+            💡 Tips for Finding Classrooms
+          </h2>
           <ul className="space-y-2 text-light-3">
             <li className="flex items-start gap-2">
               <span className="text-primary-500">•</span>
-              <span>Room numbers usually indicate the floor (e.g., ENG 201 is on the 2nd floor)</span>
+              <span>
+                Room numbers usually indicate the floor (e.g., ENG 201 is on the
+                2nd floor)
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-500">•</span>
-              <span>Use building abbreviations for faster search (e.g., "ENG" for Engineering)</span>
+              <span>
+                Use building abbreviations for faster search (e.g., "ENG" for
+                Engineering)
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-500">•</span>
-              <span>Check amenities to ensure the room has the equipment you need</span>
+              <span>
+                Check amenities to ensure the room has the equipment you need
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-500">•</span>
