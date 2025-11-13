@@ -88,6 +88,19 @@ const App = () => {
 
           {/* Phase 1 Academic Features - Q&A Forum */}
           <Route path="/qa-forum" element={<QAForum />} />
+          <Route path="/qa-forum/:questionId" element={<QuestionDetail />} />
+
+          {/* Phase 2 Academic Collaboration - Note Sharing */}
+          <Route path="/notes" element={<NoteLibrary />} />
+
+          {/* Phase 2 Academic Collaboration - Project Matching */}
+          <Route path="/projects" element={<ProjectListings />} />
+
+          {/* Phase 2 Academic Collaboration - Peer Tutoring */}
+          <Route path="/tutoring" element={<TutoringBrowser />} />
+
+          {/* Phase 2 Academic Collaboration - Resources */}
+          <Route path="/resources" element={<ResourceLibrary />} />
         </Route>
       </Routes>
 
