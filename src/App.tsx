@@ -27,6 +27,10 @@ import {
   TutoringBrowser,
   ResourceLibrary,
   QuestionDetail,
+  CampusMap,
+  DiningServices,
+  LibraryServices,
+  FacilitiesBooking,
   ClubDirectory,
   ClubDetail,
   InterestGroups,
@@ -108,6 +112,12 @@ const App = () => {
 
           {/* Phase 2 Academic Collaboration - Resources */}
           <Route path="/resources" element={<ResourceLibrary />} />
+
+          {/* Phase 3 Campus Life & Services */}
+          <Route path="/campus-map" element={<CampusMap />} />
+          <Route path="/dining" element={<DiningServices />} />
+          <Route path="/library" element={<LibraryServices />} />
+          <Route path="/facilities" element={<FacilitiesBooking />} />
 
           {/* Phase 4 Social Networking - Clubs & Organizations */}
           <Route path="/clubs" element={<ClubDirectory />} />

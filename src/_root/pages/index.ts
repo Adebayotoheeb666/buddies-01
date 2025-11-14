@@ -28,6 +28,17 @@ export { default as TutoringBrowser } from "./TutoringBrowser";
 export { default as ResourceLibrary } from "./ResourceLibrary";
 export { default as QuestionDetail } from "./QuestionDetail";
 
+// Phase 3 - Campus Life & Services
+export { default as CampusMap } from "./CampusMap";
+export { default as DiningServices } from "./DiningServices";
+export { default as LibraryServices } from "./LibraryServices";
+export { default as FacilitiesBooking } from "./FacilitiesBooking";
+
+// Phase 5 - Career Development & Professional Growth
+export { default as JobBoard } from "./JobBoard";
+export { default as AlumniNetwork } from "./AlumniNetwork";
+export { default as ResearchStartups } from "./ResearchStartups";
+
 // Phase 4 - Social Networking & Club Management
 export { default as ClubDirectory } from "./ClubDirectory";
 export { default as ClubDetail } from "./ClubDetail";

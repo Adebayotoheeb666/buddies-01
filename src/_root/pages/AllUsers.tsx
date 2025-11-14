@@ -21,11 +21,11 @@ const AllUsers = () => {
           <Loader />
         ) : (
           <ul className="user-grid">
-            {creators?.documents.map((creator) => (
-              <li key={creator?.$id} className="flex-1 min-w-[200px] w-full  ">
+            {creators?.documents?.map((creator, index) => (
+              <li key={creator?.$id || index} className="flex-1 min-w-[200px] w-full  ">
                 <UserCard user={creator} />
               </li>
-            ))}
+            )) || []}
           </ul>
         )}
       </div>

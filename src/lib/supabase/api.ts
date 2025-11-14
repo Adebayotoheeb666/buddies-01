@@ -35,6 +35,55 @@ import {
   RecruitmentPeriod,
   RecruitmentApplication,
 } from "@/types/social.types";
+import {
+  CampusLocation,
+  Classroom,
+  BuildingRoute,
+  DiningHall,
+  Menu,
+  MenuItem,
+  DiningWaitTime,
+  MealPlan,
+  DiningReview,
+  FoodReview,
+  LibraryBook,
+  BookCheckout,
+  StudyRoomBooking,
+  LibraryZone,
+  BookHold,
+  Facility,
+  FacilityEquipment,
+  FacilityBooking,
+  FacilityReview,
+} from "@/types/campus.types";
+import {
+  JobPosting,
+  JobApplication,
+  InternshipPosting,
+  ApplicationTracking,
+  CareerFair,
+  CareerFairCompany,
+  CareerFairMeeting,
+  UserPortfolio,
+  PortfolioProject,
+  SkillEndorsement,
+  AlumniProfile,
+  MentorshipPair,
+  MentorshipSession,
+  MentorshipFeedback,
+  CareerPath,
+  AlumniEvent,
+  AlumniNetwork,
+  AlumniNetworkMember,
+  ResearchOpportunity,
+  ResearchApplication,
+  ResearchProject,
+  StartupOpportunity,
+  StartupTeamMember,
+  CoFounderProfile,
+  PitchCompetition,
+  PitchCompetitionRegistration,
+} from "@/types/career.types";
 
 // ============================================================
 // AUTH
@@ -666,7 +715,10 @@ export async function joinDepartmentNetwork(networkId: string, userId: string) {
   }
 }
 
-export async function leaveDepartmentNetwork(networkId: string, userId: string) {
+export async function leaveDepartmentNetwork(
+  networkId: string,
+  userId: string
+) {
   try {
     const { error } = await supabase
       .from("department_members")
@@ -682,7 +734,10 @@ export async function leaveDepartmentNetwork(networkId: string, userId: string) 
   }
 }
 
-export async function isUserInDepartmentNetwork(networkId: string, userId: string) {
+export async function isUserInDepartmentNetwork(
+  networkId: string,
+  userId: string
+) {
   try {
     const { data, error } = await supabase
       .from("department_members")
@@ -785,7 +840,11 @@ export async function createPoll(
   }
 }
 
-export async function votePoll(pollId: string, optionId: string, userId: string) {
+export async function votePoll(
+  pollId: string,
+  optionId: string,
+  userId: string
+) {
   try {
     const { data, error } = await supabase
       .from("poll_votes")
@@ -942,7 +1001,11 @@ export async function getMemeBoard() {
   }
 }
 
-export async function createMemePost(creatorId: string, imageUrl: string, caption: string) {
+export async function createMemePost(
+  creatorId: string,
+  imageUrl: string,
+  caption: string
+) {
   try {
     const { data, error } = await supabase
       .from("meme_posts")
@@ -1101,7 +1164,11 @@ export async function joinOrganization(organizationId: string, userId: string) {
   try {
     const { data, error } = await supabase
       .from("organization_members")
-      .insert({ organization_id: organizationId, user_id: userId, role: "member" })
+      .insert({
+        organization_id: organizationId,
+        user_id: userId,
+        role: "member",
+      })
       .select()
       .single();
 
@@ -1113,7 +1180,10 @@ export async function joinOrganization(organizationId: string, userId: string) {
   }
 }
 
-export async function leaveOrganization(organizationId: string, userId: string) {
+export async function leaveOrganization(
+  organizationId: string,
+  userId: string
+) {
   try {
     const { error } = await supabase
       .from("organization_members")
@@ -1129,7 +1199,10 @@ export async function leaveOrganization(organizationId: string, userId: string) 
   }
 }
 
-export async function isUserInOrganization(organizationId: string, userId: string) {
+export async function isUserInOrganization(
+  organizationId: string,
+  userId: string
+) {
   try {
     const { data, error } = await supabase
       .from("organization_members")
@@ -1250,7 +1323,11 @@ export async function createEvent(
 // EVENT RSVP
 // ============================================================
 
-export async function rsvpEvent(eventId: string, userId: string, status: string) {
+export async function rsvpEvent(
+  eventId: string,
+  userId: string,
+  status: string
+) {
   try {
     const { data, error } = await supabase
       .from("event_rsvps")
@@ -1348,7 +1425,11 @@ export async function createRecruitmentPeriod(
   try {
     const { data, error } = await supabase
       .from("recruitment_periods")
-      .insert({ organization_id: organizationId, start_date: startDate, end_date: endDate })
+      .insert({
+        organization_id: organizationId,
+        start_date: startDate,
+        end_date: endDate,
+      })
       .select()
       .single();
 
@@ -1377,11 +1458,17 @@ export async function getRecruitmentPeriods(organizationId: string) {
   }
 }
 
-export async function applyToRecruitment(recruitmentPeriodId: string, applicantId: string) {
+export async function applyToRecruitment(
+  recruitmentPeriodId: string,
+  applicantId: string
+) {
   try {
     const { data, error } = await supabase
       .from("recruitment_applications")
-      .insert({ recruitment_period_id: recruitmentPeriodId, applicant_id: applicantId })
+      .insert({
+        recruitment_period_id: recruitmentPeriodId,
+        applicant_id: applicantId,
+      })
       .select()
       .single();
 
@@ -1409,12 +1496,1580 @@ export async function getRecruitmentApplications(recruitmentPeriodId: string) {
   }
 }
 
-export async function updateApplicationStatus(applicationId: string, status: string) {
+export async function updateApplicationStatus(
+  applicationId: string,
+  status: string
+) {
   try {
     const { data, error } = await supabase
       .from("recruitment_applications")
       .update({ status })
       .eq("id", applicationId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// PHASE 3: CAMPUS MAP & NAVIGATION
+// ============================================================
+
+export async function getCampusLocations() {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getCampusLocation(locationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .eq("id", locationId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function searchCampusLocations(searchTerm: string) {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .ilike("name", `%${searchTerm}%`)
+      .or(`description.ilike.%${searchTerm}%`)
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getClassrooms() {
+  try {
+    const { data, error } = await supabase
+      .from("classrooms")
+      .select("*")
+      .order("building_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function searchClassrooms(
+  buildingName?: string,
+  roomNumber?: string
+) {
+  try {
+    let query = supabase.from("classrooms").select("*");
+
+    if (buildingName) {
+      query = query.ilike("building_name", `%${buildingName}%`);
+    }
+
+    if (roomNumber) {
+      query = query.ilike("room_number", `%${roomNumber}%`);
+    }
+
+    const { data, error } = await query.order("building_name", {
+      ascending: true,
+    });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getRoute(fromLocationId: string, toLocationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("building_routes")
+      .select("*")
+      .eq("from_location_id", fromLocationId)
+      .eq("to_location_id", toLocationId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getAllRoutes() {
+  try {
+    const { data, error } = await supabase.from("building_routes").select("*");
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 3: DINING SERVICES
+// ============================================================
+
+export async function getDiningHalls() {
+  try {
+    const { data, error } = await supabase
+      .from("dining_halls")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getDiningHall(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_halls")
+      .select("*")
+      .eq("id", diningHallId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getMenus(diningHallId: string, menuDate?: string) {
+  try {
+    let query = supabase
+      .from("menus")
+      .select("*")
+      .eq("dining_hall_id", diningHallId);
+
+    if (menuDate) {
+      query = query.eq("menu_date", menuDate);
+    }
+
+    const { data, error } = await query.order("meal_type", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getMenuItems(menuId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("menu_items")
+      .select("*")
+      .eq("menu_id", menuId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function reportWaitTime(
+  diningHallId: string,
+  userId: string,
+  waitTimeMinutes: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_wait_times")
+      .insert({
+        dining_hall_id: diningHallId,
+        reported_by_id: userId,
+        wait_time_minutes: waitTimeMinutes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getLatestWaitTime(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_wait_times")
+      .select("*")
+      .eq("dining_hall_id", diningHallId)
+      .order("reported_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getUserMealPlan(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("meal_plans")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createDiningReview(
+  diningHallId: string,
+  reviewerId: string,
+  rating: number,
+  reviewText?: string,
+  foodQualityRating?: number,
+  cleanlinessRating?: number,
+  serviceRating?: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_reviews")
+      .insert({
+        dining_hall_id: diningHallId,
+        reviewer_id: reviewerId,
+        rating,
+        review_text: reviewText,
+        food_quality_rating: foodQualityRating,
+        cleanliness_rating: cleanlinessRating,
+        service_rating: serviceRating,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getDiningReviews(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_reviews")
+      .select("*")
+      .eq("dining_hall_id", diningHallId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 3: LIBRARY SYSTEM
+// ============================================================
+
+export async function getLibraryBooks(filters?: {
+  title?: string;
+  author?: string;
+  subject?: string;
+}) {
+  try {
+    let query = supabase.from("library_books").select("*");
+
+    if (filters?.title) {
+      query = query.ilike("title", `%${filters.title}%`);
+    }
+
+    if (filters?.author) {
+      query = query.ilike("author", `%${filters.author}%`);
+    }
+
+    if (filters?.subject) {
+      query = query.ilike("subject", `%${filters.subject}%`);
+    }
+
+    const { data, error } = await query.order("title", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getLibraryBook(bookId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("library_books")
+      .select("*")
+      .eq("id", bookId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function checkoutBook(
+  userId: string,
+  bookId: string,
+  dueDate: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("book_checkouts")
+      .insert({
+        user_id: userId,
+        book_id: bookId,
+        checkout_date: new Date().toISOString(),
+        due_date: dueDate,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserCheckouts(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_checkouts")
+      .select("*")
+      .eq("user_id", userId)
+      .is("return_date", null)
+      .order("due_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function returnBook(checkoutId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_checkouts")
+      .update({ return_date: new Date().toISOString() })
+      .eq("id", checkoutId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getStudyRooms() {
+  try {
+    const { data, error } = await supabase
+      .from("study_room_bookings")
+      .select("*")
+      .order("room_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function bookStudyRoom(
+  userId: string,
+  roomName: string,
+  bookingDate: string,
+  startTime: string,
+  endTime: string,
+  capacity: number,
+  amenities?: string[]
+) {
+  try {
+    const { data, error } = await supabase
+      .from("study_room_bookings")
+      .insert({
+        user_id: userId,
+        room_name: roomName,
+        booking_date: bookingDate,
+        start_time: startTime,
+        end_time: endTime,
+        capacity,
+        amenities,
+        status: "confirmed",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserStudyRoomBookings(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("study_room_bookings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("booking_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getLibraryZones() {
+  try {
+    const { data, error } = await supabase
+      .from("library_zones")
+      .select("*")
+      .order("zone_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function placeBookHold(userId: string, bookId: string) {
+  try {
+    const existingHolds = await supabase
+      .from("book_holds")
+      .select("*")
+      .eq("book_id", bookId)
+      .order("created_at", { ascending: false });
+
+    const position = (existingHolds.data?.length || 0) + 1;
+
+    const { data, error } = await supabase
+      .from("book_holds")
+      .insert({
+        user_id: userId,
+        book_id: bookId,
+        position_in_queue: position,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserBookHolds(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_holds")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 3: FACILITIES BOOKING
+// ============================================================
+
+export async function getFacilities(filters?: {
+  facilityType?: string;
+  location?: string;
+}) {
+  try {
+    let query = supabase.from("facilities").select("*");
+
+    if (filters?.facilityType) {
+      query = query.eq("facility_type", filters.facilityType);
+    }
+
+    const { data, error } = await query.order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getFacility(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facilities")
+      .select("*")
+      .eq("id", facilityId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getFacilityEquipment(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_equipment")
+      .select("*")
+      .eq("facility_id", facilityId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function bookFacility(
+  userId: string,
+  facilityId: string,
+  bookingDate: string,
+  startTime: string,
+  endTime: string,
+  numberOfPeople: number,
+  purpose?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .insert({
+        user_id: userId,
+        facility_id: facilityId,
+        booking_date: bookingDate,
+        start_time: startTime,
+        end_time: endTime,
+        number_of_people: numberOfPeople,
+        purpose,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserFacilityBookings(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("booking_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getFacilityBookings(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .select("*")
+      .eq("facility_id", facilityId)
+      .order("booking_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function updateFacilityBookingStatus(
+  bookingId: string,
+  status: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .update({ status })
+      .eq("id", bookingId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function createFacilityReview(
+  facilityId: string,
+  reviewerId: string,
+  rating: number,
+  reviewText?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_reviews")
+      .insert({
+        facility_id: facilityId,
+        reviewer_id: reviewerId,
+        rating,
+        review_text: reviewText,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getFacilityReviews(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_reviews")
+      .select("*")
+      .eq("facility_id", facilityId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 5: CAREER SERVICES & JOB BOARD
+// ============================================================
+
+export async function getJobPostings(filters?: {
+  jobType?: string;
+  location?: string;
+}) {
+  try {
+    let query = supabase.from("job_postings").select("*");
+
+    if (filters?.jobType) {
+      query = query.eq("job_type", filters.jobType);
+    }
+
+    if (filters?.location) {
+      query = query.ilike("location", `%${filters.location}%`);
+    }
+
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getJobPosting(jobId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("job_postings")
+      .select("*")
+      .eq("id", jobId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function applyToJob(
+  userId: string,
+  jobId: string,
+  resumeUrl?: string,
+  coverLetter?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("job_applications")
+      .insert({
+        applicant_id: userId,
+        job_posting_id: jobId,
+        resume_url: resumeUrl,
+        cover_letter: coverLetter,
+        status: "applied",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserJobApplications(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("job_applications")
+      .select("*")
+      .eq("applicant_id", userId)
+      .order("applied_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getInternshipPostings() {
+  try {
+    const { data, error } = await supabase
+      .from("internship_board")
+      .select("*")
+      .order("deadline", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getApplicationTracking(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("application_tracking")
+      .select("*")
+      .eq("user_id", userId)
+      .order("status_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createApplicationTracking(
+  userId: string,
+  companyName: string,
+  positionTitle: string,
+  status: string,
+  notes?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("application_tracking")
+      .insert({
+        user_id: userId,
+        company_name: companyName,
+        position_title: positionTitle,
+        status,
+        status_date: new Date().toISOString(),
+        notes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCareerFairs() {
+  try {
+    const { data, error } = await supabase
+      .from("career_fairs")
+      .select("*")
+      .order("event_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getCareerFairCompanies(fairId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("career_fair_companies")
+      .select("*")
+      .eq("career_fair_id", fairId)
+      .order("booth_number", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function scheduleCareerFairMeeting(
+  userId: string,
+  fairId: string,
+  companyId: string,
+  meetingTime: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("career_fair_meetings")
+      .insert({
+        career_fair_id: fairId,
+        student_id: userId,
+        company_id: companyId,
+        meeting_time: meetingTime,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserPortfolio(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_portfolios")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function updateUserPortfolio(
+  userId: string,
+  resumeUrl?: string,
+  portfolioUrl?: string,
+  linkedinUrl?: string,
+  githubUrl?: string,
+  personalWebsite?: string,
+  bio?: string
+) {
+  try {
+    const existing = await getUserPortfolio(userId);
+
+    if (existing) {
+      const { data, error } = await supabase
+        .from("user_portfolios")
+        .update({
+          resume_url: resumeUrl,
+          portfolio_url: portfolioUrl,
+          linkedin_url: linkedinUrl,
+          github_url: githubUrl,
+          personal_website: personalWebsite,
+          bio,
+        })
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    } else {
+      const { data, error } = await supabase
+        .from("user_portfolios")
+        .insert({
+          user_id: userId,
+          resume_url: resumeUrl,
+          portfolio_url: portfolioUrl,
+          linkedin_url: linkedinUrl,
+          github_url: githubUrl,
+          personal_website: personalWebsite,
+          bio,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPortfolioProjects(portfolioId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("portfolio_projects")
+      .select("*")
+      .eq("portfolio_id", portfolioId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function addPortfolioProject(
+  portfolioId: string,
+  title: string,
+  description?: string,
+  technologies?: string[],
+  projectUrl?: string,
+  imageUrl?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("portfolio_projects")
+      .insert({
+        portfolio_id: portfolioId,
+        title,
+        description,
+        technologies,
+        project_url: projectUrl,
+        image_url: imageUrl,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// PHASE 5: ALUMNI NETWORK & MENTORSHIP
+// ============================================================
+
+export async function getAlumniProfiles(filters?: {
+  industry?: string;
+  company?: string;
+}) {
+  try {
+    let query = supabase.from("alumni_profiles").select("*");
+
+    if (filters?.industry) {
+      query = query.ilike("industry", `%${filters.industry}%`);
+    }
+
+    if (filters?.company) {
+      query = query.ilike("current_company", `%${filters.company}%`);
+    }
+
+    const { data, error } = await query.order("graduation_year", {
+      ascending: false,
+    });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAlumniProfile(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function requestMentorship(
+  menteeId: string,
+  mentorId: string,
+  goal?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_pairs")
+      .insert({
+        mentor_id: mentorId,
+        mentee_id: menteeId,
+        goal,
+        started_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserMentorships(
+  userId: string,
+  role: "mentor" | "mentee"
+) {
+  try {
+    let query = supabase.from("mentorship_pairs").select("*");
+
+    if (role === "mentor") {
+      query = query.eq("mentor_id", userId);
+    } else {
+      query = query.eq("mentee_id", userId);
+    }
+
+    const { data, error } = await query.order("started_at", {
+      ascending: false,
+    });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function logMentorshipSession(
+  pairId: string,
+  topic?: string,
+  notes?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_sessions")
+      .insert({
+        pair_id: pairId,
+        session_date: new Date().toISOString(),
+        topic,
+        notes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getMentorshipSessions(pairId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_sessions")
+      .select("*")
+      .eq("pair_id", pairId)
+      .order("session_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createMentorshipFeedback(
+  pairId: string,
+  rating: number,
+  feedbackText?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_feedback")
+      .insert({
+        pair_id: pairId,
+        rating,
+        feedback_text: feedbackText,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCareerPaths() {
+  try {
+    const { data, error } = await supabase
+      .from("career_paths")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAlumniEvents() {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_events")
+      .select("*")
+      .order("event_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAlumniNetworks() {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_networks")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function joinAlumniNetwork(networkId: string, alumniId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_network_members")
+      .insert({
+        network_id: networkId,
+        alumni_id: alumniId,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// PHASE 5: RESEARCH & STARTUP OPPORTUNITIES
+// ============================================================
+
+export async function getResearchOpportunities() {
+  try {
+    const { data, error } = await supabase
+      .from("research_opportunities")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getResearchOpportunity(opportunityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("research_opportunities")
+      .select("*")
+      .eq("id", opportunityId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function applyToResearch(
+  userId: string,
+  opportunityId: string,
+  cvUrl?: string,
+  motivationStatement?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("research_applications")
+      .insert({
+        opportunity_id: opportunityId,
+        applicant_id: userId,
+        cv_url: cvUrl,
+        motivation_statement: motivationStatement,
+        status: "applied",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserResearchApplications(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("research_applications")
+      .select("*")
+      .eq("applicant_id", userId)
+      .order("applied_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getStartupOpportunities(stage?: string) {
+  try {
+    let query = supabase.from("startup_opportunities").select("*");
+
+    if (stage) {
+      query = query.eq("stage", stage);
+    }
+
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getStartupOpportunity(startupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_opportunities")
+      .select("*")
+      .eq("id", startupId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createStartup(
+  creatorId: string,
+  startupName: string,
+  description?: string,
+  stage?: string,
+  lookingFor?: string[],
+  skillsNeeded?: string[],
+  equityOffered?: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_opportunities")
+      .insert({
+        creator_id: creatorId,
+        startup_name: startupName,
+        description,
+        stage: stage || "idea",
+        looking_for: lookingFor,
+        skills_needed: skillsNeeded,
+        equity_offered: equityOffered,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getStartupTeamMembers(startupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_team_members")
+      .select("*")
+      .eq("startup_id", startupId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function addStartupTeamMember(
+  startupId: string,
+  userId: string,
+  role: string,
+  equityPercent?: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_team_members")
+      .insert({
+        startup_id: startupId,
+        user_id: userId,
+        role,
+        equity_percent: equityPercent,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCoFounderMatches(filters?: {
+  industryInterest?: string;
+}) {
+  try {
+    let query = supabase
+      .from("cofounder_profiles")
+      .select("*")
+      .eq("looking_for_cofounders", true);
+
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getPitchCompetitions() {
+  try {
+    const { data, error } = await supabase
+      .from("pitch_competitions")
+      .select("*")
+      .order("competition_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function registerPitchCompetition(
+  competitionId: string,
+  teamLeadId: string,
+  pitchTitle?: string,
+  pitchVideoUrl?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("pitch_competition_registrations")
+      .insert({
+        competition_id: competitionId,
+        team_lead_id: teamLeadId,
+        pitch_title: pitchTitle,
+        pitch_video_url: pitchVideoUrl,
+        status: "registered",
+      })
       .select()
       .single();
 
