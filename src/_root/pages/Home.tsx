@@ -40,8 +40,8 @@ const Home = () => {
             <Loader />
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full ">
-              {posts?.documents?.map((post: Models.Document) => (
-                <li key={post.$id} className="flex justify-center w-full">
+              {posts?.documents?.map((post: Models.Document, index: number) => (
+                <li key={post.$id || index} className="flex justify-center w-full">
                   <PostCard post={post} />
                 </li>
               )) || []}
@@ -56,11 +56,11 @@ const Home = () => {
           <Loader />
         ) : (
           <ul className="grid 2xl:grid-cols-2 gap-6">
-            {creators?.documents.map((creator) => (
-              <li key={creator?.$id}>
+            {creators?.documents?.map((creator, index) => (
+              <li key={creator?.$id || index}>
                 <UserCard user={creator} />
               </li>
-            ))}
+            )) || []}
           </ul>
         )}
       </div>
