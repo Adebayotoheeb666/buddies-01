@@ -80,3 +80,26 @@ export type {
   RecruitmentApplication,
   NetworkDiscoveryCard,
 } from "./social.types";
+
+// Export campus life and services types (Phase 3)
+export type {
+  CampusLocation,
+  Classroom,
+  BuildingRoute,
+  DiningHall,
+  Menu,
+  MenuItem,
+  DiningWaitTime,
+  MealPlan,
+  DiningReview,
+  FoodReview,
+  LibraryBook,
+  BookCheckout,
+  StudyRoomBooking,
+  LibraryZone,
+  BookHold,
+  Facility,
+  FacilityEquipment,
+  FacilityBooking,
+  FacilityReview,
+} from "./campus.types";
