@@ -103,3 +103,33 @@ export type {
   FacilityBooking,
   FacilityReview,
 } from "./campus.types";
+
+// Export career development types (Phase 5)
+export type {
+  JobPosting,
+  JobApplication,
+  InternshipPosting,
+  ApplicationTracking,
+  CareerFair,
+  CareerFairCompany,
+  CareerFairMeeting,
+  UserPortfolio,
+  PortfolioProject,
+  SkillEndorsement,
+  AlumniProfile,
+  MentorshipPair,
+  MentorshipSession,
+  MentorshipFeedback,
+  CareerPath,
+  AlumniEvent,
+  AlumniNetwork,
+  AlumniNetworkMember,
+  ResearchOpportunity,
+  ResearchApplication,
+  ResearchProject,
+  StartupOpportunity,
+  StartupTeamMember,
+  CoFounderProfile,
+  PitchCompetition,
+  PitchCompetitionRegistration,
+} from "./career.types";
