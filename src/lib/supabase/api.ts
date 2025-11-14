@@ -35,6 +35,27 @@ import {
   RecruitmentPeriod,
   RecruitmentApplication,
 } from "@/types/social.types";
+import {
+  CampusLocation,
+  Classroom,
+  BuildingRoute,
+  DiningHall,
+  Menu,
+  MenuItem,
+  DiningWaitTime,
+  MealPlan,
+  DiningReview,
+  FoodReview,
+  LibraryBook,
+  BookCheckout,
+  StudyRoomBooking,
+  LibraryZone,
+  BookHold,
+  Facility,
+  FacilityEquipment,
+  FacilityBooking,
+  FacilityReview,
+} from "@/types/campus.types";
 
 // ============================================================
 // AUTH
