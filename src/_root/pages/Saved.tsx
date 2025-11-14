@@ -6,7 +6,7 @@ import { useGetCurrentUser } from "@/lib/react-query/queries";
 const Saved = () => {
   const { data: currentUser } = useGetCurrentUser();
 
-  const savePosts = currentUser?.save
+  const savePosts = (currentUser?.save || [])
     .map((savePost: Models.Document) => ({
       ...savePost.post,
       creator: {
