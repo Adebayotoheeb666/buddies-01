@@ -86,6 +86,26 @@ export const sidebarLinks = [
   },
   {
     imgURL: "/assets/icons/add-post.svg",
+    route: "/campus-map",
+    label: "Campus Map",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/dining",
+    label: "Dining",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/library",
+    label: "Library",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/facilities",
+    label: "Facilities",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
     route: "/clubs",
     label: "Clubs",
   },
