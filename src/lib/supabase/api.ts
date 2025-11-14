@@ -2195,3 +2195,773 @@ export async function getFacilityReviews(facilityId: string) {
     return [];
   }
 }
+
+// ============================================================
+// PHASE 5: CAREER SERVICES & JOB BOARD
+// ============================================================
+
+export async function getJobPostings(filters?: { jobType?: string; location?: string }) {
+  try {
+    let query = supabase.from("job_postings").select("*");
+
+    if (filters?.jobType) {
+      query = query.eq("job_type", filters.jobType);
+    }
+
+    if (filters?.location) {
+      query = query.ilike("location", `%${filters.location}%`);
+    }
+
+    const { data, error } = await query.order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getJobPosting(jobId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("job_postings")
+      .select("*")
+      .eq("id", jobId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function applyToJob(userId: string, jobId: string, resumeUrl?: string, coverLetter?: string) {
+  try {
+    const { data, error } = await supabase
+      .from("job_applications")
+      .insert({
+        applicant_id: userId,
+        job_posting_id: jobId,
+        resume_url: resumeUrl,
+        cover_letter: coverLetter,
+        status: "applied",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserJobApplications(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("job_applications")
+      .select("*")
+      .eq("applicant_id", userId)
+      .order("applied_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getInternshipPostings() {
+  try {
+    const { data, error } = await supabase
+      .from("internship_board")
+      .select("*")
+      .order("deadline", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getApplicationTracking(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("application_tracking")
+      .select("*")
+      .eq("user_id", userId)
+      .order("status_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createApplicationTracking(
+  userId: string,
+  companyName: string,
+  positionTitle: string,
+  status: string,
+  notes?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("application_tracking")
+      .insert({
+        user_id: userId,
+        company_name: companyName,
+        position_title: positionTitle,
+        status,
+        status_date: new Date().toISOString(),
+        notes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCareerFairs() {
+  try {
+    const { data, error } = await supabase
+      .from("career_fairs")
+      .select("*")
+      .order("event_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getCareerFairCompanies(fairId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("career_fair_companies")
+      .select("*")
+      .eq("career_fair_id", fairId)
+      .order("booth_number", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function scheduleCareerFairMeeting(userId: string, fairId: string, companyId: string, meetingTime: string) {
+  try {
+    const { data, error } = await supabase
+      .from("career_fair_meetings")
+      .insert({
+        career_fair_id: fairId,
+        student_id: userId,
+        company_id: companyId,
+        meeting_time: meetingTime,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserPortfolio(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_portfolios")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function updateUserPortfolio(
+  userId: string,
+  resumeUrl?: string,
+  portfolioUrl?: string,
+  linkedinUrl?: string,
+  githubUrl?: string,
+  personalWebsite?: string,
+  bio?: string
+) {
+  try {
+    const existing = await getUserPortfolio(userId);
+
+    if (existing) {
+      const { data, error } = await supabase
+        .from("user_portfolios")
+        .update({
+          resume_url: resumeUrl,
+          portfolio_url: portfolioUrl,
+          linkedin_url: linkedinUrl,
+          github_url: githubUrl,
+          personal_website: personalWebsite,
+          bio,
+        })
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    } else {
+      const { data, error } = await supabase
+        .from("user_portfolios")
+        .insert({
+          user_id: userId,
+          resume_url: resumeUrl,
+          portfolio_url: portfolioUrl,
+          linkedin_url: linkedinUrl,
+          github_url: githubUrl,
+          personal_website: personalWebsite,
+          bio,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPortfolioProjects(portfolioId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("portfolio_projects")
+      .select("*")
+      .eq("portfolio_id", portfolioId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function addPortfolioProject(
+  portfolioId: string,
+  title: string,
+  description?: string,
+  technologies?: string[],
+  projectUrl?: string,
+  imageUrl?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("portfolio_projects")
+      .insert({
+        portfolio_id: portfolioId,
+        title,
+        description,
+        technologies,
+        project_url: projectUrl,
+        image_url: imageUrl,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// PHASE 5: ALUMNI NETWORK & MENTORSHIP
+// ============================================================
+
+export async function getAlumniProfiles(filters?: { industry?: string; company?: string }) {
+  try {
+    let query = supabase.from("alumni_profiles").select("*");
+
+    if (filters?.industry) {
+      query = query.ilike("industry", `%${filters.industry}%`);
+    }
+
+    if (filters?.company) {
+      query = query.ilike("current_company", `%${filters.company}%`);
+    }
+
+    const { data, error } = await query.order("graduation_year", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAlumniProfile(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function requestMentorship(menteeId: string, mentorId: string, goal?: string) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_pairs")
+      .insert({
+        mentor_id: mentorId,
+        mentee_id: menteeId,
+        goal,
+        started_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserMentorships(userId: string, role: "mentor" | "mentee") {
+  try {
+    let query = supabase.from("mentorship_pairs").select("*");
+
+    if (role === "mentor") {
+      query = query.eq("mentor_id", userId);
+    } else {
+      query = query.eq("mentee_id", userId);
+    }
+
+    const { data, error } = await query.order("started_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function logMentorshipSession(pairId: string, topic?: string, notes?: string) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_sessions")
+      .insert({
+        pair_id: pairId,
+        session_date: new Date().toISOString(),
+        topic,
+        notes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getMentorshipSessions(pairId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_sessions")
+      .select("*")
+      .eq("pair_id", pairId)
+      .order("session_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createMentorshipFeedback(pairId: string, rating: number, feedbackText?: string) {
+  try {
+    const { data, error } = await supabase
+      .from("mentorship_feedback")
+      .insert({
+        pair_id: pairId,
+        rating,
+        feedback_text: feedbackText,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCareerPaths() {
+  try {
+    const { data, error } = await supabase
+      .from("career_paths")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAlumniEvents() {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_events")
+      .select("*")
+      .order("event_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAlumniNetworks() {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_networks")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function joinAlumniNetwork(networkId: string, alumniId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("alumni_network_members")
+      .insert({
+        network_id: networkId,
+        alumni_id: alumniId,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================================================
+// PHASE 5: RESEARCH & STARTUP OPPORTUNITIES
+// ============================================================
+
+export async function getResearchOpportunities() {
+  try {
+    const { data, error } = await supabase
+      .from("research_opportunities")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getResearchOpportunity(opportunityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("research_opportunities")
+      .select("*")
+      .eq("id", opportunityId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function applyToResearch(userId: string, opportunityId: string, cvUrl?: string, motivationStatement?: string) {
+  try {
+    const { data, error } = await supabase
+      .from("research_applications")
+      .insert({
+        opportunity_id: opportunityId,
+        applicant_id: userId,
+        cv_url: cvUrl,
+        motivation_statement: motivationStatement,
+        status: "applied",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserResearchApplications(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("research_applications")
+      .select("*")
+      .eq("applicant_id", userId)
+      .order("applied_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getStartupOpportunities(stage?: string) {
+  try {
+    let query = supabase.from("startup_opportunities").select("*");
+
+    if (stage) {
+      query = query.eq("stage", stage);
+    }
+
+    const { data, error } = await query.order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getStartupOpportunity(startupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_opportunities")
+      .select("*")
+      .eq("id", startupId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createStartup(
+  creatorId: string,
+  startupName: string,
+  description?: string,
+  stage?: string,
+  lookingFor?: string[],
+  skillsNeeded?: string[],
+  equityOffered?: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_opportunities")
+      .insert({
+        creator_id: creatorId,
+        startup_name: startupName,
+        description,
+        stage: stage || "idea",
+        looking_for: lookingFor,
+        skills_needed: skillsNeeded,
+        equity_offered: equityOffered,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getStartupTeamMembers(startupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_team_members")
+      .select("*")
+      .eq("startup_id", startupId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function addStartupTeamMember(startupId: string, userId: string, role: string, equityPercent?: number) {
+  try {
+    const { data, error } = await supabase
+      .from("startup_team_members")
+      .insert({
+        startup_id: startupId,
+        user_id: userId,
+        role,
+        equity_percent: equityPercent,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCoFounderMatches(filters?: { industryInterest?: string }) {
+  try {
+    let query = supabase
+      .from("cofounder_profiles")
+      .select("*")
+      .eq("looking_for_cofounders", true);
+
+    const { data, error } = await query.order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getPitchCompetitions() {
+  try {
+    const { data, error } = await supabase
+      .from("pitch_competitions")
+      .select("*")
+      .order("competition_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function registerPitchCompetition(
+  competitionId: string,
+  teamLeadId: string,
+  pitchTitle?: string,
+  pitchVideoUrl?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("pitch_competition_registrations")
+      .insert({
+        competition_id: competitionId,
+        team_lead_id: teamLeadId,
+        pitch_title: pitchTitle,
+        pitch_video_url: pitchVideoUrl,
+        status: "registered",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
