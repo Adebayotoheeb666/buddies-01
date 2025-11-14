@@ -42,7 +42,13 @@ export interface ApplicationTracking {
   job_posting_id?: string;
   company_name: string;
   position_title: string;
-  status: "applied" | "phone_screen" | "interview" | "offer" | "rejected" | "withdrawn";
+  status:
+    | "applied"
+    | "phone_screen"
+    | "interview"
+    | "offer"
+    | "rejected"
+    | "withdrawn";
   status_date: string;
   notes?: string;
   deadline_reminder: boolean;

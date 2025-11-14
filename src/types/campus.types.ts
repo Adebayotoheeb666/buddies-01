@@ -2,7 +2,13 @@
 export interface CampusLocation {
   id: string;
   name: string;
-  location_type: "building" | "classroom" | "cafe" | "library" | "gym" | "other";
+  location_type:
+    | "building"
+    | "classroom"
+    | "cafe"
+    | "library"
+    | "gym"
+    | "other";
   description?: string;
   latitude: number;
   longitude: number;
@@ -166,7 +172,12 @@ export interface BookHold {
 export interface Facility {
   id: string;
   name: string;
-  facility_type: "gym" | "sports_court" | "club_space" | "meeting_room" | "other";
+  facility_type:
+    | "gym"
+    | "sports_court"
+    | "club_space"
+    | "meeting_room"
+    | "other";
   location_id: string;
   capacity: number;
   hourly_rate?: number;

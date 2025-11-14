@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getCampusLocations, searchCampusLocations, getAllRoutes } from "@/lib/supabase/api";
+import {
+  getCampusLocations,
+  searchCampusLocations,
+  getAllRoutes,
+} from "@/lib/supabase/api";
 import { Loader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +50,9 @@ const CampusMap = () => {
   return (
     <div className="common-container">
       <div className="max-w-5xl w-full">
-        <h2 className="h3-bold md:h2-bold text-left w-full mb-4">Campus Map & Navigation</h2>
+        <h2 className="h3-bold md:h2-bold text-left w-full mb-4">
+          Campus Map & Navigation
+        </h2>
 
         {/* Search and Filter Section */}
         <div className="flex flex-col gap-4 mb-6">
@@ -65,8 +71,7 @@ const CampusMap = () => {
                 selectedLocationType === ""
                   ? "bg-purple-500 text-white"
                   : "bg-dark-3 text-light-2"
-              }`}
-            >
+              }`}>
               All Locations
             </Button>
             {locationTypes.map((type) => (
@@ -77,8 +82,7 @@ const CampusMap = () => {
                   selectedLocationType === type
                     ? "bg-purple-500 text-white"
                     : "bg-dark-3 text-light-2"
-                }`}
-              >
+                }`}>
                 {type}
               </Button>
             ))}
@@ -95,8 +99,7 @@ const CampusMap = () => {
                 selectedLocation === location.id
                   ? "bg-dark-2 border-purple-500"
                   : "bg-dark-3 border-dark-4 hover:border-purple-500"
-              }`}
-            >
+              }`}>
               <div className="flex justify-between items-start mb-2">
                 <h3 className="h4-bold text-light-1">{location.name}</h3>
                 <span className="text-xs bg-purple-500 px-2 py-1 rounded capitalize">
@@ -104,10 +107,14 @@ const CampusMap = () => {
                 </span>
               </div>
               {location.description && (
-                <p className="text-light-3 text-sm mb-2">{location.description}</p>
+                <p className="text-light-3 text-sm mb-2">
+                  {location.description}
+                </p>
               )}
               {location.address && (
-                <p className="text-light-4 text-xs mb-2">📍 {location.address}</p>
+                <p className="text-light-4 text-xs mb-2">
+                  📍 {location.address}
+                </p>
               )}
               {location.contact_info && (
                 <div className="text-light-4 text-xs space-y-1">
@@ -123,13 +130,17 @@ const CampusMap = () => {
               {/* Hours */}
               {location.hours_json && (
                 <div className="mt-3 pt-3 border-t border-dark-4">
-                  <p className="text-light-2 text-xs font-semibold mb-1">Hours</p>
+                  <p className="text-light-2 text-xs font-semibold mb-1">
+                    Hours
+                  </p>
                   <div className="text-light-4 text-xs space-y-1">
-                    {Object.entries(location.hours_json).map(([day, hours]: [string, any]) => (
-                      <p key={day}>
-                        {day}: {hours.opens} - {hours.closes}
-                      </p>
-                    ))}
+                    {Object.entries(location.hours_json).map(
+                      ([day, hours]: [string, any]) => (
+                        <p key={day}>
+                          {day}: {hours.opens} - {hours.closes}
+                        </p>
+                      )
+                    )}
                   </div>
                 </div>
               )}
@@ -147,7 +158,8 @@ const CampusMap = () => {
         {selectedLocation && routes && routes.length > 0 && (
           <div className="mt-8 p-4 rounded-lg bg-dark-3 border border-dark-4">
             <h3 className="h4-bold text-light-1 mb-4">
-              Routes from {filteredLocations?.find((l) => l.id === selectedLocation)?.name}
+              Routes from{" "}
+              {filteredLocations?.find((l) => l.id === selectedLocation)?.name}
             </h3>
             <div className="space-y-2">
               {routes
@@ -155,10 +167,13 @@ const CampusMap = () => {
                 .map((route) => (
                   <div key={route.id} className="p-3 bg-dark-4 rounded">
                     <p className="text-light-2 text-sm font-semibold">
-                      {route.distance_meters}m · {route.walking_time_minutes} min walk
+                      {route.distance_meters}m · {route.walking_time_minutes}{" "}
+                      min walk
                     </p>
                     {route.route_description && (
-                      <p className="text-light-3 text-sm mt-1">{route.route_description}</p>
+                      <p className="text-light-3 text-sm mt-1">
+                        {route.route_description}
+                      </p>
                     )}
                   </div>
                 ))}

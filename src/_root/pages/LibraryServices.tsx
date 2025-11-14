@@ -17,9 +17,9 @@ const LibraryServices = () => {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchAuthor, setSearchAuthor] = useState("");
   const [searchSubject, setSearchSubject] = useState("");
-  const [activeTab, setActiveTab] = useState<"search" | "checkouts" | "zones" | "study">(
-    "search"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "search" | "checkouts" | "zones" | "study"
+  >("search");
 
   const { data: books, isLoading: booksLoading } = useQuery({
     queryKey: ["library-books", searchTitle, searchAuthor, searchSubject],
@@ -56,7 +56,9 @@ const LibraryServices = () => {
   return (
     <div className="common-container">
       <div className="max-w-5xl w-full">
-        <h2 className="h3-bold md:h2-bold text-left w-full mb-6">Library Services</h2>
+        <h2 className="h3-bold md:h2-bold text-left w-full mb-6">
+          Library Services
+        </h2>
 
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-6 border-b border-dark-4">
@@ -68,9 +70,14 @@ const LibraryServices = () => {
                 activeTab === tab
                   ? "text-purple-500 border-b-2 border-purple-500"
                   : "text-light-3 hover:text-light-1"
-              }`}
-            >
-              {tab === "zones" ? "Zones" : tab === "checkouts" ? "My Books" : tab === "study" ? "Study Rooms" : "Search"}
+              }`}>
+              {tab === "zones"
+                ? "Zones"
+                : tab === "checkouts"
+                ? "My Books"
+                : tab === "study"
+                ? "Study Rooms"
+                : "Search"}
             </button>
           ))}
         </div>
@@ -107,24 +114,36 @@ const LibraryServices = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {books?.map((book) => (
-                  <div key={book.id} className="p-4 rounded-lg bg-dark-3 border border-dark-4">
+                  <div
+                    key={book.id}
+                    className="p-4 rounded-lg bg-dark-3 border border-dark-4">
                     <h3 className="h4-bold text-light-1 mb-2">{book.title}</h3>
                     <div className="space-y-2 text-sm">
-                      {book.author && <p className="text-light-3">Author: {book.author}</p>}
-                      {book.isbn && <p className="text-light-3">ISBN: {book.isbn}</p>}
-                      {book.published_year && (
-                        <p className="text-light-3">Published: {book.published_year}</p>
+                      {book.author && (
+                        <p className="text-light-3">Author: {book.author}</p>
                       )}
-                      {book.subject && <p className="text-light-3">Subject: {book.subject}</p>}
+                      {book.isbn && (
+                        <p className="text-light-3">ISBN: {book.isbn}</p>
+                      )}
+                      {book.published_year && (
+                        <p className="text-light-3">
+                          Published: {book.published_year}
+                        </p>
+                      )}
+                      {book.subject && (
+                        <p className="text-light-3">Subject: {book.subject}</p>
+                      )}
                       <div className="flex justify-between items-center pt-2 border-t border-dark-4 mt-2">
                         <p className="text-light-2">
-                          Available: <span className="font-bold">{book.available_copies}</span> /{" "}
-                          {book.total_copies}
+                          Available:{" "}
+                          <span className="font-bold">
+                            {book.available_copies}
+                          </span>{" "}
+                          / {book.total_copies}
                         </p>
                         <Button
                           disabled={book.available_copies === 0}
-                          className="bg-purple-500 text-white px-3 py-1 text-xs rounded"
-                        >
+                          className="bg-purple-500 text-white px-3 py-1 text-xs rounded">
                           {book.available_copies > 0 ? "Checkout" : "Hold"}
                         </Button>
                       </div>
@@ -136,7 +155,9 @@ const LibraryServices = () => {
 
             {books?.length === 0 && !booksLoading && (
               <div className="text-center py-12">
-                <p className="text-light-3">No books found matching your search</p>
+                <p className="text-light-3">
+                  No books found matching your search
+                </p>
               </div>
             )}
           </div>
@@ -149,25 +170,32 @@ const LibraryServices = () => {
             {checkouts && checkouts.length > 0 ? (
               <div className="space-y-3">
                 {checkouts.map((checkout) => (
-                  <div key={checkout.id} className="p-4 rounded-lg bg-dark-3 border border-dark-4">
+                  <div
+                    key={checkout.id}
+                    className="p-4 rounded-lg bg-dark-3 border border-dark-4">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <p className="font-semibold text-light-1">Book ID: {checkout.book_id}</p>
+                        <p className="font-semibold text-light-1">
+                          Book ID: {checkout.book_id}
+                        </p>
                         <p className="text-light-3 text-sm mt-1">
-                          Checked out: {new Date(checkout.checkout_date).toLocaleDateString()}
+                          Checked out:{" "}
+                          {new Date(
+                            checkout.checkout_date
+                          ).toLocaleDateString()}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-light-2 font-semibold">
-                          Due: {new Date(checkout.due_date).toLocaleDateString()}
+                          Due:{" "}
+                          {new Date(checkout.due_date).toLocaleDateString()}
                         </p>
                         <p
                           className={`text-xs mt-1 ${
                             new Date(checkout.due_date) < new Date()
                               ? "text-red-500"
                               : "text-green-500"
-                          }`}
-                        >
+                          }`}>
                           {new Date(checkout.due_date) < new Date()
                             ? "Overdue!"
                             : `${Math.ceil(
@@ -195,10 +223,17 @@ const LibraryServices = () => {
                 <h3 className="h4-bold text-light-1 mb-4">Book Holds</h3>
                 <div className="space-y-3">
                   {bookHolds.map((hold) => (
-                    <div key={hold.id} className="p-4 rounded-lg bg-dark-3 border border-dark-4">
-                      <p className="font-semibold text-light-1">Book ID: {hold.book_id}</p>
+                    <div
+                      key={hold.id}
+                      className="p-4 rounded-lg bg-dark-3 border border-dark-4">
+                      <p className="font-semibold text-light-1">
+                        Book ID: {hold.book_id}
+                      </p>
                       <p className="text-light-3 text-sm mt-1">
-                        Position in queue: <span className="font-bold">{hold.position_in_queue}</span>
+                        Position in queue:{" "}
+                        <span className="font-bold">
+                          {hold.position_in_queue}
+                        </span>
                       </p>
                     </div>
                   ))}
@@ -214,28 +249,35 @@ const LibraryServices = () => {
             <h3 className="h4-bold text-light-1 mb-4">Library Zones</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {zones?.map((zone) => (
-                <div key={zone.id} className="p-4 rounded-lg bg-dark-3 border border-dark-4">
+                <div
+                  key={zone.id}
+                  className="p-4 rounded-lg bg-dark-3 border border-dark-4">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="h4-bold text-light-1">{zone.zone_name}</h4>
                     <span className="text-xs px-2 py-1 rounded capitalize bg-purple-500">
                       {zone.noise_level}
                     </span>
                   </div>
-                  {zone.equipment_available && zone.equipment_available.length > 0 && (
-                    <div className="mt-3">
-                      <p className="text-light-3 text-sm mb-2">Equipment:</p>
-                      <div className="flex gap-2 flex-wrap">
-                        {zone.equipment_available.map((equipment) => (
-                          <span key={equipment} className="text-xs bg-dark-4 px-2 py-1 rounded">
-                            {equipment}
-                          </span>
-                        ))}
+                  {zone.equipment_available &&
+                    zone.equipment_available.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-light-3 text-sm mb-2">Equipment:</p>
+                        <div className="flex gap-2 flex-wrap">
+                          {zone.equipment_available.map((equipment) => (
+                            <span
+                              key={equipment}
+                              className="text-xs bg-dark-4 px-2 py-1 rounded">
+                              {equipment}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   {zone.opening_hours_json && (
                     <div className="mt-3 pt-3 border-t border-dark-4">
-                      <p className="text-light-2 text-xs font-semibold">Hours</p>
+                      <p className="text-light-2 text-xs font-semibold">
+                        Hours
+                      </p>
                       <div className="text-light-4 text-xs mt-1 space-y-1">
                         {Object.entries(zone.opening_hours_json).map(
                           ([day, hours]: [string, any]) => (
@@ -259,17 +301,25 @@ const LibraryServices = () => {
             <h3 className="h4-bold text-light-1 mb-4">Study Rooms</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {studyRooms?.map((room) => (
-                <div key={room.id} className="p-4 rounded-lg bg-dark-3 border border-dark-4">
-                  <h4 className="h4-bold text-light-1 mb-2">{room.room_name}</h4>
+                <div
+                  key={room.id}
+                  className="p-4 rounded-lg bg-dark-3 border border-dark-4">
+                  <h4 className="h4-bold text-light-1 mb-2">
+                    {room.room_name}
+                  </h4>
                   <div className="space-y-2 text-sm">
-                    <p className="text-light-3">Capacity: {room.capacity} people</p>
+                    <p className="text-light-3">
+                      Capacity: {room.capacity} people
+                    </p>
                     <p className="text-light-3">
                       {room.booking_date} · {room.start_time} - {room.end_time}
                     </p>
                     {room.amenities && room.amenities.length > 0 && (
                       <div className="flex gap-2 flex-wrap mt-2">
                         {room.amenities.map((amenity) => (
-                          <span key={amenity} className="text-xs bg-dark-4 px-2 py-1 rounded">
+                          <span
+                            key={amenity}
+                            className="text-xs bg-dark-4 px-2 py-1 rounded">
                             {amenity}
                           </span>
                         ))}

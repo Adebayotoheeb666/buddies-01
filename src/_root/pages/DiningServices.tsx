@@ -15,8 +15,12 @@ import { Button } from "@/components/ui/button";
 const DiningServices = () => {
   const { user } = useAuthContext();
   const [selectedHall, setSelectedHall] = useState<string | null>(null);
-  const [selectedMealType, setSelectedMealType] = useState<"breakfast" | "lunch" | "dinner">("lunch");
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+  const [selectedMealType, setSelectedMealType] = useState<
+    "breakfast" | "lunch" | "dinner"
+  >("lunch");
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   const { data: diningHalls, isLoading: hallsLoading } = useQuery({
     queryKey: ["dining-halls"],
@@ -60,7 +64,9 @@ const DiningServices = () => {
   return (
     <div className="common-container">
       <div className="max-w-5xl w-full">
-        <h2 className="h3-bold md:h2-bold text-left w-full mb-4">Dining Services</h2>
+        <h2 className="h3-bold md:h2-bold text-left w-full mb-4">
+          Dining Services
+        </h2>
 
         {/* Meal Plan Status */}
         {mealPlan && (
@@ -69,15 +75,21 @@ const DiningServices = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <p className="text-light-4 text-sm">Remaining Meals</p>
-                <p className="h4-bold text-light-1">{mealPlan.remaining_meals}</p>
+                <p className="h4-bold text-light-1">
+                  {mealPlan.remaining_meals}
+                </p>
               </div>
               <div>
                 <p className="text-light-4 text-sm">Remaining Swipes</p>
-                <p className="h4-bold text-light-1">{mealPlan.remaining_swipes}</p>
+                <p className="h4-bold text-light-1">
+                  {mealPlan.remaining_swipes}
+                </p>
               </div>
               <div>
                 <p className="text-light-4 text-sm">Balance</p>
-                <p className="h4-bold text-light-1">${mealPlan.balance.toFixed(2)}</p>
+                <p className="h4-bold text-light-1">
+                  ${mealPlan.balance.toFixed(2)}
+                </p>
               </div>
               <div>
                 <p className="text-light-4 text-sm">Expires</p>
@@ -99,8 +111,7 @@ const DiningServices = () => {
                 selectedHall === hall.id
                   ? "bg-dark-2 border-purple-500"
                   : "bg-dark-3 border-dark-4 hover:border-purple-500"
-              }`}
-            >
+              }`}>
               <h3 className="h4-bold text-light-1 mb-2">{hall.name}</h3>
               <div className="space-y-2 text-sm">
                 <p className="text-light-3">
@@ -124,7 +135,8 @@ const DiningServices = () => {
                   {waitTimes.wait_time_minutes} min
                 </p>
                 <p className="text-light-4 text-xs mt-1">
-                  Last reported: {new Date(waitTimes.reported_at).toLocaleTimeString()}
+                  Last reported:{" "}
+                  {new Date(waitTimes.reported_at).toLocaleTimeString()}
                 </p>
               </div>
             )}
@@ -149,8 +161,7 @@ const DiningServices = () => {
                       selectedMealType === mealType
                         ? "bg-purple-500 text-white"
                         : "bg-dark-3 text-light-2"
-                    }`}
-                  >
+                    }`}>
                     {mealType}
                   </Button>
                 ))}
@@ -160,15 +171,23 @@ const DiningServices = () => {
               {menuItems && menuItems.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {menuItems.map((item) => (
-                    <div key={item.id} className="p-3 rounded-lg bg-dark-3 border border-dark-4">
-                      <h4 className="font-semibold text-light-1">{item.item_name}</h4>
+                    <div
+                      key={item.id}
+                      className="p-3 rounded-lg bg-dark-3 border border-dark-4">
+                      <h4 className="font-semibold text-light-1">
+                        {item.item_name}
+                      </h4>
                       {item.description && (
-                        <p className="text-light-3 text-sm mt-1">{item.description}</p>
+                        <p className="text-light-3 text-sm mt-1">
+                          {item.description}
+                        </p>
                       )}
                       {item.dietary_info && item.dietary_info.length > 0 && (
                         <div className="flex gap-1 flex-wrap mt-2">
                           {item.dietary_info.map((info) => (
-                            <span key={info} className="text-xs bg-dark-4 px-2 py-1 rounded">
+                            <span
+                              key={info}
+                              className="text-xs bg-dark-4 px-2 py-1 rounded">
                               {info}
                             </span>
                           ))}
@@ -178,7 +197,9 @@ const DiningServices = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-light-3 text-center py-4">No menu items available</p>
+                <p className="text-light-3 text-center py-4">
+                  No menu items available
+                </p>
               )}
             </div>
 
@@ -202,7 +223,9 @@ const DiningServices = () => {
                         )}
                       </div>
                       {review.review_text && (
-                        <p className="text-light-2 text-sm">{review.review_text}</p>
+                        <p className="text-light-2 text-sm">
+                          {review.review_text}
+                        </p>
                       )}
                     </div>
                   ))}

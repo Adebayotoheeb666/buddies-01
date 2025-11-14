@@ -17,7 +17,9 @@ const FacilitiesBooking = () => {
   const { user } = useAuthContext();
   const [selectedFacility, setSelectedFacility] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState("");
-  const [bookingDate, setBookingDate] = useState(new Date().toISOString().split("T")[0]);
+  const [bookingDate, setBookingDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("11:00");
   const [numberOfPeople, setNumberOfPeople] = useState(1);
@@ -71,14 +73,22 @@ const FacilitiesBooking = () => {
     },
   });
 
-  const facilityTypes = ["gym", "sports_court", "club_space", "meeting_room", "other"];
+  const facilityTypes = [
+    "gym",
+    "sports_court",
+    "club_space",
+    "meeting_room",
+    "other",
+  ];
 
   if (facilitiesLoading) return <Loader />;
 
   return (
     <div className="common-container">
       <div className="max-w-5xl w-full">
-        <h2 className="h3-bold md:h2-bold text-left w-full mb-6">Facilities Booking</h2>
+        <h2 className="h3-bold md:h2-bold text-left w-full mb-6">
+          Facilities Booking
+        </h2>
 
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-6 border-b border-dark-4">
@@ -90,8 +100,7 @@ const FacilitiesBooking = () => {
                 activeTab === tab
                   ? "text-purple-500 border-b-2 border-purple-500"
                   : "text-light-3 hover:text-light-1"
-              }`}
-            >
+              }`}>
               {tab === "mybookings" ? "My Bookings" : "Browse & Book"}
             </button>
           ))}
@@ -102,7 +111,9 @@ const FacilitiesBooking = () => {
           <>
             {/* Filter */}
             <div className="mb-6">
-              <p className="text-light-3 text-sm mb-2">Filter by facility type:</p>
+              <p className="text-light-3 text-sm mb-2">
+                Filter by facility type:
+              </p>
               <div className="flex gap-2 flex-wrap">
                 <Button
                   onClick={() => setSelectedType("")}
@@ -110,8 +121,7 @@ const FacilitiesBooking = () => {
                     selectedType === ""
                       ? "bg-purple-500 text-white"
                       : "bg-dark-3 text-light-2"
-                  }`}
-                >
+                  }`}>
                   All Facilities
                 </Button>
                 {facilityTypes.map((type) => (
@@ -122,8 +132,7 @@ const FacilitiesBooking = () => {
                       selectedType === type
                         ? "bg-purple-500 text-white"
                         : "bg-dark-3 text-light-2"
-                    }`}
-                  >
+                    }`}>
                     {type}
                   </Button>
                 ))}
@@ -140,13 +149,16 @@ const FacilitiesBooking = () => {
                     selectedFacility === facility.id
                       ? "bg-dark-2 border-purple-500"
                       : "bg-dark-3 border-dark-4 hover:border-purple-500"
-                  }`}
-                >
+                  }`}>
                   <h3 className="h4-bold text-light-1 mb-2">{facility.name}</h3>
                   <div className="space-y-2 text-sm">
-                    <p className="text-light-3">Capacity: {facility.capacity}</p>
+                    <p className="text-light-3">
+                      Capacity: {facility.capacity}
+                    </p>
                     {facility.hourly_rate && (
-                      <p className="text-light-3">Rate: ${facility.hourly_rate}/hour</p>
+                      <p className="text-light-3">
+                        Rate: ${facility.hourly_rate}/hour
+                      </p>
                     )}
                     {facility.description && (
                       <p className="text-light-4">{facility.description}</p>
@@ -154,7 +166,9 @@ const FacilitiesBooking = () => {
                     {facility.amenities && facility.amenities.length > 0 && (
                       <div className="flex gap-1 flex-wrap mt-2">
                         {facility.amenities.slice(0, 3).map((amenity) => (
-                          <span key={amenity} className="text-xs bg-dark-4 px-2 py-1 rounded">
+                          <span
+                            key={amenity}
+                            className="text-xs bg-dark-4 px-2 py-1 rounded">
                             {amenity}
                           </span>
                         ))}
@@ -171,7 +185,9 @@ const FacilitiesBooking = () => {
                 {/* Equipment */}
                 {equipment && equipment.length > 0 && (
                   <div className="mb-6 p-4 rounded-lg bg-dark-3 border border-dark-4">
-                    <h3 className="h4-bold text-light-1 mb-3">Available Equipment</h3>
+                    <h3 className="h4-bold text-light-1 mb-3">
+                      Available Equipment
+                    </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                       {equipment.map((item) => (
                         <div key={item.id} className="p-2 rounded bg-dark-4">
@@ -189,7 +205,9 @@ const FacilitiesBooking = () => {
 
                 {/* Booking Form */}
                 <div className="mb-6 p-4 rounded-lg bg-purple-500/10 border border-purple-500">
-                  <h3 className="h4-bold text-light-1 mb-4">Book This Facility</h3>
+                  <h3 className="h4-bold text-light-1 mb-4">
+                    Book This Facility
+                  </h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -211,7 +229,9 @@ const FacilitiesBooking = () => {
                           type="number"
                           min="1"
                           value={numberOfPeople}
-                          onChange={(e) => setNumberOfPeople(parseInt(e.target.value))}
+                          onChange={(e) =>
+                            setNumberOfPeople(parseInt(e.target.value))
+                          }
                           className="rounded-lg bg-dark-3 border border-dark-4 text-white"
                         />
                       </div>
@@ -258,9 +278,10 @@ const FacilitiesBooking = () => {
                     <Button
                       onClick={() => bookingMutation.mutate()}
                       disabled={bookingMutation.isPending}
-                      className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold"
-                    >
-                      {bookingMutation.isPending ? "Submitting..." : "Submit Booking Request"}
+                      className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold">
+                      {bookingMutation.isPending
+                        ? "Submitting..."
+                        : "Submit Booking Request"}
                     </Button>
                   </div>
                 </div>
@@ -283,7 +304,9 @@ const FacilitiesBooking = () => {
                             </span>
                           </div>
                           {review.review_text && (
-                            <p className="text-light-2 text-sm">{review.review_text}</p>
+                            <p className="text-light-2 text-sm">
+                              {review.review_text}
+                            </p>
                           )}
                         </div>
                       ))}
@@ -302,12 +325,17 @@ const FacilitiesBooking = () => {
             {userBookings && userBookings.length > 0 ? (
               <div className="space-y-3">
                 {userBookings.map((booking) => (
-                  <div key={booking.id} className="p-4 rounded-lg bg-dark-3 border border-dark-4">
+                  <div
+                    key={booking.id}
+                    className="p-4 rounded-lg bg-dark-3 border border-dark-4">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <p className="font-semibold text-light-1">Facility ID: {booking.facility_id}</p>
+                        <p className="font-semibold text-light-1">
+                          Facility ID: {booking.facility_id}
+                        </p>
                         <p className="text-light-3 text-sm mt-1">
-                          {booking.booking_date} · {booking.start_time} - {booking.end_time}
+                          {booking.booking_date} · {booking.start_time} -{" "}
+                          {booking.end_time}
                         </p>
                       </div>
                       <span
@@ -317,14 +345,19 @@ const FacilitiesBooking = () => {
                             : booking.status === "pending"
                             ? "bg-yellow-500/20 text-yellow-400"
                             : "bg-red-500/20 text-red-400"
-                        }`}
-                      >
+                        }`}>
                         {booking.status}
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <p className="text-light-3">People: {booking.number_of_people}</p>
-                      {booking.purpose && <p className="text-light-3">Purpose: {booking.purpose}</p>}
+                      <p className="text-light-3">
+                        People: {booking.number_of_people}
+                      </p>
+                      {booking.purpose && (
+                        <p className="text-light-3">
+                          Purpose: {booking.purpose}
+                        </p>
+                      )}
                     </div>
                     {booking.status === "pending" && (
                       <Button className="bg-dark-4 text-light-2 px-3 py-1 text-xs rounded mt-3">
@@ -336,7 +369,9 @@ const FacilitiesBooking = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-light-3">No bookings yet. Start by browsing facilities!</p>
+                <p className="text-light-3">
+                  No bookings yet. Start by browsing facilities!
+                </p>
               </div>
             )}
           </div>

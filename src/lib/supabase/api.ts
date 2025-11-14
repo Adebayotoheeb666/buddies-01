@@ -715,7 +715,10 @@ export async function joinDepartmentNetwork(networkId: string, userId: string) {
   }
 }
 
-export async function leaveDepartmentNetwork(networkId: string, userId: string) {
+export async function leaveDepartmentNetwork(
+  networkId: string,
+  userId: string
+) {
   try {
     const { error } = await supabase
       .from("department_members")
@@ -731,7 +734,10 @@ export async function leaveDepartmentNetwork(networkId: string, userId: string) 
   }
 }
 
-export async function isUserInDepartmentNetwork(networkId: string, userId: string) {
+export async function isUserInDepartmentNetwork(
+  networkId: string,
+  userId: string
+) {
   try {
     const { data, error } = await supabase
       .from("department_members")
@@ -834,7 +840,11 @@ export async function createPoll(
   }
 }
 
-export async function votePoll(pollId: string, optionId: string, userId: string) {
+export async function votePoll(
+  pollId: string,
+  optionId: string,
+  userId: string
+) {
   try {
     const { data, error } = await supabase
       .from("poll_votes")
@@ -991,7 +1001,11 @@ export async function getMemeBoard() {
   }
 }
 
-export async function createMemePost(creatorId: string, imageUrl: string, caption: string) {
+export async function createMemePost(
+  creatorId: string,
+  imageUrl: string,
+  caption: string
+) {
   try {
     const { data, error } = await supabase
       .from("meme_posts")
@@ -1150,7 +1164,11 @@ export async function joinOrganization(organizationId: string, userId: string) {
   try {
     const { data, error } = await supabase
       .from("organization_members")
-      .insert({ organization_id: organizationId, user_id: userId, role: "member" })
+      .insert({
+        organization_id: organizationId,
+        user_id: userId,
+        role: "member",
+      })
       .select()
       .single();
 
@@ -1162,7 +1180,10 @@ export async function joinOrganization(organizationId: string, userId: string) {
   }
 }
 
-export async function leaveOrganization(organizationId: string, userId: string) {
+export async function leaveOrganization(
+  organizationId: string,
+  userId: string
+) {
   try {
     const { error } = await supabase
       .from("organization_members")
@@ -1178,7 +1199,10 @@ export async function leaveOrganization(organizationId: string, userId: string) 
   }
 }
 
-export async function isUserInOrganization(organizationId: string, userId: string) {
+export async function isUserInOrganization(
+  organizationId: string,
+  userId: string
+) {
   try {
     const { data, error } = await supabase
       .from("organization_members")
@@ -1299,7 +1323,11 @@ export async function createEvent(
 // EVENT RSVP
 // ============================================================
 
-export async function rsvpEvent(eventId: string, userId: string, status: string) {
+export async function rsvpEvent(
+  eventId: string,
+  userId: string,
+  status: string
+) {
   try {
     const { data, error } = await supabase
       .from("event_rsvps")
@@ -1397,7 +1425,11 @@ export async function createRecruitmentPeriod(
   try {
     const { data, error } = await supabase
       .from("recruitment_periods")
-      .insert({ organization_id: organizationId, start_date: startDate, end_date: endDate })
+      .insert({
+        organization_id: organizationId,
+        start_date: startDate,
+        end_date: endDate,
+      })
       .select()
       .single();
 
@@ -1426,11 +1458,17 @@ export async function getRecruitmentPeriods(organizationId: string) {
   }
 }
 
-export async function applyToRecruitment(recruitmentPeriodId: string, applicantId: string) {
+export async function applyToRecruitment(
+  recruitmentPeriodId: string,
+  applicantId: string
+) {
   try {
     const { data, error } = await supabase
       .from("recruitment_applications")
-      .insert({ recruitment_period_id: recruitmentPeriodId, applicant_id: applicantId })
+      .insert({
+        recruitment_period_id: recruitmentPeriodId,
+        applicant_id: applicantId,
+      })
       .select()
       .single();
 
@@ -1458,7 +1496,10 @@ export async function getRecruitmentApplications(recruitmentPeriodId: string) {
   }
 }
 
-export async function updateApplicationStatus(applicationId: string, status: string) {
+export async function updateApplicationStatus(
+  applicationId: string,
+  status: string
+) {
   try {
     const { data, error } = await supabase
       .from("recruitment_applications")
@@ -1546,7 +1587,10 @@ export async function getClassrooms() {
   }
 }
 
-export async function searchClassrooms(buildingName?: string, roomNumber?: string) {
+export async function searchClassrooms(
+  buildingName?: string,
+  roomNumber?: string
+) {
   try {
     let query = supabase.from("classrooms").select("*");
 
@@ -1558,7 +1602,9 @@ export async function searchClassrooms(buildingName?: string, roomNumber?: strin
       query = query.ilike("room_number", `%${roomNumber}%`);
     }
 
-    const { data, error } = await query.order("building_name", { ascending: true });
+    const { data, error } = await query.order("building_name", {
+      ascending: true,
+    });
 
     if (error) throw error;
 
@@ -1589,9 +1635,7 @@ export async function getRoute(fromLocationId: string, toLocationId: string) {
 
 export async function getAllRoutes() {
   try {
-    const { data, error } = await supabase
-      .from("building_routes")
-      .select("*");
+    const { data, error } = await supabase.from("building_routes").select("*");
 
     if (error) throw error;
 
@@ -1677,7 +1721,11 @@ export async function getMenuItems(menuId: string) {
   }
 }
 
-export async function reportWaitTime(diningHallId: string, userId: string, waitTimeMinutes: number) {
+export async function reportWaitTime(
+  diningHallId: string,
+  userId: string,
+  waitTimeMinutes: number
+) {
   try {
     const { data, error } = await supabase
       .from("dining_wait_times")
@@ -1786,7 +1834,11 @@ export async function getDiningReviews(diningHallId: string) {
 // PHASE 3: LIBRARY SYSTEM
 // ============================================================
 
-export async function getLibraryBooks(filters?: { title?: string; author?: string; subject?: string }) {
+export async function getLibraryBooks(filters?: {
+  title?: string;
+  author?: string;
+  subject?: string;
+}) {
   try {
     let query = supabase.from("library_books").select("*");
 
@@ -1830,7 +1882,11 @@ export async function getLibraryBook(bookId: string) {
   }
 }
 
-export async function checkoutBook(userId: string, bookId: string, dueDate: string) {
+export async function checkoutBook(
+  userId: string,
+  bookId: string,
+  dueDate: string
+) {
   try {
     const { data, error } = await supabase
       .from("book_checkouts")
@@ -2017,7 +2073,10 @@ export async function getUserBookHolds(userId: string) {
 // PHASE 3: FACILITIES BOOKING
 // ============================================================
 
-export async function getFacilities(filters?: { facilityType?: string; location?: string }) {
+export async function getFacilities(filters?: {
+  facilityType?: string;
+  location?: string;
+}) {
   try {
     let query = supabase.from("facilities").select("*");
 
@@ -2136,7 +2195,10 @@ export async function getFacilityBookings(facilityId: string) {
   }
 }
 
-export async function updateFacilityBookingStatus(bookingId: string, status: string) {
+export async function updateFacilityBookingStatus(
+  bookingId: string,
+  status: string
+) {
   try {
     const { data, error } = await supabase
       .from("facility_bookings")
@@ -2200,7 +2262,10 @@ export async function getFacilityReviews(facilityId: string) {
 // PHASE 5: CAREER SERVICES & JOB BOARD
 // ============================================================
 
-export async function getJobPostings(filters?: { jobType?: string; location?: string }) {
+export async function getJobPostings(filters?: {
+  jobType?: string;
+  location?: string;
+}) {
   try {
     let query = supabase.from("job_postings").select("*");
 
@@ -2212,7 +2277,9 @@ export async function getJobPostings(filters?: { jobType?: string; location?: st
       query = query.ilike("location", `%${filters.location}%`);
     }
 
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
 
@@ -2240,7 +2307,12 @@ export async function getJobPosting(jobId: string) {
   }
 }
 
-export async function applyToJob(userId: string, jobId: string, resumeUrl?: string, coverLetter?: string) {
+export async function applyToJob(
+  userId: string,
+  jobId: string,
+  resumeUrl?: string,
+  coverLetter?: string
+) {
   try {
     const { data, error } = await supabase
       .from("job_applications")
@@ -2374,7 +2446,12 @@ export async function getCareerFairCompanies(fairId: string) {
   }
 }
 
-export async function scheduleCareerFairMeeting(userId: string, fairId: string, companyId: string, meetingTime: string) {
+export async function scheduleCareerFairMeeting(
+  userId: string,
+  fairId: string,
+  companyId: string,
+  meetingTime: string
+) {
   try {
     const { data, error } = await supabase
       .from("career_fair_meetings")
@@ -2517,7 +2594,10 @@ export async function addPortfolioProject(
 // PHASE 5: ALUMNI NETWORK & MENTORSHIP
 // ============================================================
 
-export async function getAlumniProfiles(filters?: { industry?: string; company?: string }) {
+export async function getAlumniProfiles(filters?: {
+  industry?: string;
+  company?: string;
+}) {
   try {
     let query = supabase.from("alumni_profiles").select("*");
 
@@ -2529,7 +2609,9 @@ export async function getAlumniProfiles(filters?: { industry?: string; company?:
       query = query.ilike("current_company", `%${filters.company}%`);
     }
 
-    const { data, error } = await query.order("graduation_year", { ascending: false });
+    const { data, error } = await query.order("graduation_year", {
+      ascending: false,
+    });
 
     if (error) throw error;
 
@@ -2557,7 +2639,11 @@ export async function getAlumniProfile(userId: string) {
   }
 }
 
-export async function requestMentorship(menteeId: string, mentorId: string, goal?: string) {
+export async function requestMentorship(
+  menteeId: string,
+  mentorId: string,
+  goal?: string
+) {
   try {
     const { data, error } = await supabase
       .from("mentorship_pairs")
@@ -2578,7 +2664,10 @@ export async function requestMentorship(menteeId: string, mentorId: string, goal
   }
 }
 
-export async function getUserMentorships(userId: string, role: "mentor" | "mentee") {
+export async function getUserMentorships(
+  userId: string,
+  role: "mentor" | "mentee"
+) {
   try {
     let query = supabase.from("mentorship_pairs").select("*");
 
@@ -2588,7 +2677,9 @@ export async function getUserMentorships(userId: string, role: "mentor" | "mente
       query = query.eq("mentee_id", userId);
     }
 
-    const { data, error } = await query.order("started_at", { ascending: false });
+    const { data, error } = await query.order("started_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
 
@@ -2599,7 +2690,11 @@ export async function getUserMentorships(userId: string, role: "mentor" | "mente
   }
 }
 
-export async function logMentorshipSession(pairId: string, topic?: string, notes?: string) {
+export async function logMentorshipSession(
+  pairId: string,
+  topic?: string,
+  notes?: string
+) {
   try {
     const { data, error } = await supabase
       .from("mentorship_sessions")
@@ -2637,7 +2732,11 @@ export async function getMentorshipSessions(pairId: string) {
   }
 }
 
-export async function createMentorshipFeedback(pairId: string, rating: number, feedbackText?: string) {
+export async function createMentorshipFeedback(
+  pairId: string,
+  rating: number,
+  feedbackText?: string
+) {
   try {
     const { data, error } = await supabase
       .from("mentorship_feedback")
@@ -2761,7 +2860,12 @@ export async function getResearchOpportunity(opportunityId: string) {
   }
 }
 
-export async function applyToResearch(userId: string, opportunityId: string, cvUrl?: string, motivationStatement?: string) {
+export async function applyToResearch(
+  userId: string,
+  opportunityId: string,
+  cvUrl?: string,
+  motivationStatement?: string
+) {
   try {
     const { data, error } = await supabase
       .from("research_applications")
@@ -2808,7 +2912,9 @@ export async function getStartupOpportunities(stage?: string) {
       query = query.eq("stage", stage);
     }
 
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
 
@@ -2884,7 +2990,12 @@ export async function getStartupTeamMembers(startupId: string) {
   }
 }
 
-export async function addStartupTeamMember(startupId: string, userId: string, role: string, equityPercent?: number) {
+export async function addStartupTeamMember(
+  startupId: string,
+  userId: string,
+  role: string,
+  equityPercent?: number
+) {
   try {
     const { data, error } = await supabase
       .from("startup_team_members")
@@ -2905,14 +3016,18 @@ export async function addStartupTeamMember(startupId: string, userId: string, ro
   }
 }
 
-export async function getCoFounderMatches(filters?: { industryInterest?: string }) {
+export async function getCoFounderMatches(filters?: {
+  industryInterest?: string;
+}) {
   try {
     let query = supabase
       .from("cofounder_profiles")
       .select("*")
       .eq("looking_for_cofounders", true);
 
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) throw error;
 
