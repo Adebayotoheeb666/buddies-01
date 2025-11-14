@@ -1446,3 +1446,724 @@ export async function updateApplicationStatus(applicationId: string, status: str
     console.log(error);
   }
 }
+
+// ============================================================
+// PHASE 3: CAMPUS MAP & NAVIGATION
+// ============================================================
+
+export async function getCampusLocations() {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getCampusLocation(locationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .eq("id", locationId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function searchCampusLocations(searchTerm: string) {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .ilike("name", `%${searchTerm}%`)
+      .or(`description.ilike.%${searchTerm}%`)
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getClassrooms() {
+  try {
+    const { data, error } = await supabase
+      .from("classrooms")
+      .select("*")
+      .order("building_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function searchClassrooms(buildingName?: string, roomNumber?: string) {
+  try {
+    let query = supabase.from("classrooms").select("*");
+
+    if (buildingName) {
+      query = query.ilike("building_name", `%${buildingName}%`);
+    }
+
+    if (roomNumber) {
+      query = query.ilike("room_number", `%${roomNumber}%`);
+    }
+
+    const { data, error } = await query.order("building_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getRoute(fromLocationId: string, toLocationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("building_routes")
+      .select("*")
+      .eq("from_location_id", fromLocationId)
+      .eq("to_location_id", toLocationId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getAllRoutes() {
+  try {
+    const { data, error } = await supabase
+      .from("building_routes")
+      .select("*");
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 3: DINING SERVICES
+// ============================================================
+
+export async function getDiningHalls() {
+  try {
+    const { data, error } = await supabase
+      .from("dining_halls")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getDiningHall(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_halls")
+      .select("*")
+      .eq("id", diningHallId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getMenus(diningHallId: string, menuDate?: string) {
+  try {
+    let query = supabase
+      .from("menus")
+      .select("*")
+      .eq("dining_hall_id", diningHallId);
+
+    if (menuDate) {
+      query = query.eq("menu_date", menuDate);
+    }
+
+    const { data, error } = await query.order("meal_type", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getMenuItems(menuId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("menu_items")
+      .select("*")
+      .eq("menu_id", menuId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function reportWaitTime(diningHallId: string, userId: string, waitTimeMinutes: number) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_wait_times")
+      .insert({
+        dining_hall_id: diningHallId,
+        reported_by_id: userId,
+        wait_time_minutes: waitTimeMinutes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getLatestWaitTime(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_wait_times")
+      .select("*")
+      .eq("dining_hall_id", diningHallId)
+      .order("reported_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getUserMealPlan(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("meal_plans")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function createDiningReview(
+  diningHallId: string,
+  reviewerId: string,
+  rating: number,
+  reviewText?: string,
+  foodQualityRating?: number,
+  cleanlinessRating?: number,
+  serviceRating?: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_reviews")
+      .insert({
+        dining_hall_id: diningHallId,
+        reviewer_id: reviewerId,
+        rating,
+        review_text: reviewText,
+        food_quality_rating: foodQualityRating,
+        cleanliness_rating: cleanlinessRating,
+        service_rating: serviceRating,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getDiningReviews(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_reviews")
+      .select("*")
+      .eq("dining_hall_id", diningHallId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 3: LIBRARY SYSTEM
+// ============================================================
+
+export async function getLibraryBooks(filters?: { title?: string; author?: string; subject?: string }) {
+  try {
+    let query = supabase.from("library_books").select("*");
+
+    if (filters?.title) {
+      query = query.ilike("title", `%${filters.title}%`);
+    }
+
+    if (filters?.author) {
+      query = query.ilike("author", `%${filters.author}%`);
+    }
+
+    if (filters?.subject) {
+      query = query.ilike("subject", `%${filters.subject}%`);
+    }
+
+    const { data, error } = await query.order("title", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getLibraryBook(bookId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("library_books")
+      .select("*")
+      .eq("id", bookId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function checkoutBook(userId: string, bookId: string, dueDate: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_checkouts")
+      .insert({
+        user_id: userId,
+        book_id: bookId,
+        checkout_date: new Date().toISOString(),
+        due_date: dueDate,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserCheckouts(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_checkouts")
+      .select("*")
+      .eq("user_id", userId)
+      .is("return_date", null)
+      .order("due_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function returnBook(checkoutId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_checkouts")
+      .update({ return_date: new Date().toISOString() })
+      .eq("id", checkoutId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getStudyRooms() {
+  try {
+    const { data, error } = await supabase
+      .from("study_room_bookings")
+      .select("*")
+      .order("room_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function bookStudyRoom(
+  userId: string,
+  roomName: string,
+  bookingDate: string,
+  startTime: string,
+  endTime: string,
+  capacity: number,
+  amenities?: string[]
+) {
+  try {
+    const { data, error } = await supabase
+      .from("study_room_bookings")
+      .insert({
+        user_id: userId,
+        room_name: roomName,
+        booking_date: bookingDate,
+        start_time: startTime,
+        end_time: endTime,
+        capacity,
+        amenities,
+        status: "confirmed",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserStudyRoomBookings(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("study_room_bookings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("booking_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getLibraryZones() {
+  try {
+    const { data, error } = await supabase
+      .from("library_zones")
+      .select("*")
+      .order("zone_name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function placeBookHold(userId: string, bookId: string) {
+  try {
+    const existingHolds = await supabase
+      .from("book_holds")
+      .select("*")
+      .eq("book_id", bookId)
+      .order("created_at", { ascending: false });
+
+    const position = (existingHolds.data?.length || 0) + 1;
+
+    const { data, error } = await supabase
+      .from("book_holds")
+      .insert({
+        user_id: userId,
+        book_id: bookId,
+        position_in_queue: position,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserBookHolds(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("book_holds")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// ============================================================
+// PHASE 3: FACILITIES BOOKING
+// ============================================================
+
+export async function getFacilities(filters?: { facilityType?: string; location?: string }) {
+  try {
+    let query = supabase.from("facilities").select("*");
+
+    if (filters?.facilityType) {
+      query = query.eq("facility_type", filters.facilityType);
+    }
+
+    const { data, error } = await query.order("name", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getFacility(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facilities")
+      .select("*")
+      .eq("id", facilityId)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getFacilityEquipment(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_equipment")
+      .select("*")
+      .eq("facility_id", facilityId);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function bookFacility(
+  userId: string,
+  facilityId: string,
+  bookingDate: string,
+  startTime: string,
+  endTime: string,
+  numberOfPeople: number,
+  purpose?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .insert({
+        user_id: userId,
+        facility_id: facilityId,
+        booking_date: bookingDate,
+        start_time: startTime,
+        end_time: endTime,
+        number_of_people: numberOfPeople,
+        purpose,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserFacilityBookings(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .select("*")
+      .eq("user_id", userId)
+      .order("booking_date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getFacilityBookings(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .select("*")
+      .eq("facility_id", facilityId)
+      .order("booking_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function updateFacilityBookingStatus(bookingId: string, status: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .update({ status })
+      .eq("id", bookingId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function createFacilityReview(
+  facilityId: string,
+  reviewerId: string,
+  rating: number,
+  reviewText?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_reviews")
+      .insert({
+        facility_id: facilityId,
+        reviewer_id: reviewerId,
+        rating,
+        review_text: reviewText,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getFacilityReviews(facilityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_reviews")
+      .select("*")
+      .eq("facility_id", facilityId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
