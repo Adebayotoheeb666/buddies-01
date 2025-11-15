@@ -141,7 +141,10 @@ export async function createUserAccount(user: INewUser) {
       throw authError || new Error("Failed to create auth account");
     }
 
-    // Create user profile in database
+    // Wait a moment for the auth user to be ready
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Create user profile in database using the authenticated session
     const { data: userData, error: dbError } = await supabase
       .from("users")
       .insert({
@@ -156,8 +159,18 @@ export async function createUserAccount(user: INewUser) {
       .single();
 
     if (dbError) {
+      console.error("User profile insert error:", {
+        message: dbError.message,
+        code: dbError.code,
+        details: dbError.details,
+        hint: dbError.hint,
+      });
       // Clean up auth account if user creation fails
-      await supabase.auth.admin.deleteUser(authData.user.id);
+      try {
+        await supabase.auth.admin.deleteUser(authData.user.id);
+      } catch (deleteError) {
+        console.error("Cleanup failed:", deleteError);
+      }
       throw new Error(dbError.message || "Failed to create user profile");
     }
 
