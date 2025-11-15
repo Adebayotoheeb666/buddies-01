@@ -47,3 +47,8 @@ export { default as CampusPolls } from "./CampusPolls";
 export { default as MemeBoard } from "./MemeBoard";
 export { default as AnonymousConfessions } from "./AnonymousConfessions";
 export { default as NetworkDiscovery } from "./NetworkDiscovery";
+
+// Phase 6 - Safety, Wellness & Administrative Features
+export { default as Safety } from "./Safety";
+export { default as Wellness } from "./Wellness";
+export { default as ModerationDashboard } from "./ModerationDashboard";

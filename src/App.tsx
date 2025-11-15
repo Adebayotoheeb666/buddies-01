@@ -41,6 +41,9 @@ import {
   JobBoard,
   AlumniNetwork,
   ResearchStartups,
+  Safety,
+  Wellness,
+  ModerationDashboard,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
@@ -145,6 +148,11 @@ const App = () => {
           <Route path="/jobs" element={<JobBoard />} />
           <Route path="/alumni" element={<AlumniNetwork />} />
           <Route path="/research-startups" element={<ResearchStartups />} />
+
+          {/* Phase 6 Safety, Wellness & Administrative Features */}
+          <Route path="/safety" element={<Safety />} />
+          <Route path="/wellness" element={<Wellness />} />
+          <Route path="/moderation" element={<ModerationDashboard />} />
         </Route>
       </Routes>
 
