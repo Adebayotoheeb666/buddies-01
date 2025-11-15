@@ -18,7 +18,7 @@ export const CreateGroupChatModal = ({
   const [isPublic, setIsPublic] = useState(false);
   const [iconUrl, setIconUrl] = useState("");
 
-  const { mutate: createGroup, isPending } = useCreateGroupChat();
+  const { mutate: createGroup } = useCreateGroupChat();
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,9 +40,9 @@ export const CreateGroupChatModal = ({
     );
   };
 
-  const handleIconUpload = (urls: string[]) => {
-    if (urls.length > 0) {
-      setIconUrl(urls[0]);
+  const handleIconUpload = (files: File[]) => {
+    if (files.length > 0) {
+      setIconUrl(URL.createObjectURL(files[0]));
     }
   };
 
@@ -65,7 +65,10 @@ export const CreateGroupChatModal = ({
                   className="h-12 w-12 rounded-full object-cover"
                 />
               )}
-              <FileUploader onUpload={handleIconUpload} maxFiles={1} />
+              <FileUploader
+                fieldChange={handleIconUpload}
+                mediaUrl={iconUrl}
+              />
             </div>
           </div>
 
@@ -115,9 +118,9 @@ export const CreateGroupChatModal = ({
           <div className="flex gap-2 pt-4">
             <Button
               type="submit"
-              disabled={isPending || !groupName.trim()}
+              disabled={!groupName.trim()}
               className="shad-button_primary flex-1">
-              {isPending ? "Creating..." : "Create Group"}
+              Create Group
             </Button>
             <Button
               type="button"

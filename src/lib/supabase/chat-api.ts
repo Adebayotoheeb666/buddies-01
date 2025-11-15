@@ -2,11 +2,9 @@ import { supabase } from "./config";
 import {
   IChat,
   IGroupChat,
-  IGroupChatMember,
   IMessage,
   IReadReceipt,
   IMessageReaction,
-  ITypingIndicator,
   ChatWithLastMessage,
   GroupChatWithMembers,
 } from "@/types/chat.types";

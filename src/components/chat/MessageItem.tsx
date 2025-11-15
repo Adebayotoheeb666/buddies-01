@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { IMessage, IMessageReaction } from "@/types/chat.types";
+import { IMessage } from "@/types/chat.types";
 import { useUserContext } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
 import {
   useDeleteMessage,
   useEditMessage,
@@ -132,7 +131,7 @@ export const MessageItem = ({ message, onReply }: MessageItemProps) => {
           <div className="flex flex-wrap gap-1 mt-1">
             {Array.from(
               new Map(message.reactions.map((r) => [r.emoji, r])).entries()
-            ).map(([emoji, reaction]) => {
+            ).map(([emoji]) => {
               const count =
                 message.reactions?.filter((r) => r.emoji === emoji).length || 0;
               const userReacted = message.reactions?.some(

@@ -74,7 +74,7 @@ const NoteLibrary = () => {
               </p>
 
               <div className="flex gap-2 flex-wrap mb-4">
-                {note.tags.slice(0, 2).map((tag) => (
+                {note.tags.slice(0, 2).map((tag: string) => (
                   <span
                     key={tag}
                     className="text-tiny-medium bg-dark-4 px-3 py-1 rounded-full">

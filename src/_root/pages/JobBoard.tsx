@@ -167,7 +167,7 @@ const JobBoard = () => {
                           Requirements:
                         </p>
                         <div className="flex gap-2 flex-wrap">
-                          {job.requirements.slice(0, 3).map((req, idx) => (
+                          {job.requirements.slice(0, 3).map((req: string, idx: number) => (
                             <span
                               key={idx}
                               className="text-xs bg-dark-4 px-2 py-1 rounded">
@@ -239,7 +239,7 @@ const JobBoard = () => {
                         Preferred Majors:
                       </p>
                       <div className="flex gap-2 flex-wrap">
-                        {internship.major_preferences.map((major, idx) => (
+                        {internship.major_preferences.map((major: string, idx: number) => (
                           <span
                             key={idx}
                             className="text-xs bg-dark-4 px-2 py-1 rounded">

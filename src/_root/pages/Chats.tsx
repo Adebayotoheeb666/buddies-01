@@ -8,10 +8,12 @@ import { GroupChatDetail } from "@/components/chat/GroupChatDetail";
 import { CreateGroupChatModal } from "@/components/chat/CreateGroupChatModal";
 import { ChatWithLastMessage, GroupChatWithMembers } from "@/types/chat.types";
 import Loader from "@/components/shared/Loader";
+import { useAuthContext } from "@/context/AuthContext";
 
 type ChatTab = "private" | "groups";
 
 export const Chats = () => {
+  const { isAuthenticated } = useAuthContext();
   const [activeTab, setActiveTab] = useState<ChatTab>("private");
   const [selectedChat, setSelectedChat] = useState<ChatWithLastMessage | null>(
     null
@@ -21,9 +23,9 @@ export const Chats = () => {
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
 
   const { data: privateChats = [], isLoading: loadingPrivate } =
-    useGetPrivateChats();
+    useGetPrivateChats(isAuthenticated);
   const { data: groupChats = [], isLoading: loadingGroups } =
-    useGetGroupChats();
+    useGetGroupChats(isAuthenticated);
 
   if (selectedChat) {
     return (

@@ -1,4 +1,4 @@
-import { OrganizationEvent, EventRSVP } from "@/types/social.types";
+import { OrganizationEvent } from "@/types/social.types";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
 import { rsvpEvent, getUserEventRSVP } from "@/lib/supabase/api";

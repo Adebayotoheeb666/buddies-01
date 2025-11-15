@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  useGetTutoringProfiles,
-  useGetUserById,
-} from "@/lib/react-query/queries";
+import { useGetTutoringProfiles } from "@/lib/react-query/queries";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
 
@@ -23,7 +20,7 @@ const TutoringBrowser = () => {
   const formatAvailability = (availability: any) => {
     if (!availability) return [];
     return Object.entries(availability)
-      .map(([day, times]: [string, any]) => `${day}`)
+      .map(([day]: [string, any]) => `${day}`)
       .slice(0, 3);
   };
 
@@ -98,7 +95,7 @@ const TutoringBrowser = () => {
               <div className="mb-4">
                 <p className="text-light-3 text-tiny-medium mb-2">Subjects:</p>
                 <div className="flex gap-2 flex-wrap">
-                  {tutor.subjects_tutored.map((subject) => (
+                  {(tutor.subjects_tutored as string[]).map((subject: string) => (
                     <span
                       key={subject}
                       className="text-tiny-medium bg-dark-4 px-3 py-1 rounded-full">

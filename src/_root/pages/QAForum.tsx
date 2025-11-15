@@ -15,7 +15,7 @@ const QAForum = () => {
             height={36}
             alt="add"
           />
-          <h2 className="h3-bold md:h2-bold">Q&A Forum</h2>
+          <h2 className="h3-bold md:h2-bold">Q&amp;A Forum</h2>
         </div>
         <button className="shad-button_primary">Ask Question</button>
       </div>
@@ -26,7 +26,8 @@ const QAForum = () => {
         {questions.map((question) => (
           <div
             key={question.id}
-            className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7 cursor-pointer hover:bg-dark-3 transition">
+            className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7 cursor-pointer hover:bg-dark-3 transition"
+          >
             <div className="flex gap-4">
               <div className="flex flex-col items-center gap-2 text-center">
                 <div className="flex items-center justify-center w-12 h-12 bg-primary-500/20 rounded">
@@ -50,10 +51,11 @@ const QAForum = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-3">
-                  {question.tags.map((tag, idx) => (
+                  {(question.tags as string[]).map((tag: string, idx: number) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 bg-dark-3 text-light-3 rounded text-tiny font-medium">
+                      className="px-2 py-1 bg-dark-3 text-light-3 rounded text-tiny font-medium"
+                    >
                       {tag}
                     </span>
                   ))}

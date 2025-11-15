@@ -10,8 +10,7 @@ const CourseCommunity = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { data: course, isLoading: courseLoading } = useGetCourseById(courseId);
-  const { data: assignmentsData, isLoading: assignmentsLoading } =
-    useGetCourseAssignments(courseId);
+  const { data: assignmentsData } = useGetCourseAssignments(courseId);
 
   const assignments = assignmentsData?.documents || [];
   const courseNotes = mockSharedNotes.filter((n) => n.course_id === courseId);

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { IChat, ChatWithLastMessage } from "@/types/chat.types";
+import { ChatWithLastMessage } from "@/types/chat.types";
 import { useUserContext } from "@/context/AuthContext";
 import {
   useGetPrivateChatMessages,
@@ -49,7 +49,7 @@ export const ChatDetail = ({ chat, onClose }: ChatDetailProps) => {
           table: "messages",
           filter: `chat_id=eq.${chat.id}`,
         },
-        (payload) => {
+        () => {
           // Messages are automatically fetched by React Query
         }
       )

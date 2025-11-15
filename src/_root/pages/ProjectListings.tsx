@@ -14,7 +14,7 @@ const ProjectListings = () => {
   const filteredProjects = selectedSkill
     ? projects.filter((p) =>
         p.required_skills.some(
-          (s) =>
+          (s: string) =>
             s.toLowerCase().includes(selectedSkill.toLowerCase()) ||
             selectedSkill.toLowerCase().includes(s.toLowerCase())
         )
@@ -99,7 +99,7 @@ const ProjectListings = () => {
                 Required Skills:
               </p>
               <div className="flex gap-2 flex-wrap">
-                {project.required_skills.map((skill) => (
+                {project.required_skills.map((skill: string) => (
                   <span
                     key={skill}
                     className="text-tiny-medium bg-dark-4 px-3 py-1 rounded-full">
@@ -119,7 +119,7 @@ const ProjectListings = () => {
               <div>
                 <p className="text-light-3 text-tiny-medium">Due Date</p>
                 <p className="text-light-1 text-small-medium">
-                  {new Date(project.due_date).toLocaleDateString()}
+                  {project.due_date ? new Date(project.due_date as string).toLocaleDateString() : "N/A"}
                 </p>
               </div>
               <div>

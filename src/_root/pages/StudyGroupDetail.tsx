@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetStudyGroupById } from "@/lib/react-query/queries";
-import { mockStudyGroups, mockUsers } from "@/lib/mockData/phase1MockData";
+import { mockUsers } from "@/lib/mockData/phase1MockData";
 import Loader from "@/components/shared/Loader";
 import { useState } from "react";
 

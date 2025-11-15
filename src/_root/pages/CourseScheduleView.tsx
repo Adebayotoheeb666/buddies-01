@@ -24,12 +24,12 @@ const CourseScheduleView = () => {
 
   const getCoursesInTimeSlot = (day: string, hour: string) => {
     return courses.filter((course) => {
-      const schedule = course.schedule_json;
-      const dayMatch = schedule.days.some(
-        (d) => d === day || d === day.slice(0, 3)
+      const schedule = course?.schedule_json;
+      const dayMatch = schedule?.days?.some(
+        (d: string) => d === day || d === (day as string).slice(0, 3)
       );
-      const startHour = schedule.startTime.split(":")[0];
-      const endHour = schedule.endTime.split(":")[0];
+      const startHour = schedule?.startTime ? schedule.startTime.split(":")[0] : "0";
+      const endHour = schedule?.endTime ? schedule.endTime.split(":")[0] : "0";
       const currentHour = parseInt(hour);
       return (
         dayMatch &&
@@ -88,13 +88,15 @@ const CourseScheduleView = () => {
                       const coursesAtSlot = getCoursesInTimeSlot(day, time);
                       return (
                         <td key={`${day}-${time}`} className="p-2 text-center">
-                          {coursesAtSlot.map((course) => (
-                            <div
-                              key={course.id}
-                              className="bg-primary-500/20 text-primary-400 rounded px-2 py-1 text-tiny font-semibold">
-                              {course.course_code}
-                            </div>
-                          ))}
+                          {coursesAtSlot.map((course) =>
+                            course ? (
+                              <div
+                                key={course.id}
+                                className="bg-primary-500/20 text-primary-400 rounded px-2 py-1 text-tiny font-semibold">
+                                {course.course_code}
+                              </div>
+                            ) : null
+                          )}
                         </td>
                       );
                     })}
@@ -106,32 +108,34 @@ const CourseScheduleView = () => {
 
           {/* Course List */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {courses.map((course) => (
-              <div
-                key={course.id}
-                className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7">
-                <h3 className="h3-bold mb-2">{course.course_code}</h3>
-                <p className="text-light-3 text-small-medium mb-3">
-                  {course.course_name}
-                </p>
-                <div className="space-y-2 text-small-regular text-light-2">
-                  <p>
-                    <span className="text-light-4">Time:</span>{" "}
-                    {course.schedule_json.days.join(", ")} •{" "}
-                    {course.schedule_json.startTime} -{" "}
-                    {course.schedule_json.endTime}
+            {courses?.map((course) =>
+              course ? (
+                <div
+                  key={course.id}
+                  className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7">
+                  <h3 className="h3-bold mb-2">{course.course_code}</h3>
+                  <p className="text-light-3 text-small-medium mb-3">
+                    {course.course_name}
                   </p>
-                  <p>
-                    <span className="text-light-4">Location:</span>{" "}
-                    {course.location}
-                  </p>
-                  <p>
-                    <span className="text-light-4">Professor:</span>{" "}
-                    {course.professor}
-                  </p>
+                  <div className="space-y-2 text-small-regular text-light-2">
+                    <p>
+                      <span className="text-light-4">Time:</span>{" "}
+                      {course.schedule_json?.days?.join(", ")} •{" "}
+                      {course.schedule_json?.startTime} -{" "}
+                      {course.schedule_json?.endTime}
+                    </p>
+                    <p>
+                      <span className="text-light-4">Location:</span>{" "}
+                      {course.location}
+                    </p>
+                    <p>
+                      <span className="text-light-4">Professor:</span>{" "}
+                      {course.professor}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ) : null
+            )}
           </div>
         </>
       )}

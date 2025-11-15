@@ -51,7 +51,7 @@ const AlumniNetwork = () => {
     enabled: !!user?.id,
   });
 
-  const { data: mySessions, refetch: refetchSessions } = useQuery({
+  const { data: mySessions } = useQuery({
     queryKey: ["mentorship-sessions", myMentorships?.[0]?.id],
     queryFn: () => getMentorshipSessions(myMentorships?.[0]?.id!),
     enabled: !!myMentorships?.[0]?.id,
@@ -142,25 +142,22 @@ const AlumniNetwork = () => {
                           Industry: {alumnus.industry}
                         </p>
                       )}
-                      {alumnus.expertise_areas &&
-                        alumnus.expertise_areas.length > 0 && (
-                          <div className="mt-2">
-                            <p className="text-light-2 text-xs font-semibold mb-1">
-                              Expertise:
-                            </p>
-                            <div className="flex gap-1 flex-wrap">
-                              {alumnus.expertise_areas
-                                .slice(0, 3)
-                                .map((area, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="text-xs bg-dark-4 px-2 py-1 rounded">
-                                    {area}
-                                  </span>
-                                ))}
-                            </div>
+                      {alumnus.expertise_areas && alumnus.expertise_areas.length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-light-2 text-xs font-semibold mb-1">
+                            Expertise:
+                          </p>
+                          <div className="flex gap-1 flex-wrap">
+                            {alumnus.expertise_areas
+                              .slice(0, 3)
+                              .map((area: any, idx: number) => (
+                                <span key={idx} className="text-xs bg-dark-4 px-2 py-1 rounded">
+                                  {area}
+                                </span>
+                              ))}
                           </div>
-                        )}
+                        </div>
+                      )}
                     </div>
                     {alumnus.willing_to_mentor && (
                       <div className="mt-3 pt-3 border-t border-dark-4">
@@ -202,7 +199,7 @@ const AlumniNetwork = () => {
                       Key Milestones:
                     </p>
                     <div className="space-y-1">
-                      {path.key_milestones.map((milestone, idx) => (
+                      {path.key_milestones.map((milestone: any, idx: number) => (
                         <p key={idx} className="text-light-4 text-sm">
                           ✓ {milestone}
                         </p>

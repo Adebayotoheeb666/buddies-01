@@ -18,13 +18,13 @@ export const PrivateMessageModal = ({
   onSuccess,
 }: PrivateMessageModalProps) => {
   const [message, setMessage] = useState("");
-  const { mutate: createChat, isPending } = useGetOrCreatePrivateChat();
+  const { mutate: createChat } = useGetOrCreatePrivateChat();
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
 
     createChat(userId, {
-      onSuccess: (chat) => {
+      onSuccess: () => {
         setMessage("");
         onSuccess?.();
         onClose();
@@ -59,9 +59,9 @@ export const PrivateMessageModal = ({
           <div className="flex gap-2">
             <Button
               type="submit"
-              disabled={isPending || !message.trim()}
+              disabled={!message.trim()}
               className="shad-button_primary flex-1">
-              {isPending ? "Sending..." : "Send Message"}
+              Send Message
             </Button>
             <Button
               type="button"

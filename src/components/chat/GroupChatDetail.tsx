@@ -72,7 +72,7 @@ export const GroupChatDetail = ({
           table: "messages",
           filter: `group_chat_id=eq.${groupChat.id}`,
         },
-        (payload) => {
+        () => {
           // Messages are automatically fetched by React Query
         }
       )

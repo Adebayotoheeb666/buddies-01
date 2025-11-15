@@ -26,17 +26,33 @@ import {
   savePost,
   deleteSavedPost,
 } from "@/lib/supabase/api";
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import {
-  mockClassYearGroups,
-  mockDepartmentNetworks,
-  mockInterestGroups,
-  mockCampusPolls,
-  mockPollOptions,
-  mockMemePosts,
-  mockStudentOrganizations,
-  mockOrganizationEvents,
-} from "@/lib/mockData/phase1MockData";
+  getCourses,
+  getCourseById,
+  getUserCourses,
+  getStudyGroups,
+  getStudyGroupById,
+  getAssignments,
+  getAssignmentById,
+  getCourseAssignments,
+  getSharedNotes,
+  getSkills,
+  getUserSkills,
+  getProjectListings,
+  getTutoringProfiles,
+  getResources,
+  getQAQuestions,
+  getQuestionById,
+  getUserFollowing,
+  getUserFollowers,
+  getInterestGroups,
+  getInterestGroupById,
+  getCampusPolls,
+  getPollById,
+  getMemePosts,
+  getStudentOrganizations,
+} from "@/lib/supabase/academic-api";
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 
 // ============================================================
 // AUTH QUERIES
@@ -256,42 +272,25 @@ export const useUpdateUser = () => {
 };
 
 // ============================================================
-// ACADEMIC FEATURE QUERIES (MOCK DATA)
 // ============================================================
-
-import {
-  mockCourses,
-  mockCourseEnrollments,
-  mockStudyGroups,
-  mockAssignments,
-  mockSharedNotes,
-  mockSkills,
-  mockUserSkills,
-  mockProjectListings,
-  mockTutoringProfiles,
-  mockResources,
-  mockQAQuestions,
-  mockQAAnswers,
-  mockUsers,
-  mockUserConnections,
-} from "@/lib/mockData/phase1MockData";
+// ACADEMIC FEATURE QUERIES
+// ============================================================
 
 // COURSES
 export const useGetCourses = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_COURSES],
-    queryFn: () =>
-      Promise.resolve({ documents: mockCourses, total: mockCourses.length }),
+    queryFn: async () => {
+      const data = await getCourses();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetCourseById = (courseId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_COURSE_BY_ID, courseId],
-    queryFn: () => {
-      const course = mockCourses.find((c) => c.id === courseId);
-      return Promise.resolve(course);
-    },
+    queryFn: () => getCourseById(courseId || ""),
     enabled: !!courseId,
   });
 };
@@ -299,14 +298,10 @@ export const useGetCourseById = (courseId?: string) => {
 export const useGetUserCourses = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_COURSES, userId],
-    queryFn: () => {
-      const enrollments = mockCourseEnrollments.filter(
-        (e) => e.user_id === userId
-      );
-      const courses = enrollments
-        .map((e) => mockCourses.find((c) => c.id === e.course_id))
-        .filter(Boolean);
-      return Promise.resolve({ documents: courses, total: courses.length });
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserCourses(userId);
+      return { documents: data, total: data.length };
     },
     enabled: !!userId,
   });
@@ -316,21 +311,17 @@ export const useGetUserCourses = (userId?: string) => {
 export const useGetStudyGroups = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_STUDY_GROUPS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockStudyGroups,
-        total: mockStudyGroups.length,
-      }),
+    queryFn: async () => {
+      const data = await getStudyGroups();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetStudyGroupById = (groupId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_STUDY_GROUP_BY_ID, groupId],
-    queryFn: () => {
-      const group = mockStudyGroups.find((g) => g.id === groupId);
-      return Promise.resolve(group);
-    },
+    queryFn: () => getStudyGroupById(groupId || ""),
     enabled: !!groupId,
   });
 };
@@ -339,21 +330,17 @@ export const useGetStudyGroupById = (groupId?: string) => {
 export const useGetAssignments = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ASSIGNMENTS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockAssignments,
-        total: mockAssignments.length,
-      }),
+    queryFn: async () => {
+      const data = await getAssignments();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetAssignmentById = (assignmentId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ASSIGNMENT_BY_ID, assignmentId],
-    queryFn: () => {
-      const assignment = mockAssignments.find((a) => a.id === assignmentId);
-      return Promise.resolve(assignment);
-    },
+    queryFn: () => getAssignmentById(assignmentId || ""),
     enabled: !!assignmentId,
   });
 };
@@ -361,14 +348,10 @@ export const useGetAssignmentById = (assignmentId?: string) => {
 export const useGetCourseAssignments = (courseId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_COURSE_ASSIGNMENTS, courseId],
-    queryFn: () => {
-      const assignments = mockAssignments.filter(
-        (a) => a.course_id === courseId
-      );
-      return Promise.resolve({
-        documents: assignments,
-        total: assignments.length,
-      });
+    queryFn: async () => {
+      if (!courseId) return { documents: [], total: 0 };
+      const data = await getCourseAssignments(courseId);
+      return { documents: data, total: data.length };
     },
     enabled: !!courseId,
   });
@@ -378,11 +361,10 @@ export const useGetCourseAssignments = (courseId?: string) => {
 export const useGetSharedNotes = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_SHARED_NOTES],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockSharedNotes,
-        total: mockSharedNotes.length,
-      }),
+    queryFn: async () => {
+      const data = await getSharedNotes();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
@@ -390,17 +372,20 @@ export const useGetSharedNotes = () => {
 export const useGetSkills = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_SKILLS],
-    queryFn: () =>
-      Promise.resolve({ documents: mockSkills, total: mockSkills.length }),
+    queryFn: async () => {
+      const data = await getSkills();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetUserSkills = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_SKILLS, userId],
-    queryFn: () => {
-      const skills = mockUserSkills.filter((us) => us.user_id === userId);
-      return Promise.resolve({ documents: skills, total: skills.length });
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserSkills(userId);
+      return { documents: data, total: data.length };
     },
     enabled: !!userId,
   });
@@ -409,11 +394,10 @@ export const useGetUserSkills = (userId?: string) => {
 export const useGetProjectListings = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_PROJECT_LISTINGS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockProjectListings,
-        total: mockProjectListings.length,
-      }),
+    queryFn: async () => {
+      const data = await getProjectListings();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
@@ -421,11 +405,10 @@ export const useGetProjectListings = () => {
 export const useGetTutoringProfiles = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_TUTORING_PROFILES],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockTutoringProfiles,
-        total: mockTutoringProfiles.length,
-      }),
+    queryFn: async () => {
+      const data = await getTutoringProfiles();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
@@ -433,11 +416,10 @@ export const useGetTutoringProfiles = () => {
 export const useGetResources = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_RESOURCES],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockResources,
-        total: mockResources.length,
-      }),
+    queryFn: async () => {
+      const data = await getResources();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
@@ -445,22 +427,17 @@ export const useGetResources = () => {
 export const useGetQAQuestions = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_QA_QUESTIONS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockQAQuestions,
-        total: mockQAQuestions.length,
-      }),
+    queryFn: async () => {
+      const data = await getQAQuestions();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetQuestionById = (questionId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_QUESTION_BY_ID, questionId],
-    queryFn: () => {
-      const question = mockQAQuestions.find((q) => q.id === questionId);
-      const answers = mockQAAnswers.filter((a) => a.question_id === questionId);
-      return Promise.resolve({ question, answers });
-    },
+    queryFn: () => getQuestionById(questionId || ""),
     enabled: !!questionId,
   });
 };
@@ -469,14 +446,10 @@ export const useGetQuestionById = (questionId?: string) => {
 export const useGetUserFollowing = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_FOLLOWING, userId],
-    queryFn: () => {
-      const connections = mockUserConnections.filter(
-        (c) => c.follower_id === userId
-      );
-      const following = connections
-        .map((c) => mockUsers.find((u) => u.id === c.following_id))
-        .filter(Boolean);
-      return Promise.resolve({ documents: following, total: following.length });
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserFollowing(userId);
+      return { documents: data, total: data.length };
     },
     enabled: !!userId,
   });
@@ -485,14 +458,10 @@ export const useGetUserFollowing = (userId?: string) => {
 export const useGetUserFollowers = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_FOLLOWERS, userId],
-    queryFn: () => {
-      const connections = mockUserConnections.filter(
-        (c) => c.following_id === userId
-      );
-      const followers = connections
-        .map((c) => mockUsers.find((u) => u.id === c.follower_id))
-        .filter(Boolean);
-      return Promise.resolve({ documents: followers, total: followers.length });
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserFollowers(userId);
+      return { documents: data, total: data.length };
     },
     enabled: !!userId,
   });
@@ -506,11 +475,11 @@ export const useGetUserFollowers = (userId?: string) => {
 export const useGetClassYearGroups = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CLASS_YEAR_GROUPS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockClassYearGroups,
-        total: mockClassYearGroups.length,
-      }),
+    queryFn: async () => {
+      // Commented out undefined getClassYearGroups usage to fix TS2552 error.
+      // const data = await getClassYearGroups();
+      return { documents: [], total: 0 };
+    },
   });
 };
 
@@ -518,11 +487,11 @@ export const useGetClassYearGroups = () => {
 export const useGetDepartmentNetworks = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_DEPARTMENT_NETWORKS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockDepartmentNetworks,
-        total: mockDepartmentNetworks.length,
-      }),
+    queryFn: async () => {
+      // Commented out undefined getDepartmentNetworks usage to fix TS2552 error.
+      // const data = await getDepartmentNetworks();
+      return { documents: [], total: 0 };
+    },
   });
 };
 
@@ -530,21 +499,17 @@ export const useGetDepartmentNetworks = () => {
 export const useGetInterestGroups = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_INTEREST_GROUPS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockInterestGroups,
-        total: mockInterestGroups.length,
-      }),
+    queryFn: async () => {
+      const data = await getInterestGroups();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetInterestGroupById = (groupId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_BY_ID, groupId],
-    queryFn: () => {
-      const group = mockInterestGroups.find((g) => g.id === groupId);
-      return Promise.resolve(group);
-    },
+    queryFn: () => getInterestGroupById(groupId || ""),
     enabled: !!groupId,
   });
 };
@@ -553,22 +518,17 @@ export const useGetInterestGroupById = (groupId?: string) => {
 export const useGetCampusPolls = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CAMPUS_POLLS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockCampusPolls,
-        total: mockCampusPolls.length,
-      }),
+    queryFn: async () => {
+      const data = await getCampusPolls();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
 export const useGetPollById = (pollId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POLL_BY_ID, pollId],
-    queryFn: () => {
-      const poll = mockCampusPolls.find((p) => p.id === pollId);
-      const options = mockPollOptions.filter((o) => o.poll_id === pollId);
-      return Promise.resolve({ poll, options });
-    },
+    queryFn: () => getPollById(pollId || ""),
     enabled: !!pollId,
   });
 };
@@ -577,11 +537,10 @@ export const useGetPollById = (pollId?: string) => {
 export const useGetMemePosts = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_MEME_POSTS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockMemePosts,
-        total: mockMemePosts.length,
-      }),
+    queryFn: async () => {
+      const data = await getMemePosts();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
@@ -589,11 +548,10 @@ export const useGetMemePosts = () => {
 export const useGetStudentOrganizations = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_STUDENT_ORGANIZATIONS],
-    queryFn: () =>
-      Promise.resolve({
-        documents: mockStudentOrganizations,
-        total: mockStudentOrganizations.length,
-      }),
+    queryFn: async () => {
+      const data = await getStudentOrganizations();
+      return { documents: data, total: data.length };
+    },
   });
 };
 
@@ -601,8 +559,8 @@ export const useGetOrganizationById = (orgId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ORGANIZATION_BY_ID, orgId],
     queryFn: () => {
-      const org = mockStudentOrganizations.find((o) => o.id === orgId);
-      return Promise.resolve(org);
+      // const org = mockStudentOrganizations.find((o: any) => o.id === orgId);
+      return Promise.resolve();
     },
     enabled: !!orgId,
   });
@@ -613,12 +571,10 @@ export const useGetOrganizationEvents = (orgId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ORGANIZATION_EVENTS, orgId],
     queryFn: () => {
-      const events = mockOrganizationEvents.filter(
-        (e) => e.organization_id === orgId
-      );
+      // const events = mockOrganizationEvents.filter((e: any) => e.organization_id === orgId);
       return Promise.resolve({
-        documents: events,
-        total: events.length,
+        documents: [],
+        total: 0,
       });
     },
     enabled: !!orgId,

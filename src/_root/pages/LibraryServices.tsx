@@ -263,10 +263,8 @@ const LibraryServices = () => {
                       <div className="mt-3">
                         <p className="text-light-3 text-sm mb-2">Equipment:</p>
                         <div className="flex gap-2 flex-wrap">
-                          {zone.equipment_available.map((equipment) => (
-                            <span
-                              key={equipment}
-                              className="text-xs bg-dark-4 px-2 py-1 rounded">
+                          {zone.equipment_available.map((equipment: string) => (
+                            <span key={equipment} className="bg-dark-4 px-2 py-1 rounded text-xs">
                               {equipment}
                             </span>
                           ))}
@@ -316,10 +314,8 @@ const LibraryServices = () => {
                     </p>
                     {room.amenities && room.amenities.length > 0 && (
                       <div className="flex gap-2 flex-wrap mt-2">
-                        {room.amenities.map((amenity) => (
-                          <span
-                            key={amenity}
-                            className="text-xs bg-dark-4 px-2 py-1 rounded">
+                        {room.amenities.map((amenity: string) => (
+                          <span key={amenity} className="bg-dark-4 px-2 py-1 rounded text-xs">
                             {amenity}
                           </span>
                         ))}
