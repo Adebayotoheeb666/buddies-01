@@ -1,4 +1,4 @@
-import { useState } from "react";
+import LeftSidebar from "@/components/shared/LeftSidebar";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -31,10 +31,15 @@ const MobileMenu = ({ isOpen, setIsOpen }: MobileMenuProps) => {
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 md:hidden z-30"
-          onClick={() => setIsOpen(false)}
-        />
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 md:hidden z-30"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="fixed left-0 top-0 h-full w-4/5 bg-dark-2 z-40 overflow-y-auto">
+            <LeftSidebar isMobile onLinkClick={() => setIsOpen(false)} />
+          </div>
+        </>
       )}
     </>
   );

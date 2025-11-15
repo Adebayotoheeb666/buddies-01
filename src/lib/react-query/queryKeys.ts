@@ -51,4 +51,21 @@ export enum QUERY_KEYS {
   // Q&A KEYS
   GET_QA_QUESTIONS = "getQAQuestions",
   GET_QUESTION_BY_ID = "getQuestionById",
+
+  // CLASS YEAR GROUPS
+  GET_CLASS_YEAR_GROUPS = "getClassYearGroups",
+  // DEPARTMENT NETWORKS
+  GET_DEPARTMENT_NETWORKS = "getDepartmentNetworks",
+  // INTEREST GROUPS
+  GET_INTEREST_GROUPS = "getInterestGroups",
+  GET_INTEREST_GROUP_BY_ID = "getInterestGroupById",
+  // CAMPUS POLLS
+  GET_CAMPUS_POLLS = "getCampusPolls",
+  GET_POLL_BY_ID = "getPollById",
+  // MEME POSTS
+  GET_MEME_POSTS = "getMemePosts",
+  // STUDENT ORGANIZATIONS
+  GET_STUDENT_ORGANIZATIONS = "getStudentOrganizations",
+  GET_ORGANIZATION_BY_ID = "getOrganizationById",
+  GET_ORGANIZATION_EVENTS = "getOrganizationEvents",
 }
