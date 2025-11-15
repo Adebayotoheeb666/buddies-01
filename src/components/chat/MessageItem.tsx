@@ -151,7 +151,7 @@ export const MessageItem = ({ message, onReply }: MessageItemProps) => {
         )}
 
         <div className="flex gap-1 mt-1 text-xs text-light-4">
-          <span>{formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}</span>
+          <span>{formatTimeAgo(message.created_at)}</span>
         </div>
       </div>
 
