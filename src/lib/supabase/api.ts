@@ -351,10 +351,12 @@ export async function getAccount() {
 
 export async function getCurrentUser() {
   try {
-    const {
-      data: { user: authUser },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { data, error: authError } = await retryWithBackoff(
+      () => supabase.auth.getUser(),
+      3,
+      200
+    );
+    const { user: authUser } = data;
 
     if (authError) {
       logErrorDetails("getCurrentUser - Auth error details:", authError);
