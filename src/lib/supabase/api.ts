@@ -279,21 +279,13 @@ export async function getAccount() {
     } = await supabase.auth.getUser();
 
     if (error) {
-      console.error("getAccount - Auth error:", {
-        message: error.message || "Unknown auth error",
-        status: error.status,
-        code: (error as any).code,
-      });
+      console.error("getAccount - Auth error details:", serializeError(error));
       throw error;
     }
 
     return user;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("getAccount - Error:", {
-      message: errorMessage,
-      error: error,
-    });
+    console.error("getAccount - Error details:", serializeError(error));
     return null;
   }
 }
