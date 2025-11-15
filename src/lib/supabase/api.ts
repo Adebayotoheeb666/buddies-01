@@ -244,7 +244,7 @@ export async function createUserAccount(user: INewUser) {
       .single();
 
     if (dbError) {
-      console.error("User profile insert error details:", serializeError(dbError));
+      logErrorDetails("User profile insert error details:", dbError);
       throw new Error(dbError.message || "Failed to create user profile");
     }
 
