@@ -140,6 +140,11 @@ const App = () => {
 
           {/* Phase 4 Social Networking - Network Discovery */}
           <Route path="/network" element={<NetworkDiscovery />} />
+
+          {/* Phase 5 Career Development & Professional Growth */}
+          <Route path="/jobs" element={<JobBoard />} />
+          <Route path="/alumni" element={<AlumniNetwork />} />
+          <Route path="/research-startups" element={<ResearchStartups />} />
         </Route>
       </Routes>
 
