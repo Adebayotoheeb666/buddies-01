@@ -208,13 +208,7 @@ export async function createUserAccount(user: INewUser) {
       .single();
 
     if (dbError) {
-      console.error("User profile insert error:", {
-        message: dbError.message || "Unknown database error",
-        code: dbError.code || "UNKNOWN",
-        details: dbError.details || null,
-        hint: (dbError as any).hint || null,
-        status: (dbError as any).status || null,
-      });
+      console.error("User profile insert error details:", serializeError(dbError));
       throw new Error(dbError.message || "Failed to create user profile");
     }
 
