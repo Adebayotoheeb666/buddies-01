@@ -5,8 +5,14 @@ import { Button } from "../ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { useSignOutAccount } from "@/lib/react-query/queries";
 import { ChatNotificationBadge } from "../chat/ChatNotificationBadge";
+import MobileMenu from "./MobileMenu";
 
-const Topbar = () => {
+interface TopbarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+}
+
+const Topbar = ({ sidebarOpen, setSidebarOpen }: TopbarProps) => {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const { mutate: signOut, isSuccess } = useSignOutAccount();
@@ -18,15 +24,18 @@ const Topbar = () => {
   return (
     <section className="topbar">
       <div className="flex-between py-4 px-5">
-        <Link to="/" className="flex gap-3 items-center">
-          <img
-            src="/assets/images/logo.svg"
-            alt="logo"
-            width={36}
-            height={36}
-          />
-          <span className="h3-bold text-primary-500">Buddies</span>
-        </Link>
+        <div className="flex gap-3 items-center">
+          <MobileMenu isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+          <Link to="/" className="flex gap-3 items-center">
+            <img
+              src="/assets/images/logo.svg"
+              alt="logo"
+              width={36}
+              height={36}
+            />
+            <span className="h3-bold text-primary-500 hidden xs:block">Buddies</span>
+          </Link>
+        </div>
 
         <div className="flex gap-4">
           <ChatNotificationBadge />
