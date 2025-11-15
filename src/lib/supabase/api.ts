@@ -158,13 +158,13 @@ export async function createUserAccount(user: INewUser) {
     if (dbError) {
       // Clean up auth account if user creation fails
       await supabase.auth.admin.deleteUser(authData.user.id);
-      throw dbError;
+      throw new Error(dbError.message || "Failed to create user profile");
     }
 
     return userData;
   } catch (error) {
-    console.log(error);
-    return error;
+    console.error("createUserAccount error:", error);
+    throw error;
   }
 }
 
