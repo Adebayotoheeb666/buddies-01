@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queries";
 import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
-const LeftSidebar = () => {
+interface LeftSidebarProps {
+  isMobile?: boolean;
+  onLinkClick?: () => void;
+}
+
+const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
@@ -69,25 +74,39 @@ const LeftSidebar = () => {
     navigate("/sign-in");
   };
 
+  const handleNavLinkClick = () => {
+    if (onLinkClick && isMobile) {
+      onLinkClick();
+    }
+  };
+
   return (
-    <nav className="leftsidebar">
-      <div className="flex flex-col gap-11">
-        <Link to="/" className="flex gap-3 items-center">
-          <img
-            src="/assets/images/logo.svg"
-            alt="logo"
-            width={36}
-            height={36}
-          />
-          <span className="h3-bold text-primary-500">Buddies</span>
-        </Link>
+    <nav
+      className={`leftsidebar ${
+        isMobile ? "flex md:hidden px-6 py-4 min-w-full" : ""
+      }`}>
+      <div className="flex flex-col gap-11 w-full">
+        {!isMobile && (
+          <Link to="/" className="flex gap-3 items-center">
+            <img
+              src="/assets/images/logo.svg"
+              alt="logo"
+              width={36}
+              height={36}
+            />
+            <span className="h3-bold text-primary-500">Buddies</span>
+          </Link>
+        )}
 
         {isLoading || !user.email ? (
           <div className="h-14">
             <Loader />
           </div>
         ) : (
-          <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
+          <Link
+            to={`/profile/${user.id}`}
+            className="flex gap-3 items-center"
+            onClick={handleNavLinkClick}>
             <img
               src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
               alt="profile"
@@ -100,7 +119,7 @@ const LeftSidebar = () => {
           </Link>
         )}
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 max-h-[calc(100vh-280px)] overflow-y-auto custom-scrollbar">
           {categoryOrder.map((category) => {
             const links = groupedLinks[category];
             if (!links) return null;
@@ -129,6 +148,7 @@ const LeftSidebar = () => {
                           }`}>
                           <NavLink
                             to={link.route}
+                            onClick={handleNavLinkClick}
                             className="flex gap-4 items-center p-4">
                             <img
                               src={link.imgURL}

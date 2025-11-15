@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useCreateGroupChat } from "@/lib/react-query/chat-queries";
 import { GroupChatWithMembers } from "@/types/chat.types";
 import { Button } from "@/components/ui/button";
-import { FileUploader } from "@/components/shared/FileUploader";
+import FileUploader from "@/components/shared/FileUploader";
 
 interface CreateGroupChatModalProps {
   onClose: () => void;
