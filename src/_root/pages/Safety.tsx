@@ -1,26 +1,42 @@
 import { useEffect, useState } from "react";
 import { getSafetyAlerts, getEmergencyResources } from "@/lib/supabase/api";
 import { SafetyAlert, EmergencyResource } from "@/types/safety.types";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Safety = () => {
   const [alerts, setAlerts] = useState<SafetyAlert[]>([]);
   const [resources, setResources] = useState<EmergencyResource[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated, isLoading: authLoading } = useAuthContext();
 
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+
     const fetchData = async () => {
-      setLoading(true);
-      const [alertsData, resourcesData] = await Promise.all([
-        getSafetyAlerts(),
-        getEmergencyResources(),
-      ]);
-      setAlerts(alertsData);
-      setResources(resourcesData);
-      setLoading(false);
+      try {
+        setLoading(true);
+        setError(null);
+        const [alertsData, resourcesData] = await Promise.all([
+          getSafetyAlerts(),
+          getEmergencyResources(),
+        ]);
+        setAlerts(alertsData || []);
+        setResources(resourcesData || []);
+      } catch (err) {
+        console.error("Error fetching safety data:", err);
+        setError("Failed to load safety information. Please try again later.");
+        setAlerts([]);
+        setResources([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [authLoading]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
