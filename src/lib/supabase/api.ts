@@ -129,40 +129,6 @@ import {
 // UTILITY FUNCTIONS
 // ============================================================
 
-// Utility function to retry failed requests with exponential backoff
-async function retryWithBackoff<T>(
-  fn: () => Promise<T>,
-  maxRetries: number = 3,
-  initialDelayMs: number = 100
-): Promise<T> {
-  let lastError: Error | null = null;
-
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error as Error;
-      const errorMessage = (error as any).message || String(error);
-
-      // Only retry on body stream errors and network errors
-      const isRetryableError =
-        errorMessage.includes("body stream already read") ||
-        errorMessage.includes("Failed to fetch") ||
-        errorMessage.includes("NetworkError");
-
-      if (!isRetryableError || attempt === maxRetries - 1) {
-        throw error;
-      }
-
-      // Exponential backoff
-      const delayMs = initialDelayMs * Math.pow(2, attempt);
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
-    }
-  }
-
-  throw lastError;
-}
-
 // Utility function to safely serialize error objects for logging
 function logErrorDetails(label: string, error: any): void {
   if (!error) {
@@ -242,16 +208,13 @@ export async function createUserAccount(user: INewUser) {
   let authUserId: string | null = null;
 
   try {
-    // Create auth account with retry logic for network errors
-    const { data: authData, error: authError } = await retryWithBackoff(
-      () =>
-        supabase.auth.signUp({
-          email: user.email,
-          password: user.password,
-        }),
-      3,
-      200
-    );
+    // Create auth account directly without retry on body stream errors
+    const authResult = await supabase.auth.signUp({
+      email: user.email,
+      password: user.password,
+    });
+
+    const { data: authData, error: authError } = authResult;
 
     if (authError) {
       const errorMessage = authError.message || "Failed to create auth account";
@@ -301,15 +264,12 @@ export async function createUserAccount(user: INewUser) {
 
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const { data, error } = await retryWithBackoff(
-      () =>
-        supabase.auth.signInWithPassword({
-          email: user.email,
-          password: user.password,
-        }),
-      3,
-      200
-    );
+    const signInResult = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: user.password,
+    });
+
+    const { data, error } = signInResult;
 
     if (error) {
       const errorMessage = error.message || "Sign in failed";
@@ -330,11 +290,7 @@ export async function signInAccount(user: { email: string; password: string }) {
 
 export async function getAccount() {
   try {
-    const { data, error } = await retryWithBackoff(
-      () => supabase.auth.getUser(),
-      3,
-      200
-    );
+    const { data, error } = await supabase.auth.getUser();
     const { user } = data;
 
     if (error) {
@@ -351,11 +307,7 @@ export async function getAccount() {
 
 export async function getCurrentUser() {
   try {
-    const { data, error: authError } = await retryWithBackoff(
-      () => supabase.auth.getUser(),
-      3,
-      200
-    );
+    const { data, error: authError } = await supabase.auth.getUser();
     const { user: authUser } = data;
 
     if (authError) {
@@ -370,7 +322,7 @@ export async function getCurrentUser() {
 
     const { data: userData, error: dbError } = await supabase
       .from("users")
-      .select()
+      .select("*")
       .eq("id", authUser.id)
       .single();
 
