@@ -59,6 +59,25 @@ const Safety = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold text-white">Safety & Security</h1>
+          <p className="text-light-3">Stay informed and safe on campus</p>
+        </div>
+        <div className="rounded-lg border border-danger-500 bg-danger-500/10 p-6">
+          <p className="text-danger-500">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 rounded-lg bg-danger-500 px-4 py-2 text-white hover:bg-danger-600 transition">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-2">
