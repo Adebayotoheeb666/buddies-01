@@ -141,7 +141,10 @@ export async function createUserAccount(user: INewUser) {
       throw authError || new Error("Failed to create auth account");
     }
 
-    // Create user profile in database
+    // Wait a moment for the auth user to be ready
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Create user profile in database using the authenticated session
     const { data: userData, error: dbError } = await supabase
       .from("users")
       .insert({
@@ -156,15 +159,25 @@ export async function createUserAccount(user: INewUser) {
       .single();
 
     if (dbError) {
+      console.error("User profile insert error:", {
+        message: dbError.message,
+        code: dbError.code,
+        details: dbError.details,
+        hint: dbError.hint,
+      });
       // Clean up auth account if user creation fails
-      await supabase.auth.admin.deleteUser(authData.user.id);
-      throw dbError;
+      try {
+        await supabase.auth.admin.deleteUser(authData.user.id);
+      } catch (deleteError) {
+        console.error("Cleanup failed:", deleteError);
+      }
+      throw new Error(dbError.message || "Failed to create user profile");
     }
 
     return userData;
   } catch (error) {
-    console.log(error);
-    return error;
+    console.error("createUserAccount error:", error);
+    throw error;
   }
 }
 
@@ -175,11 +188,12 @@ export async function signInAccount(user: { email: string; password: string }) {
       password: user.password,
     });
 
-    if (error) throw error;
+    if (error) throw new Error(error.message || "Sign in failed");
 
     return data.session;
   } catch (error) {
-    console.log(error);
+    console.error("signInAccount error:", error);
+    throw error;
   }
 }
 
@@ -206,6 +220,10 @@ export async function getCurrentUser() {
     } = await supabase.auth.getUser();
 
     if (authError || !authUser) {
+      console.error(
+        "getCurrentUser - No authenticated user:",
+        authError?.message
+      );
       return null;
     }
 
@@ -215,11 +233,23 @@ export async function getCurrentUser() {
       .eq("id", authUser.id)
       .single();
 
-    if (dbError) return null;
+    if (dbError) {
+      console.error("getCurrentUser dbError details:", {
+        message: dbError.message || "Unknown error",
+        code: dbError.code || "UNKNOWN",
+        details: dbError.details || "No details",
+        hint: (dbError as any).hint || "No hint",
+        status: (dbError as any).status || "Unknown status",
+      });
+      return null;
+    }
 
     return userData;
   } catch (error) {
-    console.log(error);
+    console.error("getCurrentUser try-catch error:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return null;
   }
 }
