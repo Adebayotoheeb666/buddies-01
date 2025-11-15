@@ -333,7 +333,7 @@ export async function getCurrentUser() {
 
     return userData;
   } catch (error) {
-    console.error("getCurrentUser - Try-catch error details:", serializeError(error));
+    logErrorDetails("getCurrentUser - Try-catch error details:", error);
     return null;
   }
 }
