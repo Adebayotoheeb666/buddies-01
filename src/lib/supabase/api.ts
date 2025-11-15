@@ -214,11 +214,9 @@ export async function createUserAccount(user: INewUser) {
 
     return userData;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("createUserAccount error:", {
-      message: errorMessage,
+    console.error("createUserAccount error details:", {
       userId: authUserId,
-      error: error instanceof Error ? error : String(error),
+      ...serializeError(error),
     });
 
     // Note: We cannot clean up the auth account with just the anon key
