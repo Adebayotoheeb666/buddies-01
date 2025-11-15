@@ -180,11 +180,7 @@ export async function createUserAccount(user: INewUser) {
 
     if (authError) {
       const errorMessage = authError.message || "Failed to create auth account";
-      console.error("Auth signup error:", {
-        message: errorMessage,
-        status: authError.status,
-        code: (authError as any).code,
-      });
+      console.error("Auth signup error details:", serializeError(authError));
       throw new Error(errorMessage);
     }
 
