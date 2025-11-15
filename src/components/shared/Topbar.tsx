@@ -21,9 +21,10 @@ const Topbar = () => {
           <img
             src="/assets/images/logo.svg"
             alt="logo"
-            width={130}
-            height={325}
+            width={36}
+            height={36}
           />
+          <span className="h3-bold text-primary-500">Buddies</span>
         </Link>
 
         <div className="flex gap-4">
