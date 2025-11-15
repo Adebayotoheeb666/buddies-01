@@ -207,11 +207,27 @@ export async function signInAccount(user: { email: string; password: string }) {
       password: user.password,
     });
 
-    if (error) throw new Error(error.message || "Sign in failed");
+    if (error) {
+      const errorMessage = error.message || "Sign in failed";
+      console.error("signInAccount error:", {
+        message: errorMessage,
+        status: error.status,
+        code: (error as any).code,
+      });
+      throw new Error(errorMessage);
+    }
+
+    if (!data.session) {
+      throw new Error("Sign in failed: No session returned");
+    }
 
     return data.session;
   } catch (error) {
-    console.error("signInAccount error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("signInAccount try-catch error:", {
+      message: errorMessage,
+      error: error instanceof Error ? error : String(error),
+    });
     throw error;
   }
 }
