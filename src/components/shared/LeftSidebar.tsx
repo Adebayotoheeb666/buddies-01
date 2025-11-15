@@ -87,7 +87,7 @@ const LeftSidebar = () => {
           </Link>
         )}
 
-        <div className="flex flex-col gap-4 max-h-[calc(100vh-400px)] overflow-y-auto">
+        <div className="flex flex-col gap-4">
           {categoryOrder.map((category) => {
             const links = groupedLinks[category];
             if (!links) return null;
