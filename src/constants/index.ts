@@ -24,6 +24,12 @@ export const sidebarLinks = [
     category: "Core",
   },
   {
+    imgURL: "/assets/icons/chat.svg",
+    route: "/chats",
+    label: "Messages",
+    category: "Core",
+  },
+  {
     imgURL: "/assets/icons/gallery-add.svg",
     route: "/create-post",
     label: "Create Post",

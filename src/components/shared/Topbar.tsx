@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { useSignOutAccount } from "@/lib/react-query/queries";
+import { ChatNotificationBadge } from "../chat/ChatNotificationBadge";
 
 const Topbar = () => {
   const navigate = useNavigate();
@@ -21,12 +22,14 @@ const Topbar = () => {
           <img
             src="/assets/images/logo.svg"
             alt="logo"
-            width={130}
-            height={325}
+            width={36}
+            height={36}
           />
+          <span className="h3-bold text-primary-500">Buddies</span>
         </Link>
 
         <div className="flex gap-4">
+          <ChatNotificationBadge />
           <Button
             variant="ghost"
             className="shad-button_ghost"

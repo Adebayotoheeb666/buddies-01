@@ -8,6 +8,7 @@ export { default as EditPost } from "./EditPost";
 export { default as PostDetails } from "./PostDetails";
 export { default as LikedPosts } from "./LikedPosts";
 export { default as AllUsers } from "./AllUsers";
+export { default as Chats } from "./Chats";
 export { default as EnhancedProfile } from "./EnhancedProfile";
 export { default as Courses } from "./Courses";
 export { default as CourseDetail } from "./CourseDetail";
