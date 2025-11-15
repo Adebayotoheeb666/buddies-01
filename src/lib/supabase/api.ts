@@ -3098,3 +3098,725 @@ export async function registerPitchCompetition(
     console.log(error);
   }
 }
+
+// ============================================================
+// PHASE 6: SAFETY, WELLNESS & ADMINISTRATIVE FEATURES
+// ============================================================
+
+// SAFETY & EMERGENCY FEATURES
+
+export async function getSafetyAlerts() {
+  try {
+    const { data, error } = await supabase
+      .from("safety_alerts")
+      .select("*")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createSafetyAlert(
+  alertType: string,
+  title: string,
+  description?: string,
+  locationId?: string,
+  severity?: string,
+  issuedById?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("safety_alerts")
+      .insert({
+        alert_type: alertType,
+        title,
+        description,
+        location_id: locationId,
+        severity: severity || "medium",
+        issued_by_id: issuedById,
+        is_active: true,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getSafeWalkRequests(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("safe_walk_requests")
+      .select("*")
+      .or(`requester_id.eq.${userId},escort_id.eq.${userId}`)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function requestSafeWalk(
+  requesterId: string,
+  fromLocation: string,
+  toLocation: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("safe_walk_requests")
+      .insert({
+        requester_id: requesterId,
+        from_location: fromLocation,
+        to_location: toLocation,
+        request_time: new Date().toISOString(),
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function acceptSafeWalkRequest(requestId: string, escortId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("safe_walk_requests")
+      .update({
+        escort_id: escortId,
+        status: "in_progress",
+      })
+      .eq("id", requestId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function completeSafeWalk(requestId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("safe_walk_requests")
+      .update({
+        status: "completed",
+        completion_time: new Date().toISOString(),
+      })
+      .eq("id", requestId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function shareLocation(sharer_id: string, shared_with_id: string, expiresAt: string) {
+  try {
+    const { data, error } = await supabase
+      .from("location_shares")
+      .insert({
+        sharer_id,
+        shared_with_id,
+        expires_at: expiresAt,
+        is_active: true,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateLocationUpdate(
+  userId: string,
+  latitude: number,
+  longitude: number,
+  safeWalkId?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("location_updates")
+      .insert({
+        user_id: userId,
+        latitude,
+        longitude,
+        safe_walk_id: safeWalkId,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getEmergencyResources() {
+  try {
+    const { data, error } = await supabase
+      .from("emergency_resources")
+      .select("*")
+      .order("resource_type", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// MENTAL HEALTH & WELLNESS
+
+export async function getWellnessResources() {
+  try {
+    const { data, error } = await supabase
+      .from("wellness_resources")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getCounselingAppointments(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("counseling_appointments")
+      .select("*")
+      .eq("user_id", userId)
+      .order("appointment_date", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function scheduleCounselingAppointment(
+  userId: string,
+  counselorName: string,
+  appointmentDate: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("counseling_appointments")
+      .insert({
+        user_id: userId,
+        counselor_name: counselorName,
+        appointment_date: appointmentDate,
+        status: "scheduled",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function createWellnessCheckIn(
+  userId: string,
+  moodScore: number,
+  stressLevel: number,
+  sleepHours: number,
+  exerciseMinutes: number,
+  notes?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("wellness_checkins")
+      .insert({
+        user_id: userId,
+        mood_score: moodScore,
+        stress_level: stressLevel,
+        sleep_hours: sleepHours,
+        exercise_minutes: exerciseMinutes,
+        notes,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserWellnessCheckIns(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("wellness_checkins")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createWellnessGoal(
+  userId: string,
+  goalType: string,
+  targetValue: string,
+  frequency: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("wellness_goals")
+      .insert({
+        user_id: userId,
+        goal_type: goalType,
+        target_value: targetValue,
+        frequency,
+        progress: 0,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserWellnessGoals(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("wellness_goals")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getSupportForums() {
+  try {
+    const { data, error } = await supabase
+      .from("support_forums")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getForumThreads(forumId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("forum_threads")
+      .select("*")
+      .eq("forum_id", forumId)
+      .order("pinned", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createForumThread(
+  forumId: string,
+  creatorId: string,
+  title: string,
+  content: string,
+  isAnonymous?: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("forum_threads")
+      .insert({
+        forum_id: forumId,
+        creator_id: creatorId,
+        title,
+        content,
+        is_anonymous: isAnonymous || true,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getForumReplies(threadId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("forum_replies")
+      .select("*")
+      .eq("thread_id", threadId)
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function createForumReply(
+  threadId: string,
+  replierId: string,
+  content: string,
+  isAnonymous?: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("forum_replies")
+      .insert({
+        thread_id: threadId,
+        replier_id: replierId,
+        content,
+        is_anonymous: isAnonymous || true,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ACADEMIC INTEGRITY & MODERATION
+
+export async function reportContent(
+  reportedContentId: string,
+  reportedContentType: string,
+  reporterId: string,
+  reason: string,
+  description?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("content_reports")
+      .insert({
+        reported_content_id: reportedContentId,
+        reported_content_type: reportedContentType,
+        reporter_id: reporterId,
+        reason,
+        description,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getContentReports() {
+  try {
+    const { data, error } = await supabase
+      .from("content_reports")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function updateContentReportStatus(
+  reportId: string,
+  status: string,
+  reviewedById?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("content_reports")
+      .update({
+        status,
+        reviewed_by_id: reviewedById,
+      })
+      .eq("id", reportId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function createIntegrityFlag(
+  flaggedUserId: string,
+  flagType: string,
+  description?: string,
+  evidenceLink?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("integrity_flags")
+      .insert({
+        flagged_user_id: flaggedUserId,
+        flag_type: flagType,
+        description,
+        evidence_link: evidenceLink,
+        status: "reported",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getIntegrityFlags() {
+  try {
+    const { data, error } = await supabase
+      .from("integrity_flags")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function updateIntegrityFlagStatus(
+  flagId: string,
+  status: string,
+  resolvedById?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("integrity_flags")
+      .update({
+        status,
+        resolved_by_id: resolvedById,
+      })
+      .eq("id", flagId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function takeModerationAction(
+  contentId: string,
+  moderatorId: string,
+  actionType: string,
+  reason: string,
+  appealAllowed?: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("moderation_actions")
+      .insert({
+        content_id: contentId,
+        moderator_id: moderatorId,
+        action_type: actionType,
+        reason,
+        appeal_allowed: appealAllowed !== false,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getModerationActions() {
+  try {
+    const { data, error } = await supabase
+      .from("moderation_actions")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function submitAppeal(
+  userId: string,
+  moderationActionId: string,
+  appealText: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("appeals")
+      .insert({
+        user_id: userId,
+        moderation_action_id: moderationActionId,
+        appeal_text: appealText,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserAppeals(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("appeals")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAppeals() {
+  try {
+    const { data, error } = await supabase
+      .from("appeals")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function reviewAppeal(
+  appealId: string,
+  status: string,
+  reviewedById: string,
+  decisionText?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("appeals")
+      .update({
+        status,
+        reviewed_by_id: reviewedById,
+        decision_text: decisionText,
+      })
+      .eq("id", appealId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
