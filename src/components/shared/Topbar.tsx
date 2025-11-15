@@ -33,7 +33,9 @@ const Topbar = ({ sidebarOpen, setSidebarOpen }: TopbarProps) => {
               width={36}
               height={36}
             />
-            <span className="h3-bold text-primary-500 hidden xs:block">Buddies</span>
+            <span className="h3-bold text-primary-500 hidden xs:block">
+              Buddies
+            </span>
           </Link>
         </div>
 

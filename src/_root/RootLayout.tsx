@@ -26,10 +26,7 @@ const RootLayout = () => {
               onClick={closeSidebar}
             />
             <div className="fixed left-0 top-16 bottom-0 w-72 bg-dark-2 z-40 overflow-y-auto md:hidden">
-              <LeftSidebar
-                isMobile={true}
-                onLinkClick={closeSidebar}
-              />
+              <LeftSidebar isMobile={true} onLinkClick={closeSidebar} />
             </div>
           </>
         )}

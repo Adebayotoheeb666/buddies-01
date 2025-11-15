@@ -81,7 +81,10 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
   };
 
   return (
-    <nav className={`leftsidebar ${isMobile ? "flex md:hidden px-6 py-4 min-w-full" : ""}`}>
+    <nav
+      className={`leftsidebar ${
+        isMobile ? "flex md:hidden px-6 py-4 min-w-full" : ""
+      }`}>
       <div className="flex flex-col gap-11 w-full">
         {!isMobile && (
           <Link to="/" className="flex gap-3 items-center">
@@ -100,7 +103,10 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
             <Loader />
           </div>
         ) : (
-          <Link to={`/profile/${user.id}`} className="flex gap-3 items-center" onClick={handleNavLinkClick}>
+          <Link
+            to={`/profile/${user.id}`}
+            className="flex gap-3 items-center"
+            onClick={handleNavLinkClick}>
             <img
               src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
               alt="profile"
