@@ -3,7 +3,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
@@ -34,7 +41,7 @@ const SigninForm = () => {
 
     if (!session) {
       toast({ title: "Login failed. Please try again." });
-      
+
       return;
     }
 
@@ -45,8 +52,8 @@ const SigninForm = () => {
 
       navigate("/");
     } else {
-      toast({ title: "Login failed. Please try again.", });
-      
+      toast({ title: "Login failed. Please try again." });
+
       return;
     }
   };
@@ -55,7 +62,12 @@ const SigninForm = () => {
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
         <div className="flex items-center gap-2 mb-4">
-          <img src="/assets/images/logo.svg" alt="logo" width={36} height={36} />
+          <img
+            src="/assets/images/logo.svg"
+            alt="logo"
+            width={36}
+            height={36}
+          />
           <span className="h3-bold md:h2-bold text-primary-500">Buddies</span>
         </div>
 

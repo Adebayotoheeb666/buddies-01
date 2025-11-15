@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { useGetPrivateChats, useGetGroupChats } from "@/lib/react-query/chat-queries";
+import {
+  useGetPrivateChats,
+  useGetGroupChats,
+} from "@/lib/react-query/chat-queries";
 import { ChatDetail } from "@/components/chat/ChatDetail";
 import { GroupChatDetail } from "@/components/chat/GroupChatDetail";
 import { CreateGroupChatModal } from "@/components/chat/CreateGroupChatModal";
@@ -19,14 +22,12 @@ export const Chats = () => {
 
   const { data: privateChats = [], isLoading: loadingPrivate } =
     useGetPrivateChats();
-  const { data: groupChats = [], isLoading: loadingGroups } = useGetGroupChats();
+  const { data: groupChats = [], isLoading: loadingGroups } =
+    useGetGroupChats();
 
   if (selectedChat) {
     return (
-      <ChatDetail
-        chat={selectedChat}
-        onClose={() => setSelectedChat(null)}
-      />
+      <ChatDetail chat={selectedChat} onClose={() => setSelectedChat(null)} />
     );
   }
 
@@ -116,15 +117,12 @@ export const Chats = () => {
                         {chat.otherUser?.name}
                       </h3>
                       <p className="text-sm text-light-4 truncate">
-                        {chat.lastMessage?.content ||
-                          "No messages yet"}
+                        {chat.lastMessage?.content || "No messages yet"}
                       </p>
                     </div>
                     {chat.last_message_at && (
                       <span className="text-xs text-light-3">
-                        {new Date(
-                          chat.last_message_at
-                        ).toLocaleDateString()}
+                        {new Date(chat.last_message_at).toLocaleDateString()}
                       </span>
                     )}
                   </div>

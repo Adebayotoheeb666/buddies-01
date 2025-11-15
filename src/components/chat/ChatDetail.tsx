@@ -1,7 +1,10 @@
 import { useEffect, useRef } from "react";
 import { IChat, ChatWithLastMessage } from "@/types/chat.types";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetPrivateChatMessages, useMarkMessageAsRead } from "@/lib/react-query/chat-queries";
+import {
+  useGetPrivateChatMessages,
+  useMarkMessageAsRead,
+} from "@/lib/react-query/chat-queries";
 import { MessageItem } from "./MessageItem";
 import { MessageInput } from "./MessageInput";
 import { supabase } from "@/lib/supabase/config";
@@ -75,9 +78,7 @@ export const ChatDetail = ({ chat, onClose }: ChatDetailProps) => {
           </div>
         </div>
         {onClose && (
-          <button
-            onClick={onClose}
-            className="text-light-3 hover:text-light-1">
+          <button onClick={onClose} className="text-light-3 hover:text-light-1">
             ✕
           </button>
         )}
@@ -91,7 +92,9 @@ export const ChatDetail = ({ chat, onClose }: ChatDetailProps) => {
           </div>
         ) : messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <p className="text-light-4">No messages yet. Start the conversation!</p>
+            <p className="text-light-4">
+              No messages yet. Start the conversation!
+            </p>
           </div>
         ) : (
           <>

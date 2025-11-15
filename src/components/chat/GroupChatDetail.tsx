@@ -221,7 +221,9 @@ export const GroupChatDetail = ({
                 <h3 className="font-semibold text-light-1">Members</h3>
 
                 {groupChat.members?.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between p-2 bg-dark-4 rounded">
+                  <div
+                    key={member.id}
+                    className="flex items-center justify-between p-2 bg-dark-4 rounded">
                     <div className="flex-1">
                       <p className="text-sm text-light-1">
                         {member.user_id === user.id ? "You" : member.user_id}
@@ -248,11 +250,7 @@ export const GroupChatDetail = ({
             {/* Leave Group */}
             <Button
               onClick={() => {
-                if (
-                  confirm(
-                    "Are you sure you want to leave this group?"
-                  )
-                ) {
+                if (confirm("Are you sure you want to leave this group?")) {
                   leaveGroup(groupChat.id);
                   onClose?.();
                 }

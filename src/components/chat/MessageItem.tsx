@@ -2,7 +2,12 @@ import { useState } from "react";
 import { IMessage, IMessageReaction } from "@/types/chat.types";
 import { useUserContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { useDeleteMessage, useEditMessage, useAddReaction, useRemoveReaction } from "@/lib/react-query/chat-queries";
+import {
+  useDeleteMessage,
+  useEditMessage,
+  useAddReaction,
+  useRemoveReaction,
+} from "@/lib/react-query/chat-queries";
 
 const formatTimeAgo = (dateString: string) => {
   const date = new Date(dateString);
@@ -69,7 +74,9 @@ export const MessageItem = ({ message, onReply }: MessageItemProps) => {
       onMouseLeave={() => setShowActions(false)}>
       {!isOwn && message.sender && (
         <img
-          src={message.sender.imageUrl || "/assets/icons/profile-placeholder.svg"}
+          src={
+            message.sender.imageUrl || "/assets/icons/profile-placeholder.svg"
+          }
           alt={message.sender.name}
           className="h-8 w-8 rounded-full"
         />
@@ -82,9 +89,7 @@ export const MessageItem = ({ message, onReply }: MessageItemProps) => {
 
         <div
           className={`rounded-lg px-4 py-2 max-w-xs lg:max-w-md break-words ${
-            isOwn
-              ? "bg-primary-500 text-white"
-              : "bg-dark-4 text-light-1"
+            isOwn ? "bg-primary-500 text-white" : "bg-dark-4 text-light-1"
           }`}>
           {isEditing ? (
             <div className="flex gap-2">
@@ -128,9 +133,8 @@ export const MessageItem = ({ message, onReply }: MessageItemProps) => {
             {Array.from(
               new Map(message.reactions.map((r) => [r.emoji, r])).entries()
             ).map(([emoji, reaction]) => {
-              const count = message.reactions?.filter(
-                (r) => r.emoji === emoji
-              ).length || 0;
+              const count =
+                message.reactions?.filter((r) => r.emoji === emoji).length || 0;
               const userReacted = message.reactions?.some(
                 (r) => r.emoji === emoji && r.user_id === user.id
               );

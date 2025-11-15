@@ -76,7 +76,13 @@ export const useCreateGroupChat = () => {
       description?: string;
       isPublic?: boolean;
       iconUrl?: string;
-    }) => createGroupChat(params.name, params.description, params.isPublic, params.iconUrl),
+    }) =>
+      createGroupChat(
+        params.name,
+        params.description,
+        params.isPublic,
+        params.iconUrl
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: chatKeys.groupChats });
     },
@@ -294,8 +300,7 @@ export const useSetTypingStatus = () => {
       isTyping: boolean;
       chatId?: string;
       groupChatId?: string;
-    }) =>
-      setTypingStatus(params.isTyping, params.chatId, params.groupChatId),
+    }) => setTypingStatus(params.isTyping, params.chatId, params.groupChatId),
   });
 };
 

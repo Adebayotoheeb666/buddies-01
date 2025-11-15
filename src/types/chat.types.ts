@@ -24,7 +24,7 @@ export interface IGroupChatMember {
   id: string;
   group_chat_id: string;
   user_id: string;
-  role: 'admin' | 'member';
+  role: "admin" | "member";
   joined_at: string;
 }
 

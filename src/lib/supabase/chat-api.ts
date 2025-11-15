@@ -67,7 +67,8 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
   // Fetch user details for other participants
   const chatsWithUsers = await Promise.all(
     data.map(async (chat: any) => {
-      const otherUserId = chat.user1_id === user.id ? chat.user2_id : chat.user1_id;
+      const otherUserId =
+        chat.user1_id === user.id ? chat.user2_id : chat.user1_id;
       const { data: userData } = await supabase
         .from("users")
         .select("id, name, imageUrl, username")
@@ -343,7 +344,8 @@ export const sendMessage = async (
   } = await supabase.auth.getUser();
 
   if (!user) throw new Error("User not authenticated");
-  if (!chatId && !groupChatId) throw new Error("Either chatId or groupChatId required");
+  if (!chatId && !groupChatId)
+    throw new Error("Either chatId or groupChatId required");
 
   const { data, error } = await supabase
     .from("messages")

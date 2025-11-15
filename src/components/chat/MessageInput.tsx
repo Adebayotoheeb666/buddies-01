@@ -1,5 +1,8 @@
 import { useRef, useState } from "react";
-import { useSendMessage, useSetTypingStatus } from "@/lib/react-query/chat-queries";
+import {
+  useSendMessage,
+  useSetTypingStatus,
+} from "@/lib/react-query/chat-queries";
 import { FileUploader } from "@/components/shared/FileUploader";
 import { Button } from "@/components/ui/button";
 

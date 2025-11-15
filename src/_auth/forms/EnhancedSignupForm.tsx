@@ -121,7 +121,12 @@ const EnhancedSignupForm = () => {
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
         <div className="flex items-center gap-2 mb-4">
-          <img src="/assets/images/logo.svg" alt="logo" width={36} height={36} />
+          <img
+            src="/assets/images/logo.svg"
+            alt="logo"
+            width={36}
+            height={36}
+          />
           <span className="h3-bold md:h2-bold text-primary-500">Buddies</span>
         </div>
 
