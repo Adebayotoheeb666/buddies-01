@@ -142,7 +142,7 @@ export async function createUserAccount(user: INewUser) {
     }
 
     // Wait a moment for the auth user to be ready
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Create user profile in database using the authenticated session
     const { data: userData, error: dbError } = await supabase
@@ -220,7 +220,10 @@ export async function getCurrentUser() {
     } = await supabase.auth.getUser();
 
     if (authError || !authUser) {
-      console.error("getCurrentUser - No authenticated user:", authError?.message);
+      console.error(
+        "getCurrentUser - No authenticated user:",
+        authError?.message
+      );
       return null;
     }
 

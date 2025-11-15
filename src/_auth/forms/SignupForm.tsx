@@ -80,7 +80,10 @@ const SignupForm = () => {
         return;
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Sign up failed. Please try again.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Sign up failed. Please try again.";
       toast({ title: errorMessage });
       console.error("Signup error:", error);
     }
