@@ -357,60 +357,18 @@ export async function getCurrentUser() {
       return null;
     }
 
-    // Attempt to fetch user profile from database with error recovery
-    try {
-      const { data: userData, error: dbError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", authUser.id)
-        .single();
+    const { data: userData, error: dbError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", authUser.id)
+      .single();
 
-      if (dbError) {
-        logErrorDetails("getCurrentUser - Database error details:", dbError);
-
-        // If we get a body stream error, try a simpler query
-        if (dbError.message?.includes("body stream already read")) {
-          console.warn("Retrying user query due to stream error");
-
-          // Wait a moment and try again with a fresh connection
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          const { data: retryData, error: retryError } = await supabase
-            .from("users")
-            .select("id, name, username, email, imageUrl, bio")
-            .eq("id", authUser.id)
-            .single();
-
-          if (retryError) {
-            logErrorDetails("getCurrentUser - Database retry error:", retryError);
-            return null;
-          }
-
-          return retryData;
-        }
-
-        return null;
-      }
-
-      return userData;
-    } catch (dbCatchError) {
-      logErrorDetails("getCurrentUser - Database catch error:", dbCatchError);
-
-      // If we still get a stream error, return a minimal user object based on auth data
-      if ((dbCatchError as any).message?.includes("body stream already read")) {
-        console.warn("Using auth data fallback due to persistent stream error");
-        return {
-          id: authUser.id,
-          email: authUser.email || "",
-          name: authUser.user_metadata?.name || "",
-          username: authUser.user_metadata?.username || "",
-          imageUrl: authUser.user_metadata?.imageUrl || "",
-          bio: authUser.user_metadata?.bio || "",
-        };
-      }
-
+    if (dbError) {
+      logErrorDetails("getCurrentUser - Database error details:", dbError);
       return null;
     }
+
+    return userData;
   } catch (error) {
     logErrorDetails("getCurrentUser - Try-catch error details:", error);
     return null;
