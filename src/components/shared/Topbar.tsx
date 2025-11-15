@@ -29,6 +29,7 @@ const Topbar = () => {
         </Link>
 
         <div className="flex gap-4">
+          <ChatNotificationBadge />
           <Button
             variant="ghost"
             className="shad-button_ghost"
