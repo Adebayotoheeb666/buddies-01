@@ -86,8 +86,8 @@ const SignupForm = () => {
 
   return (
     <Form {...form}>
-      <div className="sm:w-420 flex-center flex-col">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="w-full sm:w-420 flex-center flex-col px-4 sm:px-0">
+        <div className="flex items-center gap-2 mb-4 sm:mb-6">
           <img
             src="/assets/images/logo.svg"
             alt="logo"
@@ -97,7 +97,7 @@ const SignupForm = () => {
           <span className="h3-bold md:h2-bold text-primary-500">Buddies</span>
         </div>
 
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
+        <h2 className="h3-bold md:h2-bold pt-3 sm:pt-5 lg:pt-12">
           Create a new account
         </h2>
         <p className="text-light-3 small-medium md:base-regular mt-2">
