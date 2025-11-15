@@ -75,6 +75,28 @@ import {
   Appeal,
 } from "@/types/safety.types";
 import {
+  Achievement,
+  UserAchievement,
+  UserPoints,
+  PointTransaction,
+  Leaderboard,
+  LeaderboardEntry,
+  SemesterRecap,
+  Challenge,
+  ChallengeParticipation,
+  PhotoContest,
+  PhotoSubmission,
+  BucketList,
+  BucketListItem,
+  AttendanceStreak,
+  UserAnalytics,
+  FeatureUsage,
+  CampusExploration,
+  AdminMetrics,
+  EngagementSummary,
+  AtRiskStudent,
+} from "@/types/gamification.types";
+import {
   JobPosting,
   JobApplication,
   InternshipPosting,
