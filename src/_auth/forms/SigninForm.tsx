@@ -37,24 +37,48 @@ const SigninForm = () => {
   });
 
   const handleSignin = async (user: z.infer<typeof SigninValidation>) => {
-    const session = await signInAccount(user);
+    try {
+      const session = await signInAccount(user);
 
-    if (!session) {
-      toast({ title: "Login failed. Please try again." });
+      if (!session) {
+        toast({
+          title: "Login failed",
+          description: "Invalid email or password. Please try again."
+        });
+        return;
+      }
 
-      return;
-    }
+      const isLoggedIn = await checkAuthUser();
 
-    const isLoggedIn = await checkAuthUser();
+      if (isLoggedIn) {
+        form.reset();
+        toast({
+          title: "Welcome back!",
+          description: "You have been logged in successfully."
+        });
+        navigate("/");
+      } else {
+        toast({
+          title: "Verify your email",
+          description: "Please check your email to verify your account."
+        });
+        return;
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.";
 
-    if (isLoggedIn) {
-      form.reset();
+      console.error("Sign in error:", {
+        message: errorMessage,
+        error: error
+      });
 
-      navigate("/");
-    } else {
-      toast({ title: "Login failed. Please try again." });
-
-      return;
+      toast({
+        title: "Login failed",
+        description: errorMessage
+      });
     }
   };
 
