@@ -130,6 +130,8 @@ import {
 // ============================================================
 
 export async function createUserAccount(user: INewUser) {
+  let authUserId: string | null = null;
+
   try {
     // Create auth account
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -137,9 +139,21 @@ export async function createUserAccount(user: INewUser) {
       password: user.password,
     });
 
-    if (authError || !authData.user) {
-      throw authError || new Error("Failed to create auth account");
+    if (authError) {
+      const errorMessage = authError.message || "Failed to create auth account";
+      console.error("Auth signup error:", {
+        message: errorMessage,
+        status: authError.status,
+        code: (authError as any).code,
+      });
+      throw new Error(errorMessage);
     }
+
+    if (!authData.user) {
+      throw new Error("Failed to create auth account: No user returned");
+    }
+
+    authUserId = authData.user.id;
 
     // Wait a moment for the auth user to be ready
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -160,23 +174,28 @@ export async function createUserAccount(user: INewUser) {
 
     if (dbError) {
       console.error("User profile insert error:", {
-        message: dbError.message,
-        code: dbError.code,
-        details: dbError.details,
-        hint: dbError.hint,
+        message: dbError.message || "Unknown database error",
+        code: dbError.code || "UNKNOWN",
+        details: dbError.details || null,
+        hint: (dbError as any).hint || null,
+        status: (dbError as any).status || null,
       });
-      // Clean up auth account if user creation fails
-      try {
-        await supabase.auth.admin.deleteUser(authData.user.id);
-      } catch (deleteError) {
-        console.error("Cleanup failed:", deleteError);
-      }
       throw new Error(dbError.message || "Failed to create user profile");
     }
 
     return userData;
   } catch (error) {
-    console.error("createUserAccount error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("createUserAccount error:", {
+      message: errorMessage,
+      userId: authUserId,
+      error: error instanceof Error ? error : String(error),
+    });
+
+    // Note: We cannot clean up the auth account with just the anon key
+    // The auth user will remain in the system but the profile creation failed
+    // This should be handled by the user retrying signup or contacting support
+
     throw error;
   }
 }
