@@ -9,7 +9,11 @@ export interface Achievement {
   title: string;
   description?: string;
   badge_icon_url?: string;
-  requirement_type: "events_attended" | "clubs_joined" | "posts_created" | "other";
+  requirement_type:
+    | "events_attended"
+    | "clubs_joined"
+    | "posts_created"
+    | "other";
   requirement_count: number;
   category: "social" | "academic" | "campus" | "exploration";
   points_reward: number;
@@ -36,7 +40,12 @@ export interface PointTransaction {
   id: string;
   user_id: string;
   points: number;
-  transaction_type: "event_attendance" | "post_creation" | "achievement" | "challenge" | "other";
+  transaction_type:
+    | "event_attendance"
+    | "post_creation"
+    | "achievement"
+    | "challenge"
+    | "other";
   description?: string;
   created_at: string;
 }
@@ -184,7 +193,11 @@ export interface CampusExploration {
 
 export interface AdminMetrics {
   id: string;
-  metric_type: "daily_active_users" | "event_attendance" | "engagement" | "new_signups";
+  metric_type:
+    | "daily_active_users"
+    | "event_attendance"
+    | "engagement"
+    | "new_signups";
   value: number;
   date: string;
   created_at: string;

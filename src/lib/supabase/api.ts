@@ -3218,7 +3218,10 @@ export async function requestSafeWalk(
   }
 }
 
-export async function acceptSafeWalkRequest(requestId: string, escortId: string) {
+export async function acceptSafeWalkRequest(
+  requestId: string,
+  escortId: string
+) {
   try {
     const { data, error } = await supabase
       .from("safe_walk_requests")
@@ -3258,7 +3261,11 @@ export async function completeSafeWalk(requestId: string) {
   }
 }
 
-export async function shareLocation(sharer_id: string, shared_with_id: string, expiresAt: string) {
+export async function shareLocation(
+  sharer_id: string,
+  shared_with_id: string,
+  expiresAt: string
+) {
   try {
     const { data, error } = await supabase
       .from("location_shares")
@@ -4187,7 +4194,10 @@ export async function addBucketListItem(
   }
 }
 
-export async function completeBucketListItem(itemId: string, photoUrl?: string) {
+export async function completeBucketListItem(
+  itemId: string,
+  photoUrl?: string
+) {
   try {
     const { data, error } = await supabase
       .from("bucket_list_items")
@@ -4225,7 +4235,10 @@ export async function getBucketListItems(bucketListId: string) {
   }
 }
 
-export async function getAttendanceStreak(userId: string, activityType: string) {
+export async function getAttendanceStreak(
+  userId: string,
+  activityType: string
+) {
   try {
     const { data, error } = await supabase
       .from("attendance_streaks")

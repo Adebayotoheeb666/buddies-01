@@ -17,9 +17,9 @@ const AnalyticsDashboard = () => {
   const { user } = useAuthContext();
   const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
   const [featureUsage, setFeatureUsage] = useState<FeatureUsage[]>([]);
-  const [campusExploration, setCampusExploration] = useState<CampusExploration[]>(
-    []
-  );
+  const [campusExploration, setCampusExploration] = useState<
+    CampusExploration[]
+  >([]);
   const [engagement, setEngagement] = useState<EngagementSummary | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -80,17 +80,17 @@ const AnalyticsDashboard = () => {
               <div className="h-3 w-full rounded-full bg-dark-3">
                 <div
                   className="h-3 rounded-full bg-primary-500 transition"
-                  style={{ width: `${engagement.engagement_score}%` }}
-                ></div>
+                  style={{ width: `${engagement.engagement_score}%` }}></div>
               </div>
-              {engagement.recommendations && engagement.recommendations.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-xs text-light-3">
-                    <strong>Recommendation:</strong>{" "}
-                    {engagement.recommendations[0]}
-                  </p>
-                </div>
-              )}
+              {engagement.recommendations &&
+                engagement.recommendations.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs text-light-3">
+                      <strong>Recommendation:</strong>{" "}
+                      {engagement.recommendations[0]}
+                    </p>
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -141,10 +141,14 @@ const AnalyticsDashboard = () => {
       {/* Feature Usage */}
       {featureUsage.length > 0 && (
         <div className="rounded-lg border border-dark-4 bg-dark-2 p-6">
-          <h2 className="text-lg font-semibold text-white">Most Used Features</h2>
+          <h2 className="text-lg font-semibold text-white">
+            Most Used Features
+          </h2>
           <div className="mt-4 space-y-3">
             {featureUsage.slice(0, 5).map((feature) => (
-              <div key={feature.id} className="flex items-center justify-between">
+              <div
+                key={feature.id}
+                className="flex items-center justify-between">
                 <p className="text-sm text-light-3">{feature.feature_name}</p>
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-32 rounded-full bg-dark-3">
@@ -157,8 +161,7 @@ const AnalyticsDashboard = () => {
                             100,
                           100
                         )}%`,
-                      }}
-                    ></div>
+                      }}></div>
                   </div>
                   <span className="text-sm font-bold text-light-3 min-w-[40px] text-right">
                     {feature.usage_count}x
@@ -180,8 +183,7 @@ const AnalyticsDashboard = () => {
             {campusExploration.slice(0, 5).map((location) => (
               <div
                 key={location.id}
-                className="flex items-center justify-between rounded-lg bg-dark-3 p-3"
-              >
+                className="flex items-center justify-between rounded-lg bg-dark-3 p-3">
                 <div>
                   <p className="font-medium text-white">
                     Location #{location.location_id.slice(0, 8)}

@@ -33,7 +33,7 @@ const SafeWalkModal = ({ isOpen, onClose, onSuccess }: SafeWalkModalProps) => {
       }
 
       await requestSafeWalk(user.id, fromLocation, toLocation);
-      
+
       setFromLocation("");
       setToLocation("");
       onSuccess?.();
@@ -94,15 +94,13 @@ const SafeWalkModal = ({ isOpen, onClose, onSuccess }: SafeWalkModalProps) => {
               type="button"
               onClick={onClose}
               variant="ghost"
-              className="w-full"
-            >
+              className="w-full">
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary-500 text-white hover:bg-primary-600"
-            >
+              className="w-full bg-primary-500 text-white hover:bg-primary-600">
               {loading ? "Requesting..." : "Request Safe Walk"}
             </Button>
           </div>

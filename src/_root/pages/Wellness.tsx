@@ -20,9 +20,9 @@ const Wellness = () => {
   const [goals, setGoals] = useState<WellnessGoal[]>([]);
   const [forums, setForums] = useState<SupportForum[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"resources" | "checkin" | "goals" | "forums">(
-    "resources"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "resources" | "checkin" | "goals" | "forums"
+  >("resources");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,9 +58,12 @@ const Wellness = () => {
   return (
     <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-white">Mental Health & Wellness</h1>
+        <h1 className="text-2xl font-bold text-white">
+          Mental Health & Wellness
+        </h1>
         <p className="text-light-3">
-          Your wellbeing matters. Access resources and track your wellness journey
+          Your wellbeing matters. Access resources and track your wellness
+          journey
         </p>
       </div>
 
@@ -74,8 +77,7 @@ const Wellness = () => {
               activeTab === tab
                 ? "border-b-2 border-primary-500 text-primary-500"
                 : "text-light-3 hover:text-white"
-            }`}
-          >
+            }`}>
             {tab === "resources" && "Resources"}
             {tab === "checkin" && "Check-In"}
             {tab === "goals" && "Goals"}
@@ -91,8 +93,7 @@ const Wellness = () => {
             resources.map((resource) => (
               <div
                 key={resource.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4 hover:bg-dark-3 transition cursor-pointer"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4 hover:bg-dark-3 transition cursor-pointer">
                 <h3 className="font-semibold text-white">{resource.title}</h3>
                 {resource.description && (
                   <p className="mt-1 text-sm text-light-3">
@@ -126,10 +127,12 @@ const Wellness = () => {
       {activeTab === "checkin" && (
         <div className="flex flex-col gap-4">
           <div className="rounded-lg border border-dark-4 bg-dark-2 p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Daily Check-In</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Daily Check-In
+            </h3>
             <p className="text-light-3 text-sm mb-4">
-              Log your mood, stress level, sleep, and exercise to track your wellness
-              journey.
+              Log your mood, stress level, sleep, and exercise to track your
+              wellness journey.
             </p>
             <button className="rounded-lg bg-primary-500 px-6 py-2 font-semibold text-white hover:bg-primary-600 transition">
               Start Check-In
@@ -138,14 +141,15 @@ const Wellness = () => {
 
           {/* Recent Check-Ins */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-3">Recent Check-Ins</h4>
+            <h4 className="text-lg font-semibold text-white mb-3">
+              Recent Check-Ins
+            </h4>
             {checkIns.length > 0 ? (
               <div className="grid gap-3">
                 {checkIns.slice(0, 5).map((checkIn) => (
                   <div
                     key={checkIn.id}
-                    className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-                  >
+                    className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                     <div className="grid grid-cols-4 gap-2 text-center">
                       <div>
                         <p className="text-xs text-light-4">Mood</p>
@@ -177,7 +181,9 @@ const Wellness = () => {
               </div>
             ) : (
               <div className="rounded-lg border border-dark-4 bg-dark-2 p-6 text-center">
-                <p className="text-light-3">No check-ins yet. Start tracking!</p>
+                <p className="text-light-3">
+                  No check-ins yet. Start tracking!
+                </p>
               </div>
             )}
           </div>
@@ -188,7 +194,9 @@ const Wellness = () => {
       {activeTab === "goals" && (
         <div className="flex flex-col gap-4">
           <div className="rounded-lg border border-dark-4 bg-dark-2 p-6">
-            <h3 className="text-lg font-semibold text-white mb-2">Wellness Goals</h3>
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Wellness Goals
+            </h3>
             <p className="text-light-3 text-sm mb-4">
               Set personal wellness goals and track your progress
             </p>
@@ -202,8 +210,7 @@ const Wellness = () => {
               {goals.map((goal) => (
                 <div
                   key={goal.id}
-                  className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-                >
+                  className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <h4 className="font-semibold text-white capitalize">
@@ -225,15 +232,16 @@ const Wellness = () => {
                   <div className="mt-3 h-2 w-full rounded-full bg-dark-3">
                     <div
                       className="h-2 rounded-full bg-primary-500 transition"
-                      style={{ width: `${goal.progress}%` }}
-                    ></div>
+                      style={{ width: `${goal.progress}%` }}></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="rounded-lg border border-dark-4 bg-dark-2 p-6 text-center">
-              <p className="text-light-3">No goals yet. Create one to get started!</p>
+              <p className="text-light-3">
+                No goals yet. Create one to get started!
+              </p>
             </div>
           )}
         </div>
@@ -247,8 +255,7 @@ const Wellness = () => {
             forums.map((forum) => (
               <div
                 key={forum.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4 hover:bg-dark-3 transition cursor-pointer"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4 hover:bg-dark-3 transition cursor-pointer">
                 <h4 className="font-semibold text-white">{forum.title}</h4>
                 {forum.description && (
                   <p className="mt-1 text-sm text-light-3">

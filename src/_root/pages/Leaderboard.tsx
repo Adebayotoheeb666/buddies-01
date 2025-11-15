@@ -92,12 +92,9 @@ const Leaderboard = () => {
                 selectedLeaderboard === lb.id
                   ? "bg-primary-500 text-white"
                   : "bg-dark-3 text-light-3 hover:bg-dark-2"
-              }`}
-            >
+              }`}>
               {lb.name}
-              <span className="ml-2 text-xs opacity-75">
-                ({lb.period})
-              </span>
+              <span className="ml-2 text-xs opacity-75">({lb.period})</span>
             </button>
           ))}
         </div>
@@ -109,13 +106,11 @@ const Leaderboard = () => {
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="flex items-center gap-4 rounded-lg border border-dark-4 bg-dark-2 p-4 hover:bg-dark-3 transition"
-            >
+              className="flex items-center gap-4 rounded-lg border border-dark-4 bg-dark-2 p-4 hover:bg-dark-3 transition">
               <div
                 className={`min-w-[50px] text-center text-2xl font-bold ${getMedalColor(
                   entry.rank
-                )}`}
-              >
+                )}`}>
                 {getMedalEmoji(entry.rank)}
               </div>
               <div className="flex-1">
@@ -146,8 +141,8 @@ const Leaderboard = () => {
         <h3 className="font-semibold text-white">About Leaderboards</h3>
         <p className="mt-2 text-sm text-light-3">
           Leaderboards track your engagement across campus. Participate in
-          events, clubs, and challenges to climb the rankings. You can choose
-          to keep your profile private or share your achievements with the
+          events, clubs, and challenges to climb the rankings. You can choose to
+          keep your profile private or share your achievements with the
           community.
         </p>
       </div>

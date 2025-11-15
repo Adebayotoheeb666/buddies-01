@@ -63,7 +63,9 @@ const WellnessCheckInModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
-        <h2 className="text-xl font-bold text-white">Daily Wellness Check-In</h2>
+        <h2 className="text-xl font-bold text-white">
+          Daily Wellness Check-In
+        </h2>
         <p className="mt-1 text-sm text-light-3">
           Track your mood, stress, sleep, and exercise
         </p>
@@ -159,15 +161,13 @@ const WellnessCheckInModal = ({
               type="button"
               onClick={onClose}
               variant="ghost"
-              className="w-full"
-            >
+              className="w-full">
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary-500 text-white hover:bg-primary-600"
-            >
+              className="w-full bg-primary-500 text-white hover:bg-primary-600">
               {loading ? "Saving..." : "Save Check-In"}
             </Button>
           </div>

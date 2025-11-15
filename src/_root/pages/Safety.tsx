@@ -58,14 +58,12 @@ const Safety = () => {
             {alerts.map((alert) => (
               <div
                 key={alert.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                 <div className="flex items-start gap-3">
                   <div
                     className={`${getSeverityColor(
                       alert.severity
-                    )} flex h-3 w-3 rounded-full flex-shrink-0 mt-1`}
-                  ></div>
+                    )} flex h-3 w-3 rounded-full flex-shrink-0 mt-1`}></div>
                   <div className="flex-1">
                     <h3 className="text-base font-semibold text-white">
                       {alert.title}
@@ -76,7 +74,8 @@ const Safety = () => {
                       </p>
                     )}
                     <p className="mt-2 text-xs text-light-4">
-                      Severity: <span className="capitalize">{alert.severity}</span>
+                      Severity:{" "}
+                      <span className="capitalize">{alert.severity}</span>
                     </p>
                   </div>
                 </div>
@@ -92,15 +91,20 @@ const Safety = () => {
 
       {/* Emergency Resources */}
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-semibold text-white">Emergency Resources</h2>
+        <h2 className="text-xl font-semibold text-white">
+          Emergency Resources
+        </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {resources.map((resource) => (
             <div
               key={resource.id}
-              className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-            >
-              <h3 className="font-semibold text-white">{resource.service_name}</h3>
-              <p className="mt-1 text-sm text-light-3">{resource.description}</p>
+              className="rounded-lg border border-dark-4 bg-dark-2 p-4">
+              <h3 className="font-semibold text-white">
+                {resource.service_name}
+              </h3>
+              <p className="mt-1 text-sm text-light-3">
+                {resource.description}
+              </p>
               {resource.phone && (
                 <p className="mt-2 text-sm font-medium text-primary-500">
                   {resource.phone}
@@ -122,7 +126,9 @@ const Safety = () => {
       {/* Safety Features */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-lg border border-dark-4 bg-dark-2 p-6 text-center hover:bg-dark-3 cursor-pointer transition">
-          <h3 className="text-lg font-semibold text-white">Safe Walk Program</h3>
+          <h3 className="text-lg font-semibold text-white">
+            Safe Walk Program
+          </h3>
           <p className="mt-2 text-sm text-light-3">
             Request a walking companion for campus
           </p>

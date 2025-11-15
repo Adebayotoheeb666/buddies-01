@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { getAdminMetrics, getAtRiskStudents } from "@/lib/supabase/api";
-import { AdminMetrics as AdminMetricsType, AtRiskStudent } from "@/types/gamification.types";
+import {
+  AdminMetrics as AdminMetricsType,
+  AtRiskStudent,
+} from "@/types/gamification.types";
 
 const AdminMetrics = () => {
   const [metrics, setMetrics] = useState<AdminMetricsType[]>([]);
@@ -81,8 +84,7 @@ const AdminMetrics = () => {
           return (
             <div
               key={type}
-              className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-            >
+              className="rounded-lg border border-dark-4 bg-dark-2 p-4">
               <p className="text-xs text-light-4 uppercase">{label}</p>
               <p className="mt-3 text-3xl font-bold text-primary-500">
                 {todayMetric?.value || 0}
@@ -107,8 +109,7 @@ const AdminMetrics = () => {
                 selectedMetricType === type
                   ? "bg-primary-500 text-white"
                   : "bg-dark-3 text-light-3 hover:bg-dark-2"
-              }`}
-            >
+              }`}>
               {type.replace(/_/g, " ")}
             </button>
           ))}
@@ -120,8 +121,7 @@ const AdminMetrics = () => {
               {getMetricsForType(selectedMetricType).map((metric) => (
                 <div
                   key={metric.id}
-                  className="flex items-center justify-between rounded-lg bg-dark-3 p-2"
-                >
+                  className="flex items-center justify-between rounded-lg bg-dark-3 p-2">
                   <span className="text-sm text-light-3">{metric.date}</span>
                   <span className="text-sm font-bold text-primary-500">
                     {metric.value}
@@ -145,11 +145,12 @@ const AdminMetrics = () => {
             {atRiskStudents.slice(0, 10).map((student) => (
               <div
                 key={student.id}
-                className={`rounded-lg p-4 ${getRiskColor(student.risk_type)}`}
-              >
+                className={`rounded-lg p-4 ${getRiskColor(student.risk_type)}`}>
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="font-semibold">User #{student.user_id.slice(0, 8)}</p>
+                    <p className="font-semibold">
+                      User #{student.user_id.slice(0, 8)}
+                    </p>
                     <p className="text-xs opacity-75 mt-1">
                       Risk Score: {student.risk_score}
                     </p>
@@ -163,8 +164,15 @@ const AdminMetrics = () => {
                     <p className="text-xs capitalize opacity-75">
                       {student.risk_type.replace(/_/g, " ")}
                     </p>
-                    <p className={`text-xs font-bold mt-1 ${student.intervention_sent ? "text-green-400" : "text-red-400"}`}>
-                      {student.intervention_sent ? "✓ Contacted" : "Needs Contact"}
+                    <p
+                      className={`text-xs font-bold mt-1 ${
+                        student.intervention_sent
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}>
+                      {student.intervention_sent
+                        ? "✓ Contacted"
+                        : "Needs Contact"}
                     </p>
                   </div>
                 </div>

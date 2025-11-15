@@ -23,9 +23,9 @@ const ModerationDashboard = () => {
   const [actions, setActions] = useState<ModerationAction[]>([]);
   const [appeals, setAppeals] = useState<Appeal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"reports" | "flags" | "actions" | "appeals">(
-    "reports"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "reports" | "flags" | "actions" | "appeals"
+  >("reports");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,10 +56,7 @@ const ModerationDashboard = () => {
     );
   }
 
-  const handleReportStatus = async (
-    reportId: string,
-    status: string
-  ) => {
+  const handleReportStatus = async (reportId: string, status: string) => {
     await updateContentReportStatus(reportId, status, user?.id);
     const updatedReports = reports.map((r) =>
       r.id === reportId ? { ...r, status: status as any } : r
@@ -82,7 +79,9 @@ const ModerationDashboard = () => {
   ) => {
     await reviewAppeal(appealId, status, user?.id || "", decisionText);
     const updatedAppeals = appeals.map((a) =>
-      a.id === appealId ? { ...a, status: status as any, decision_text: decisionText } : a
+      a.id === appealId
+        ? { ...a, status: status as any, decision_text: decisionText }
+        : a
     );
     setAppeals(updatedAppeals);
   };
@@ -130,8 +129,7 @@ const ModerationDashboard = () => {
               activeTab === tab
                 ? "border-b-2 border-primary-500 text-primary-500"
                 : "text-light-3 hover:text-white"
-            }`}
-          >
+            }`}>
             {tab === "reports" && `Reports (${reports.length})`}
             {tab === "flags" && `Flags (${flags.length})`}
             {tab === "actions" && `Actions (${actions.length})`}
@@ -147,15 +145,18 @@ const ModerationDashboard = () => {
             reports.map((report) => (
               <div
                 key={report.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h4 className="font-semibold text-white">
-                      {report.reported_content_type === "post" && "📝 Post Report"}
-                      {report.reported_content_type === "comment" && "💬 Comment Report"}
-                      {report.reported_content_type === "assignment" && "📚 Assignment Report"}
-                      {report.reported_content_type === "confession" && "🤐 Confession Report"}
+                      {report.reported_content_type === "post" &&
+                        "📝 Post Report"}
+                      {report.reported_content_type === "comment" &&
+                        "💬 Comment Report"}
+                      {report.reported_content_type === "assignment" &&
+                        "📚 Assignment Report"}
+                      {report.reported_content_type === "confession" &&
+                        "🤐 Confession Report"}
                     </h4>
                     <p className="mt-1 text-sm text-light-3">
                       <strong>Reason:</strong> {report.reason}
@@ -166,20 +167,21 @@ const ModerationDashboard = () => {
                       </p>
                     )}
                     <p className="mt-2 text-xs text-light-4">
-                      Status: <span className="capitalize font-medium text-primary-500">{report.status}</span>
+                      Status:{" "}
+                      <span className="capitalize font-medium text-primary-500">
+                        {report.status}
+                      </span>
                     </p>
                   </div>
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => handleReportStatus(report.id, "approved")}
-                      className="rounded bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition"
-                    >
+                      className="rounded bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition">
                       Approve
                     </button>
                     <button
                       onClick={() => handleReportStatus(report.id, "rejected")}
-                      className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700 transition"
-                    >
+                      className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700 transition">
                       Reject
                     </button>
                   </div>
@@ -201,8 +203,7 @@ const ModerationDashboard = () => {
             flags.map((flag) => (
               <div
                 key={flag.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h4 className="font-semibold text-white capitalize">
@@ -215,26 +216,32 @@ const ModerationDashboard = () => {
                     )}
                     {flag.evidence_link && (
                       <p className="mt-1 text-xs text-blue-500 truncate">
-                        Evidence: <a href={flag.evidence_link} target="_blank" rel="noopener noreferrer" className="underline">
+                        Evidence:{" "}
+                        <a
+                          href={flag.evidence_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline">
                           View Link
                         </a>
                       </p>
                     )}
                     <p className="mt-2 text-xs text-light-4">
-                      Status: <span className="capitalize font-medium text-orange-500">{flag.status}</span>
+                      Status:{" "}
+                      <span className="capitalize font-medium text-orange-500">
+                        {flag.status}
+                      </span>
                     </p>
                   </div>
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => handleFlagStatus(flag.id, "investigated")}
-                      className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition"
-                    >
+                      className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition">
                       Investigate
                     </button>
                     <button
                       onClick={() => handleFlagStatus(flag.id, "resolved")}
-                      className="rounded bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition"
-                    >
+                      className="rounded bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition">
                       Resolve
                     </button>
                   </div>
@@ -256,8 +263,7 @@ const ModerationDashboard = () => {
             actions.map((action) => (
               <div
                 key={action.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                 <h4 className="font-semibold text-white capitalize">
                   {action.action_type.replace(/_/g, " ")}
                 </h4>
@@ -266,7 +272,9 @@ const ModerationDashboard = () => {
                 </p>
                 <div className="mt-3 flex items-center justify-between text-xs text-light-4">
                   <span>
-                    {action.appeal_allowed ? "Appeals: Allowed ✓" : "Appeals: Not Allowed ✗"}
+                    {action.appeal_allowed
+                      ? "Appeals: Allowed ✓"
+                      : "Appeals: Not Allowed ✗"}
                   </span>
                   <span>
                     {new Date(action.created_at).toLocaleDateString()}
@@ -289,8 +297,7 @@ const ModerationDashboard = () => {
             appeals.map((appeal) => (
               <div
                 key={appeal.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-4"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h4 className="font-semibold text-white">User Appeal</h4>
@@ -303,21 +310,34 @@ const ModerationDashboard = () => {
                       </p>
                     )}
                     <p className="mt-2 text-xs text-light-4">
-                      Status: <span className="capitalize font-medium text-yellow-500">{appeal.status}</span>
+                      Status:{" "}
+                      <span className="capitalize font-medium text-yellow-500">
+                        {appeal.status}
+                      </span>
                     </p>
                   </div>
                   {appeal.status === "pending" && (
                     <div className="flex flex-col gap-2">
                       <button
-                        onClick={() => handleAppealReview(appeal.id, "approved", "Appeal approved")}
-                        className="rounded bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition"
-                      >
+                        onClick={() =>
+                          handleAppealReview(
+                            appeal.id,
+                            "approved",
+                            "Appeal approved"
+                          )
+                        }
+                        className="rounded bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition">
                         Approve
                       </button>
                       <button
-                        onClick={() => handleAppealReview(appeal.id, "denied", "Appeal denied")}
-                        className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700 transition"
-                      >
+                        onClick={() =>
+                          handleAppealReview(
+                            appeal.id,
+                            "denied",
+                            "Appeal denied"
+                          )
+                        }
+                        className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700 transition">
                         Deny
                       </button>
                     </div>

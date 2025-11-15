@@ -83,7 +83,8 @@ const ReportContentModal = ({
       <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
         <h2 className="text-xl font-bold text-white">Report Content</h2>
         <p className="mt-1 text-sm text-light-3">
-          Help us keep the community safe. Report inappropriate or harmful content.
+          Help us keep the community safe. Report inappropriate or harmful
+          content.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
@@ -100,8 +101,7 @@ const ReportContentModal = ({
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="mt-2 w-full rounded-lg border border-dark-4 bg-dark-3 px-4 py-2 text-white outline-none"
-            >
+              className="mt-2 w-full rounded-lg border border-dark-4 bg-dark-3 px-4 py-2 text-white outline-none">
               <option value="">Select a reason...</option>
               {reasons.map((r) => (
                 <option key={r} value={r}>
@@ -126,7 +126,8 @@ const ReportContentModal = ({
 
           <div className="mt-2">
             <p className="text-xs text-light-4">
-              ⚠️ Your report is confidential. False reports may result in account action.
+              ⚠️ Your report is confidential. False reports may result in
+              account action.
             </p>
           </div>
 
@@ -135,15 +136,13 @@ const ReportContentModal = ({
               type="button"
               onClick={onClose}
               variant="ghost"
-              className="w-full"
-            >
+              className="w-full">
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-red-600 text-white hover:bg-red-700"
-            >
+              className="w-full bg-red-600 text-white hover:bg-red-700">
               {loading ? "Submitting..." : "Submit Report"}
             </Button>
           </div>

@@ -5,19 +5,18 @@ import {
   getUserChallengeParticipations,
   participateInChallenge,
 } from "@/lib/supabase/api";
-import {
-  Challenge,
-  ChallengeParticipation,
-} from "@/types/gamification.types";
+import { Challenge, ChallengeParticipation } from "@/types/gamification.types";
 
 const Challenges = () => {
   const { user } = useAuthContext();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [participations, setParticipations] = useState<ChallengeParticipation[]>(
-    []
-  );
+  const [participations, setParticipations] = useState<
+    ChallengeParticipation[]
+  >([]);
   const [loading, setLoading] = useState(true);
-  const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
+  const [selectedChallenge, setSelectedChallenge] = useState<string | null>(
+    null
+  );
   const [submissionText, setSubmissionText] = useState("");
 
   useEffect(() => {
@@ -103,8 +102,7 @@ const Challenges = () => {
             return (
               <div
                 key={challenge.id}
-                className="rounded-lg border border-dark-4 bg-dark-2 p-6"
-              >
+                className="rounded-lg border border-dark-4 bg-dark-2 p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -137,7 +135,12 @@ const Challenges = () => {
                       </div>
                       <div className="flex items-center gap-1">
                         <span className="text-light-4">Days Left:</span>
-                        <span className={`font-bold ${daysRemaining <= 3 ? "text-red-500" : "text-green-500"}`}>
+                        <span
+                          className={`font-bold ${
+                            daysRemaining <= 3
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}>
                           {daysRemaining}
                         </span>
                       </div>
@@ -147,8 +150,7 @@ const Challenges = () => {
                   {!isParticipating_ ? (
                     <button
                       onClick={() => setSelectedChallenge(challenge.id)}
-                      className="whitespace-nowrap rounded-lg bg-primary-500 px-4 py-2 font-medium text-white hover:bg-primary-600 transition"
-                    >
+                      className="whitespace-nowrap rounded-lg bg-primary-500 px-4 py-2 font-medium text-white hover:bg-primary-600 transition">
                       Join Challenge
                     </button>
                   ) : (
@@ -181,8 +183,7 @@ const Challenges = () => {
                 e.preventDefault();
                 handleParticipate(selectedChallenge);
               }}
-              className="mt-4 flex flex-col gap-4"
-            >
+              className="mt-4 flex flex-col gap-4">
               <div>
                 <label className="text-sm font-medium text-white">
                   Submission Details
@@ -200,15 +201,13 @@ const Challenges = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedChallenge(null)}
-                  className="w-full rounded-lg border border-dark-4 px-4 py-2 font-medium text-light-3 hover:bg-dark-3 transition"
-                >
+                  className="w-full rounded-lg border border-dark-4 px-4 py-2 font-medium text-light-3 hover:bg-dark-3 transition">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!submissionText.trim()}
-                  className="w-full rounded-lg bg-primary-500 px-4 py-2 font-medium text-white hover:bg-primary-600 disabled:opacity-50 transition"
-                >
+                  className="w-full rounded-lg bg-primary-500 px-4 py-2 font-medium text-white hover:bg-primary-600 disabled:opacity-50 transition">
                   Submit
                 </button>
               </div>

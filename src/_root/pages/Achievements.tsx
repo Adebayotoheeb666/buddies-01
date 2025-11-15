@@ -5,12 +5,18 @@ import {
   getUserAchievements,
   getUserPoints,
 } from "@/lib/supabase/api";
-import { Achievement, UserAchievement, UserPoints } from "@/types/gamification.types";
+import {
+  Achievement,
+  UserAchievement,
+  UserPoints,
+} from "@/types/gamification.types";
 
 const Achievements = () => {
   const { user } = useAuthContext();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [userAchievements, setUserAchievements] = useState<UserAchievement[]>([]);
+  const [userAchievements, setUserAchievements] = useState<UserAchievement[]>(
+    []
+  );
   const [userPoints, setUserPoints] = useState<UserPoints | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -64,7 +70,9 @@ const Achievements = () => {
     <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold text-white">Achievements & Badges</h1>
-        <p className="text-light-3">Unlock badges and earn points by participating</p>
+        <p className="text-light-3">
+          Unlock badges and earn points by participating
+        </p>
       </div>
 
       {/* Points & Level Display */}
@@ -95,7 +103,9 @@ const Achievements = () => {
 
       {/* Achievements Grid */}
       <div>
-        <h2 className="mb-4 text-xl font-semibold text-white">All Achievements</h2>
+        <h2 className="mb-4 text-xl font-semibold text-white">
+          All Achievements
+        </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {achievements.map((achievement) => {
             const isUnlocked = unlockedIds.has(achievement.id);
@@ -107,14 +117,12 @@ const Achievements = () => {
                   isUnlocked
                     ? "border-primary-500 bg-dark-2"
                     : "border-dark-4 bg-dark-3 opacity-60"
-                }`}
-              >
+                }`}>
                 <div className="flex items-start gap-3">
                   <div
                     className={`${getCategoryColor(
                       achievement.category
-                    )} flex h-12 w-12 items-center justify-center rounded-full text-2xl`}
-                  >
+                    )} flex h-12 w-12 items-center justify-center rounded-full text-2xl`}>
                     {achievement.badge_icon_url ? "🏆" : "⭐"}
                   </div>
                   <div className="flex-1">
@@ -153,7 +161,11 @@ const Achievements = () => {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <p className="text-sm text-light-3">
-              Achievements Unlocked: <span className="font-bold text-primary-500">{userAchievements.length}</span> / {achievements.length}
+              Achievements Unlocked:{" "}
+              <span className="font-bold text-primary-500">
+                {userAchievements.length}
+              </span>{" "}
+              / {achievements.length}
             </p>
             <div className="mt-2 h-2 w-full rounded-full bg-dark-3">
               <div
@@ -162,13 +174,15 @@ const Achievements = () => {
                   width: `${Math.round(
                     (userAchievements.length / achievements.length) * 100
                   )}%`,
-                }}
-              ></div>
+                }}></div>
             </div>
           </div>
           <div>
             <p className="text-sm text-light-3">
-              Next Level: <span className="font-bold text-yellow-500">{userPoints ? (userPoints.level + 1) * 1000 : 1000} pts</span>
+              Next Level:{" "}
+              <span className="font-bold text-yellow-500">
+                {userPoints ? (userPoints.level + 1) * 1000 : 1000} pts
+              </span>
             </p>
             <div className="mt-2 h-2 w-full rounded-full bg-dark-3">
               <div
@@ -177,8 +191,7 @@ const Achievements = () => {
                   width: `${Math.round(
                     ((userPoints?.points_this_semester || 0) / 1000) * 100
                   )}%`,
-                }}
-              ></div>
+                }}></div>
             </div>
           </div>
         </div>
