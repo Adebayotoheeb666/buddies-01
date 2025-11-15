@@ -8,65 +8,52 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Custom fetch wrapper to handle "body stream already read" errors
-// This occurs when proxies or middleware consume the response body before the client
+// This occurs when proxies or middleware consume the response body before the client.
+// The solution is to retry the entire request with exponential backoff.
 const customFetch = async (
   input: RequestInfo | URL,
   init?: RequestInit
 ): Promise<Response> => {
+  const maxRetries = 3;
   let lastError: Error | null = null;
 
-  // Try up to 3 times for body stream errors
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      const response = await fetch(input, init);
+      // Create a fresh request each time (don't reuse body for POST/PUT)
+      let requestBody = init?.body;
 
-      // Clone the response to allow multiple reads
-      const clonedResponse = response.clone();
-
-      // Try to read the body to ensure it's valid
-      const contentType = response.headers.get("content-type");
-      if (contentType?.includes("application/json")) {
-        // Pre-validate JSON responses
-        try {
-          await response.clone().json();
-        } catch (e) {
-          // If we can't parse JSON, it might be a stream issue
-          const error = e as Error;
-          if (error.message?.includes("body stream already read")) {
-            lastError = error;
-            // Wait and retry
-            if (attempt < 2) {
-              await new Promise((resolve) => setTimeout(resolve, 100 * (attempt + 1)));
-              continue;
-            }
-          }
-          throw e;
-        }
+      // If body is a string or we're retrying, we need to clone it
+      if (attempt > 0 && init?.body && typeof init.body === "string") {
+        requestBody = init.body;
       }
 
-      return clonedResponse;
+      const response = await fetch(input, {
+        ...init,
+        body: requestBody,
+      });
+
+      return response;
     } catch (error) {
       lastError = error as Error;
       const errorMessage = (error as any).message || String(error);
 
-      // Only retry on body stream errors
-      if (errorMessage.includes("body stream already read") && attempt < 2) {
-        // Wait with exponential backoff before retrying
-        await new Promise((resolve) => setTimeout(resolve, 100 * (attempt + 1)));
-        continue;
+      // Only retry on body stream errors and network errors
+      const isRetryable =
+        errorMessage.includes("body stream already read") ||
+        errorMessage.includes("Failed to fetch") ||
+        errorMessage.includes("NetworkError");
+
+      if (!isRetryable || attempt === maxRetries - 1) {
+        throw error;
       }
 
-      throw error;
+      // Exponential backoff
+      const delayMs = 100 * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
   }
 
-  // If all retries failed with body stream error, throw the last error
-  if (lastError) {
-    throw lastError;
-  }
-
-  // Fallback - should not reach here
-  return fetch(input, init);
+  throw lastError;
 };
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
