@@ -197,6 +197,48 @@ export const sidebarLinks = [
     label: "Moderation",
     category: "Admin",
   },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/achievements",
+    label: "Achievements",
+    category: "Gamification",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/challenges",
+    label: "Challenges",
+    category: "Gamification",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/leaderboard",
+    label: "Leaderboard",
+    category: "Gamification",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/bucket-list",
+    label: "Bucket Lists",
+    category: "Gamification",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/photo-contests",
+    label: "Photo Contests",
+    category: "Gamification",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/semester-recap",
+    label: "Semester Recap",
+    category: "Gamification",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/analytics",
+    label: "My Analytics",
+    category: "Analytics",
+  },
 ];
 
 export const bottombarLinks = [

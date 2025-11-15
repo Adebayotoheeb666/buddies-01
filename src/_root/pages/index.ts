@@ -52,3 +52,12 @@ export { default as NetworkDiscovery } from "./NetworkDiscovery";
 export { default as Safety } from "./Safety";
 export { default as Wellness } from "./Wellness";
 export { default as ModerationDashboard } from "./ModerationDashboard";
+
+// Phase 7 - Gamification & Analytics
+export { default as Achievements } from "./Achievements";
+export { default as Challenges } from "./Challenges";
+export { default as Leaderboard } from "./Leaderboard";
+export { default as AnalyticsDashboard } from "./AnalyticsDashboard";
+export { default as SemesterRecap } from "./SemesterRecap";
+export { default as BucketList } from "./BucketList";
+export { default as PhotoContests } from "./PhotoContests";
