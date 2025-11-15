@@ -43,7 +43,7 @@ const SigninForm = () => {
       if (!session) {
         toast({
           title: "Login failed",
-          description: "Invalid email or password. Please try again."
+          description: "Invalid email or password. Please try again.",
         });
         return;
       }
@@ -54,13 +54,13 @@ const SigninForm = () => {
         form.reset();
         toast({
           title: "Welcome back!",
-          description: "You have been logged in successfully."
+          description: "You have been logged in successfully.",
         });
         navigate("/");
       } else {
         toast({
           title: "Verify your email",
-          description: "Please check your email to verify your account."
+          description: "Please check your email to verify your account.",
         });
         return;
       }
@@ -72,12 +72,12 @@ const SigninForm = () => {
 
       console.error("Sign in error:", {
         message: errorMessage,
-        error: error
+        error: error,
       });
 
       toast({
         title: "Login failed",
-        description: errorMessage
+        description: errorMessage,
       });
     }
   };

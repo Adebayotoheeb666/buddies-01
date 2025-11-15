@@ -89,7 +89,7 @@ const EnhancedSignupForm = () => {
       if (!newUser) {
         toast({
           title: "Sign up failed",
-          description: "Unable to create your account. Please try again."
+          description: "Unable to create your account. Please try again.",
         });
         return;
       }
@@ -105,7 +105,7 @@ const EnhancedSignupForm = () => {
       if (!session) {
         toast({
           title: "Account created",
-          description: "Your account was created. Please log in."
+          description: "Your account was created. Please log in.",
         });
         navigate("/sign-in");
         return;
@@ -119,13 +119,14 @@ const EnhancedSignupForm = () => {
         setEmailVerified(false);
         toast({
           title: "Success!",
-          description: "Welcome to Buddies!"
+          description: "Welcome to Buddies!",
         });
         navigate("/");
       } else {
         toast({
           title: "Verify your email",
-          description: "Please check your email to verify your account, then log in."
+          description:
+            "Please check your email to verify your account, then log in.",
         });
         navigate("/sign-in");
         return;
@@ -138,12 +139,12 @@ const EnhancedSignupForm = () => {
 
       console.error("Enhanced signup error:", {
         message: errorMessage,
-        error: error
+        error: error,
       });
 
       toast({
         title: "Sign up failed",
-        description: errorMessage
+        description: errorMessage,
       });
     }
   };
