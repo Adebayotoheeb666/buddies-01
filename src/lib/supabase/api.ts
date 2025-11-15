@@ -126,20 +126,144 @@ import {
 } from "@/types/career.types";
 
 // ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+
+// Utility function to retry failed requests with exponential backoff
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  initialDelayMs: number = 100
+): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      const errorMessage = (error as any).message || String(error);
+
+      // Only retry on body stream errors and network errors
+      const isRetryableError =
+        errorMessage.includes("body stream already read") ||
+        errorMessage.includes("Failed to fetch") ||
+        errorMessage.includes("NetworkError");
+
+      if (!isRetryableError || attempt === maxRetries - 1) {
+        throw error;
+      }
+
+      // Exponential backoff
+      const delayMs = initialDelayMs * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+
+  throw lastError;
+}
+
+// Utility function to safely serialize error objects for logging
+function logErrorDetails(label: string, error: any): void {
+  if (!error) {
+    console.error(label, "Unknown error");
+    return;
+  }
+
+  const serialized: Record<string, any> = {};
+
+  try {
+    // Handle Error objects
+    if (error instanceof Error) {
+      serialized.type = "Error";
+      serialized.name = error.name;
+      serialized.message = error.message;
+      serialized.stack = error.stack;
+    }
+
+    // Extract own properties
+    try {
+      const ownProps = Object.getOwnPropertyNames(error);
+      for (const key of ownProps) {
+        try {
+          const value = error[key];
+          // Skip functions but include everything else
+          if (typeof value !== "function") {
+            serialized[key] = value;
+          }
+        } catch (e) {
+          serialized[key] = "[Unable to access property]";
+        }
+      }
+    } catch (e) {
+      // Fallback: try enumerable properties
+      for (const key in error) {
+        try {
+          const value = error[key];
+          if (typeof value !== "function") {
+            serialized[key] = value;
+          }
+        } catch (e) {
+          serialized[key] = "[Unable to access property]";
+        }
+      }
+    }
+
+    // Ensure critical Supabase error properties
+    if (error.message && !serialized.message) {
+      serialized.message = error.message;
+    }
+    if (error.code && !serialized.code) {
+      serialized.code = error.code;
+    }
+    if (error.status && !serialized.status) {
+      serialized.status = error.status;
+    }
+    if ((error as any).details && !serialized.details) {
+      serialized.details = (error as any).details;
+    }
+    if ((error as any).hint && !serialized.hint) {
+      serialized.hint = (error as any).hint;
+    }
+
+    // Log as formatted JSON string to ensure proper display
+    const errorLog = JSON.stringify(serialized, null, 2);
+    console.error(label, "\n" + errorLog);
+  } catch (e) {
+    console.error(label, `Serialization failed: ${String(e)}`);
+  }
+}
+
+// ============================================================
 // AUTH
 // ============================================================
 
 export async function createUserAccount(user: INewUser) {
-  try {
-    // Create auth account
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: user.email,
-      password: user.password,
-    });
+  let authUserId: string | null = null;
 
-    if (authError || !authData.user) {
-      throw authError || new Error("Failed to create auth account");
+  try {
+    // Create auth account with retry logic for network errors
+    const { data: authData, error: authError } = await retryWithBackoff(
+      () =>
+        supabase.auth.signUp({
+          email: user.email,
+          password: user.password,
+        }),
+      3,
+      200
+    );
+
+    if (authError) {
+      const errorMessage = authError.message || "Failed to create auth account";
+      logErrorDetails("Auth signup error details:", authError);
+      throw new Error(errorMessage);
     }
+
+    if (!authData.user) {
+      throw new Error("Failed to create auth account: No user returned");
+    }
+
+    authUserId = authData.user.id;
 
     // Wait a moment for the auth user to be ready
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -159,71 +283,88 @@ export async function createUserAccount(user: INewUser) {
       .single();
 
     if (dbError) {
-      console.error("User profile insert error:", {
-        message: dbError.message,
-        code: dbError.code,
-        details: dbError.details,
-        hint: dbError.hint,
-      });
-      // Clean up auth account if user creation fails
-      try {
-        await supabase.auth.admin.deleteUser(authData.user.id);
-      } catch (deleteError) {
-        console.error("Cleanup failed:", deleteError);
-      }
+      logErrorDetails("User profile insert error details:", dbError);
       throw new Error(dbError.message || "Failed to create user profile");
     }
 
     return userData;
   } catch (error) {
-    console.error("createUserAccount error:", error);
+    logErrorDetails("createUserAccount error details:", error);
+
+    // Note: We cannot clean up the auth account with just the anon key
+    // The auth user will remain in the system but the profile creation failed
+    // This should be handled by the user retrying signup or contacting support
+
     throw error;
   }
 }
 
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: user.email,
-      password: user.password,
-    });
+    const { data, error } = await retryWithBackoff(
+      () =>
+        supabase.auth.signInWithPassword({
+          email: user.email,
+          password: user.password,
+        }),
+      3,
+      200
+    );
 
-    if (error) throw new Error(error.message || "Sign in failed");
+    if (error) {
+      const errorMessage = error.message || "Sign in failed";
+      logErrorDetails("signInAccount error details:", error);
+      throw new Error(errorMessage);
+    }
+
+    if (!data.session) {
+      throw new Error("Sign in failed: No session returned");
+    }
 
     return data.session;
   } catch (error) {
-    console.error("signInAccount error:", error);
+    logErrorDetails("signInAccount try-catch error details:", error);
     throw error;
   }
 }
 
 export async function getAccount() {
   try {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+    const { data, error } = await retryWithBackoff(
+      () => supabase.auth.getUser(),
+      3,
+      200
+    );
+    const { user } = data;
 
-    if (error) throw error;
+    if (error) {
+      logErrorDetails("getAccount - Auth error details:", error);
+      throw error;
+    }
 
     return user;
   } catch (error) {
-    console.log(error);
+    logErrorDetails("getAccount - Error details:", error);
+    return null;
   }
 }
 
 export async function getCurrentUser() {
   try {
-    const {
-      data: { user: authUser },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const { data, error: authError } = await retryWithBackoff(
+      () => supabase.auth.getUser(),
+      3,
+      200
+    );
+    const { user: authUser } = data;
 
-    if (authError || !authUser) {
-      console.error(
-        "getCurrentUser - No authenticated user:",
-        authError?.message
-      );
+    if (authError) {
+      logErrorDetails("getCurrentUser - Auth error details:", authError);
+      return null;
+    }
+
+    if (!authUser) {
+      console.warn("getCurrentUser - No authenticated user found");
       return null;
     }
 
@@ -234,22 +375,13 @@ export async function getCurrentUser() {
       .single();
 
     if (dbError) {
-      console.error("getCurrentUser dbError details:", {
-        message: dbError.message || "Unknown error",
-        code: dbError.code || "UNKNOWN",
-        details: dbError.details || "No details",
-        hint: (dbError as any).hint || "No hint",
-        status: (dbError as any).status || "Unknown status",
-      });
+      logErrorDetails("getCurrentUser - Database error details:", dbError);
       return null;
     }
 
     return userData;
   } catch (error) {
-    console.error("getCurrentUser try-catch error:", {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
+    logErrorDetails("getCurrentUser - Try-catch error details:", error);
     return null;
   }
 }

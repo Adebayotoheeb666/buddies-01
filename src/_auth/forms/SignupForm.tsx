@@ -50,10 +50,15 @@ const SignupForm = () => {
       const newUser = await createUserAccount(user);
 
       if (!newUser) {
-        toast({ title: "Sign up failed. Please try again." });
-
+        toast({
+          title: "Sign up failed",
+          description: "Unable to create your account. Please try again.",
+        });
         return;
       }
+
+      // Give auth a moment to propagate
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       const session = await signInAccount({
         email: user.email,
@@ -61,10 +66,11 @@ const SignupForm = () => {
       });
 
       if (!session) {
-        toast({ title: "Something went wrong. Please login your new account" });
-
+        toast({
+          title: "Account created",
+          description: "Your account was created. Please log in.",
+        });
         navigate("/sign-in");
-
         return;
       }
 
@@ -72,11 +78,18 @@ const SignupForm = () => {
 
       if (isLoggedIn) {
         form.reset();
-
+        toast({
+          title: "Success!",
+          description: "Welcome to Buddies!",
+        });
         navigate("/");
       } else {
-        toast({ title: "Login failed. Please try again." });
-
+        toast({
+          title: "Verify your email",
+          description:
+            "Please check your email to verify your account, then log in.",
+        });
+        navigate("/sign-in");
         return;
       }
     } catch (error) {
@@ -84,8 +97,16 @@ const SignupForm = () => {
         error instanceof Error
           ? error.message
           : "Sign up failed. Please try again.";
-      toast({ title: errorMessage });
-      console.error("Signup error:", error);
+
+      console.error("Signup error:", {
+        message: errorMessage,
+        error: error,
+      });
+
+      toast({
+        title: "Sign up failed",
+        description: errorMessage,
+      });
     }
   };
 
