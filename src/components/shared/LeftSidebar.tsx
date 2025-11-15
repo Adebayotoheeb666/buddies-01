@@ -76,9 +76,10 @@ const LeftSidebar = () => {
           <img
             src="/assets/images/logo.svg"
             alt="logo"
-            width={170}
+            width={36}
             height={36}
           />
+          <span className="h3-bold text-primary-500">Buddies</span>
         </Link>
 
         {isLoading || !user.email ? (
