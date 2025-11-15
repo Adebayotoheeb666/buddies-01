@@ -7,7 +7,10 @@ import {
   addBucketListItem,
   completeBucketListItem,
 } from "@/lib/supabase/api";
-import { BucketList as BucketListType, BucketListItem } from "@/types/gamification.types";
+import {
+  BucketList as BucketListType,
+  BucketListItem,
+} from "@/types/gamification.types";
 
 const BucketList = () => {
   const { user } = useAuthContext();
@@ -100,7 +103,8 @@ const BucketList = () => {
 
   const completedCount = listItems.filter((item) => item.completed).length;
   const totalCount = listItems.length;
-  const completionPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+  const completionPercentage =
+    totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   return (
     <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -181,7 +185,9 @@ const BucketList = () => {
                   <div className="flex-1">
                     <p
                       className={`font-medium ${
-                        item.completed ? "line-through text-light-4" : "text-white"
+                        item.completed
+                          ? "line-through text-light-4"
+                          : "text-white"
                       }`}>
                       {item.activity}
                     </p>
@@ -192,9 +198,7 @@ const BucketList = () => {
                     )}
                   </div>
                   {item.completed && (
-                    <div className="flex-shrink-0 text-primary-500">
-                      ✓ Done
-                    </div>
+                    <div className="flex-shrink-0 text-primary-500">✓ Done</div>
                   )}
                 </div>
               ))
@@ -222,7 +226,9 @@ const BucketList = () => {
           <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
             <h2 className="text-xl font-bold text-white">Create Bucket List</h2>
 
-            <form onSubmit={handleCreateList} className="mt-4 flex flex-col gap-4">
+            <form
+              onSubmit={handleCreateList}
+              className="mt-4 flex flex-col gap-4">
               <div>
                 <label className="text-sm font-medium text-white">
                   List Name

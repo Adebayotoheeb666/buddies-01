@@ -197,7 +197,9 @@ const PhotoContests = () => {
                   {/* Caption */}
                   <div className="p-4">
                     {submission.caption && (
-                      <p className="text-sm text-light-3">{submission.caption}</p>
+                      <p className="text-sm text-light-3">
+                        {submission.caption}
+                      </p>
                     )}
 
                     {/* Ranking */}
@@ -248,9 +250,7 @@ const PhotoContests = () => {
       {showSubmitModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
-            <h2 className="text-xl font-bold text-white">
-              Submit Your Photo
-            </h2>
+            <h2 className="text-xl font-bold text-white">Submit Your Photo</h2>
 
             <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
               <div>
