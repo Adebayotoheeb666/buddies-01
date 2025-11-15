@@ -24,6 +24,8 @@ const LeftSidebar = () => {
     Campus: false,
     Social: false,
     Career: false,
+    "Safety & Wellness": false,
+    Admin: false,
   });
 
   const toggleCategory = (category: string) => {
