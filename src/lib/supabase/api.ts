@@ -130,42 +130,70 @@ import {
 // ============================================================
 
 // Utility function to safely serialize error objects for logging
-function serializeError(error: any): Record<string, any> {
-  if (!error) return { error: "Unknown error" };
+function serializeError(error: any): string {
+  if (!error) return "Unknown error";
 
   const serialized: Record<string, any> = {};
 
-  // Handle Error objects
-  if (error instanceof Error) {
-    serialized.name = error.name;
-    serialized.message = error.message;
-    serialized.stack = error.stack;
-  }
-
-  // Extract all enumerable properties
   try {
-    for (const key in error) {
-      if (Object.prototype.hasOwnProperty.call(error, key)) {
-        const value = error[key];
-        // Skip functions and circular references
-        if (typeof value !== "function") {
-          serialized[key] = value;
+    // Handle Error objects
+    if (error instanceof Error) {
+      serialized.type = "Error";
+      serialized.name = error.name;
+      serialized.message = error.message;
+      serialized.stack = error.stack;
+    }
+
+    // Extract own properties
+    try {
+      const ownProps = Object.getOwnPropertyNames(error);
+      for (const key of ownProps) {
+        try {
+          const value = error[key];
+          // Skip functions but include everything else
+          if (typeof value !== "function") {
+            serialized[key] = value;
+          }
+        } catch (e) {
+          serialized[key] = "[Unable to access property]";
+        }
+      }
+    } catch (e) {
+      // Fallback: try enumerable properties
+      for (const key in error) {
+        try {
+          const value = error[key];
+          if (typeof value !== "function") {
+            serialized[key] = value;
+          }
+        } catch (e) {
+          serialized[key] = "[Unable to access property]";
         }
       }
     }
+
+    // Ensure critical Supabase error properties
+    if (error.message && !serialized.message) {
+      serialized.message = error.message;
+    }
+    if (error.code && !serialized.code) {
+      serialized.code = error.code;
+    }
+    if (error.status && !serialized.status) {
+      serialized.status = error.status;
+    }
+    if ((error as any).details && !serialized.details) {
+      serialized.details = (error as any).details;
+    }
+    if ((error as any).hint && !serialized.hint) {
+      serialized.hint = (error as any).hint;
+    }
+
+    // Return as formatted string
+    return JSON.stringify(serialized, null, 2);
   } catch (e) {
-    serialized.serializationError = "Could not enumerate error properties";
+    return `Error serialization failed: ${String(e)}`;
   }
-
-  // Ensure we have the most important fields
-  if (!serialized.message && error.message) {
-    serialized.message = error.message;
-  }
-  if (!serialized.code && error.code) {
-    serialized.code = error.code;
-  }
-
-  return serialized;
 }
 
 // ============================================================
