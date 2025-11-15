@@ -48,11 +48,12 @@ export const useGetOrCreatePrivateChat = () => {
   });
 };
 
-export const useGetPrivateChats = () => {
+export const useGetPrivateChats = (enabled: boolean = true) => {
   return useQuery({
     queryKey: chatKeys.privateChats,
     queryFn: getPrivateChats,
     refetchInterval: 5000,
+    enabled,
   });
 };
 
@@ -89,11 +90,12 @@ export const useCreateGroupChat = () => {
   });
 };
 
-export const useGetGroupChats = () => {
+export const useGetGroupChats = (enabled: boolean = true) => {
   return useQuery({
     queryKey: chatKeys.groupChats,
     queryFn: getGroupChats,
     refetchInterval: 5000,
+    enabled,
   });
 };
 
