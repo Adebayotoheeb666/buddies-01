@@ -175,11 +175,12 @@ export async function signInAccount(user: { email: string; password: string }) {
       password: user.password,
     });
 
-    if (error) throw error;
+    if (error) throw new Error(error.message || "Sign in failed");
 
     return data.session;
   } catch (error) {
-    console.log(error);
+    console.error("signInAccount error:", error);
+    throw error;
   }
 }
 
