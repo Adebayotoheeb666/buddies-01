@@ -2,13 +2,14 @@ import {
   useGetPrivateChats,
   useGetGroupChats,
 } from "@/lib/react-query/chat-queries";
-import { useUserContext } from "@/context/AuthContext";
+import { useUserContext, useAuthContext } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
 
 export const ChatNotificationBadge = () => {
   const { user } = useUserContext();
-  const { data: privateChats = [] } = useGetPrivateChats();
-  const { data: groupChats = [] } = useGetGroupChats();
+  const { isAuthenticated } = useAuthContext();
+  const { data: privateChats = [] } = useGetPrivateChats(isAuthenticated);
+  const { data: groupChats = [] } = useGetGroupChats(isAuthenticated);
 
   // Count unread messages (simplified - can be enhanced with actual unread count tracking)
   const unreadCount = privateChats.length + groupChats.length;
