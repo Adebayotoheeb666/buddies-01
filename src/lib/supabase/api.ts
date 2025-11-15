@@ -216,11 +216,14 @@ export async function getCurrentUser() {
       .eq("id", authUser.id)
       .single();
 
-    if (dbError) return null;
+    if (dbError) {
+      console.error("getCurrentUser dbError:", dbError);
+      return null;
+    }
 
     return userData;
   } catch (error) {
-    console.log(error);
+    console.error("getCurrentUser error:", error);
     return null;
   }
 }
