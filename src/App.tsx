@@ -38,6 +38,9 @@ import {
   MemeBoard,
   AnonymousConfessions,
   NetworkDiscovery,
+  JobBoard,
+  AlumniNetwork,
+  ResearchStartups,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
