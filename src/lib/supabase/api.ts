@@ -246,11 +246,7 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     return data.session;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("signInAccount try-catch error:", {
-      message: errorMessage,
-      error: error instanceof Error ? error : String(error),
-    });
+    console.error("signInAccount try-catch error details:", serializeError(error));
     throw error;
   }
 }
