@@ -239,11 +239,23 @@ export async function getAccount() {
       error,
     } = await supabase.auth.getUser();
 
-    if (error) throw error;
+    if (error) {
+      console.error("getAccount - Auth error:", {
+        message: error.message || "Unknown auth error",
+        status: error.status,
+        code: (error as any).code,
+      });
+      throw error;
+    }
 
     return user;
   } catch (error) {
-    console.log(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("getAccount - Error:", {
+      message: errorMessage,
+      error: error,
+    });
+    return null;
   }
 }
 
