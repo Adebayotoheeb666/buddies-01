@@ -41,6 +41,9 @@ import {
   JobBoard,
   AlumniNetwork,
   ResearchStartups,
+  Safety,
+  Wellness,
+  ModerationDashboard,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
