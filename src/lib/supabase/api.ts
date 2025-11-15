@@ -217,7 +217,11 @@ export async function getCurrentUser() {
       .single();
 
     if (dbError) {
-      console.error("getCurrentUser dbError:", dbError);
+      console.error("getCurrentUser dbError:", {
+        message: dbError.message,
+        code: dbError.code,
+        details: dbError.details,
+      });
       return null;
     }
 
