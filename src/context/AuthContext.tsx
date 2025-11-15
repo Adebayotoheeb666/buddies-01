@@ -69,10 +69,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let isMounted = true;
+    let hasInitialized = false;
 
     const initializeAuth = async () => {
+      if (hasInitialized) return;
+      hasInitialized = true;
+
       try {
-        await checkAuthUser();
+        // Wait for session to be restored from storage
+        const { data } = await supabase.auth.getSession();
+
+        if (isMounted) {
+          if (data?.session) {
+            // Session exists, try to get user data
+            await checkAuthUser();
+          } else {
+            // No session, user is not authenticated
+            setIsAuthenticated(false);
+            setUser(INITIAL_USER);
+          }
+        }
       } catch (error) {
         console.error("Auth initialization error:", error);
         if (isMounted) {
@@ -85,13 +101,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth state changes and update context
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event: string, session: any) => {
+        if (!isMounted) return;
+
         if (event === "SIGNED_IN" && session) {
           await checkAuthUser();
         } else if (event === "SIGNED_OUT") {
-          if (isMounted) {
-            setUser(INITIAL_USER);
+          setUser(INITIAL_USER);
+          setIsAuthenticated(false);
+          navigate("/sign-in");
+        } else if (event === "INITIAL_SESSION") {
+          // Session has been restored from storage
+          if (session) {
+            await checkAuthUser();
+          } else {
             setIsAuthenticated(false);
-            navigate("/sign-in");
+            setUser(INITIAL_USER);
           }
         }
       }
@@ -103,7 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Cleanup listener on unmount
     return () => {
       isMounted = false;
-      authListener.subscription.unsubscribe();
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, [navigate]);
 
