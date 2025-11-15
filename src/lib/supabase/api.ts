@@ -3842,3 +3842,640 @@ export async function reviewAppeal(
     console.log(error);
   }
 }
+
+// ============================================================
+// PHASE 7: GAMIFICATION & ANALYTICS
+// ============================================================
+
+// 7.1 ENGAGEMENT & GAMIFICATION
+
+export async function getAchievements() {
+  try {
+    const { data, error } = await supabase
+      .from("achievements")
+      .select("*")
+      .order("points_reward", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getUserAchievements(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_achievements")
+      .select("*")
+      .eq("user_id", userId)
+      .order("unlocked_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getUserPoints(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_points")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function addPointTransaction(
+  userId: string,
+  points: number,
+  transactionType: string,
+  description?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("point_transactions")
+      .insert({
+        user_id: userId,
+        points,
+        transaction_type: transactionType,
+        description,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getLeaderboards() {
+  try {
+    const { data, error } = await supabase
+      .from("leaderboards")
+      .select("*")
+      .order("updated_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getLeaderboardEntries(leaderboardId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("leaderboard_entries")
+      .select("*")
+      .eq("leaderboard_id", leaderboardId)
+      .order("rank", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getSemesterRecap(userId: string, semester: string) {
+  try {
+    const { data, error } = await supabase
+      .from("semester_recaps")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("semester", semester)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getChallenges() {
+  try {
+    const { data, error } = await supabase
+      .from("challenges")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function participateInChallenge(
+  challengeId: string,
+  userId: string,
+  submissionText?: string,
+  submissionImageUrl?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("challenge_participations")
+      .insert({
+        challenge_id: challengeId,
+        user_id: userId,
+        submission_text: submissionText,
+        submission_image_url: submissionImageUrl,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserChallengeParticipations(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("challenge_participations")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getPhotoContests() {
+  try {
+    const { data, error } = await supabase
+      .from("photo_contests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function submitPhotoContestEntry(
+  contestId: string,
+  submitterId: string,
+  photoUrl: string,
+  caption?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("photo_submissions")
+      .insert({
+        contest_id: contestId,
+        submitter_id: submitterId,
+        photo_url: photoUrl,
+        caption,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPhotoContestSubmissions(contestId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("photo_submissions")
+      .select("*")
+      .eq("contest_id", contestId)
+      .order("votes", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function voteForPhoto(submissionId: string) {
+  try {
+    const { data: current } = await supabase
+      .from("photo_submissions")
+      .select("votes")
+      .eq("id", submissionId)
+      .single();
+
+    const newVotes = (current?.votes || 0) + 1;
+
+    const { data, error } = await supabase
+      .from("photo_submissions")
+      .update({ votes: newVotes })
+      .eq("id", submissionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function createBucketList(
+  userId: string,
+  name: string,
+  description?: string,
+  isPublic?: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("bucket_lists")
+      .insert({
+        user_id: userId,
+        name,
+        description,
+        is_public: isPublic || false,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserBucketLists(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("bucket_lists")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function addBucketListItem(
+  bucketListId: string,
+  activity: string,
+  locationId?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("bucket_list_items")
+      .insert({
+        bucket_list_id: bucketListId,
+        activity,
+        location_id: locationId,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function completeBucketListItem(itemId: string, photoUrl?: string) {
+  try {
+    const { data, error } = await supabase
+      .from("bucket_list_items")
+      .update({
+        completed: true,
+        completed_date: new Date().toISOString(),
+        photo_url: photoUrl,
+      })
+      .eq("id", itemId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getBucketListItems(bucketListId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("bucket_list_items")
+      .select("*")
+      .eq("bucket_list_id", bucketListId)
+      .order("completed", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAttendanceStreak(userId: string, activityType: string) {
+  try {
+    const { data, error } = await supabase
+      .from("attendance_streaks")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("activity_type", activityType)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+// 7.2 ANALYTICS & INSIGHTS
+
+export async function getUserAnalytics(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_analytics")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getFeatureUsage(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("feature_usage")
+      .select("*")
+      .eq("user_id", userId)
+      .order("usage_count", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function logFeatureUsage(userId: string, featureName: string) {
+  try {
+    const { data: existing } = await supabase
+      .from("feature_usage")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("feature_name", featureName)
+      .single();
+
+    if (existing) {
+      const { data, error } = await supabase
+        .from("feature_usage")
+        .update({
+          usage_count: existing.usage_count + 1,
+          last_used: new Date().toISOString(),
+        })
+        .eq("id", existing.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } else {
+      const { data, error } = await supabase
+        .from("feature_usage")
+        .insert({
+          user_id: userId,
+          feature_name: featureName,
+          usage_count: 1,
+          last_used: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCampusExploration(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("campus_exploration")
+      .select("*")
+      .eq("user_id", userId)
+      .order("visit_count", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function logCampusVisit(userId: string, locationId: string) {
+  try {
+    const { data: existing } = await supabase
+      .from("campus_exploration")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("location_id", locationId)
+      .single();
+
+    if (existing) {
+      const { data, error } = await supabase
+        .from("campus_exploration")
+        .update({
+          visit_count: existing.visit_count + 1,
+          last_visit: new Date().toISOString(),
+        })
+        .eq("id", existing.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } else {
+      const { data, error } = await supabase
+        .from("campus_exploration")
+        .insert({
+          user_id: userId,
+          location_id: locationId,
+          visit_count: 1,
+          first_visit: new Date().toISOString(),
+          last_visit: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAdminMetrics(metricType?: string) {
+  try {
+    let query = supabase.from("admin_metrics").select("*");
+
+    if (metricType) {
+      query = query.eq("metric_type", metricType);
+    }
+
+    const { data, error } = await query.order("date", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function recordAdminMetric(
+  metricType: string,
+  value: number,
+  date?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("admin_metrics")
+      .insert({
+        metric_type: metricType,
+        value,
+        date: date || new Date().toISOString().split("T")[0],
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getEngagementSummary(userId: string, period: string) {
+  try {
+    const { data, error } = await supabase
+      .from("engagement_summary")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("period", period)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    return data || null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getAtRiskStudents() {
+  try {
+    const { data, error } = await supabase
+      .from("at_risk_students")
+      .select("*")
+      .order("risk_score", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function updateAtRiskStudentIntervention(
+  studentId: string,
+  interventionSent: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("at_risk_students")
+      .update({
+        intervention_sent: interventionSent,
+      })
+      .eq("id", studentId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
