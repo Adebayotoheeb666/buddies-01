@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getConfessions } from "@/lib/supabase/api";
-import { AnonymousConfession } from "@/types/social.types";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
 import ConfessionCard from "@/components/social/ConfessionCard";

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getMemeBoard } from "@/lib/supabase/api";
-import { MemePost } from "@/types/social.types";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
 import MemeCard from "@/components/social/MemeCard";

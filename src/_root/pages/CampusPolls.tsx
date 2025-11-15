@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPolls } from "@/lib/supabase/api";
-import { CampusPoll } from "@/types/social.types";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
 import PollCard from "@/components/social/PollCard";

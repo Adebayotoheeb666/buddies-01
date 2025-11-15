@@ -1,6 +1,5 @@
 import { useGetCourses } from "@/lib/react-query/queries";
 import Loader from "@/components/shared/Loader";
-import GridPostList from "@/components/shared/GridPostList";
 
 const Courses = () => {
   const { data: coursesData, isLoading } = useGetCourses();

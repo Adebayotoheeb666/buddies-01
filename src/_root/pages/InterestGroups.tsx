@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getInterestGroups } from "@/lib/supabase/api";
-import { InterestGroup } from "@/types/social.types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
@@ -23,7 +22,7 @@ const InterestGroups = () => {
     (group) =>
       group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       group.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      group.interests?.some((interest) =>
+      group.interests?.some((interest: any) =>
         interest.toLowerCase().includes(searchTerm.toLowerCase())
       )
   );

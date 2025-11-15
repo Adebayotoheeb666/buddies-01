@@ -3,10 +3,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   getFacilities,
   getFacilityEquipment,
-  getFacilityBookings,
-  getUserFacilityBookings,
   getFacilityReviews,
   bookFacility,
+  getUserFacilityBookings,
 } from "@/lib/supabase/api";
 import { useAuthContext } from "@/context/AuthContext";
 import { Loader } from "@/components/shared";
@@ -34,12 +33,6 @@ const FacilitiesBooking = () => {
   const { data: equipment } = useQuery({
     queryKey: ["facility-equipment", selectedFacility],
     queryFn: () => getFacilityEquipment(selectedFacility!),
-    enabled: !!selectedFacility,
-  });
-
-  const { data: bookings } = useQuery({
-    queryKey: ["facility-bookings", selectedFacility],
-    queryFn: () => getFacilityBookings(selectedFacility!),
     enabled: !!selectedFacility,
   });
 
@@ -165,7 +158,7 @@ const FacilitiesBooking = () => {
                     )}
                     {facility.amenities && facility.amenities.length > 0 && (
                       <div className="flex gap-1 flex-wrap mt-2">
-                        {facility.amenities.slice(0, 3).map((amenity) => (
+                        {facility.amenities.slice(0, 3).map((amenity: string) => (
                           <span
                             key={amenity}
                             className="text-xs bg-dark-4 px-2 py-1 rounded">
@@ -277,9 +270,9 @@ const FacilitiesBooking = () => {
 
                     <Button
                       onClick={() => bookingMutation.mutate()}
-                      disabled={bookingMutation.isPending}
+                      disabled={bookingMutation.isLoading}
                       className="w-full bg-purple-500 text-white py-3 rounded-lg font-semibold">
-                      {bookingMutation.isPending
+                      {bookingMutation.isLoading
                         ? "Submitting..."
                         : "Submit Booking Request"}
                     </Button>

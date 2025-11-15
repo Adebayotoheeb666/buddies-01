@@ -2,12 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getDepartmentNetworks } from "@/lib/supabase/api";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
-import { useAuthContext } from "@/context/AuthContext";
 import DepartmentNetworkCard from "@/components/social/DepartmentNetworkCard";
 
 const NetworkDiscovery = () => {
-  const { user } = useAuthContext();
-
   const { data: departmentNetworks = [], isLoading } = useQuery({
     queryKey: ["departmentNetworks"],
     queryFn: getDepartmentNetworks,
