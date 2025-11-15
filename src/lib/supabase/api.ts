@@ -1,5 +1,44 @@
 import { supabase } from "./config";
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
+
+// Utility function to safely serialize error objects
+function serializeError(error: any): Record<string, any> {
+  if (!error) return { error: "Unknown error" };
+
+  const serialized: Record<string, any> = {};
+
+  // Handle Error objects
+  if (error instanceof Error) {
+    serialized.name = error.name;
+    serialized.message = error.message;
+    serialized.stack = error.stack;
+  }
+
+  // Extract all enumerable properties
+  try {
+    for (const key in error) {
+      if (Object.prototype.hasOwnProperty.call(error, key)) {
+        const value = error[key];
+        // Skip functions and circular references
+        if (typeof value !== "function") {
+          serialized[key] = value;
+        }
+      }
+    }
+  } catch (e) {
+    serialized.serializationError = "Could not enumerate error properties";
+  }
+
+  // Ensure we have the most important fields
+  if (!serialized.message && error.message) {
+    serialized.message = error.message;
+  }
+  if (!serialized.code && error.code) {
+    serialized.code = error.code;
+  }
+
+  return serialized;
+}
 import {
   Course,
   CourseEnrollment,
