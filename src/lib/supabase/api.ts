@@ -326,14 +326,7 @@ export async function getCurrentUser() {
       .single();
 
     if (dbError) {
-      console.error("getCurrentUser - Database error:", {
-        message: dbError.message || "Unknown database error",
-        code: dbError.code || "UNKNOWN_CODE",
-        details: dbError.details || null,
-        hint: (dbError as any).hint || null,
-        status: (dbError as any).status || "UNKNOWN_STATUS",
-        fullError: JSON.stringify(dbError, null, 2),
-      });
+      console.error("getCurrentUser - Database error details:", serializeError(dbError));
       return null;
     }
 
