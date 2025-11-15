@@ -57,6 +57,24 @@ import {
   FacilityReview,
 } from "@/types/campus.types";
 import {
+  SafetyAlert,
+  SafeWalkRequest,
+  LocationShare,
+  LocationUpdate,
+  EmergencyResource,
+  WellnessResource,
+  CounselingAppointment,
+  WellnessCheckIn,
+  WellnessGoal,
+  SupportForum,
+  ForumThread,
+  ForumReply,
+  ContentReport,
+  IntegrityFlag,
+  ModerationAction,
+  Appeal,
+} from "@/types/safety.types";
+import {
   JobPosting,
   JobApplication,
   InternshipPosting,
