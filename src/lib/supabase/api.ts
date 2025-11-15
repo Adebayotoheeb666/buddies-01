@@ -301,15 +301,12 @@ export async function createUserAccount(user: INewUser) {
 
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const { data, error } = await retryWithBackoff(
-      () =>
-        supabase.auth.signInWithPassword({
-          email: user.email,
-          password: user.password,
-        }),
-      3,
-      200
-    );
+    const signInResult = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: user.password,
+    });
+
+    const { data, error } = signInResult;
 
     if (error) {
       const errorMessage = error.message || "Sign in failed";
