@@ -298,7 +298,7 @@ export async function getAccount() {
 
     return user;
   } catch (error) {
-    console.error("getAccount - Error details:", serializeError(error));
+    logErrorDetails("getAccount - Error details:", error);
     return null;
   }
 }
