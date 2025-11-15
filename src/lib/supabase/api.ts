@@ -220,6 +220,7 @@ export async function getCurrentUser() {
     } = await supabase.auth.getUser();
 
     if (authError || !authUser) {
+      console.error("getCurrentUser - No authenticated user:", authError?.message);
       return null;
     }
 
@@ -230,17 +231,22 @@ export async function getCurrentUser() {
       .single();
 
     if (dbError) {
-      console.error("getCurrentUser dbError:", {
-        message: dbError.message,
-        code: dbError.code,
-        details: dbError.details,
+      console.error("getCurrentUser dbError details:", {
+        message: dbError.message || "Unknown error",
+        code: dbError.code || "UNKNOWN",
+        details: dbError.details || "No details",
+        hint: (dbError as any).hint || "No hint",
+        status: (dbError as any).status || "Unknown status",
       });
       return null;
     }
 
     return userData;
   } catch (error) {
-    console.error("getCurrentUser error:", error);
+    console.error("getCurrentUser try-catch error:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return null;
   }
 }
