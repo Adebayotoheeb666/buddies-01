@@ -245,16 +245,13 @@ export async function createUserAccount(user: INewUser) {
   let authUserId: string | null = null;
 
   try {
-    // Create auth account with retry logic for network errors
-    const { data: authData, error: authError } = await retryWithBackoff(
-      () =>
-        supabase.auth.signUp({
-          email: user.email,
-          password: user.password,
-        }),
-      3,
-      200
-    );
+    // Create auth account directly without retry on body stream errors
+    const authResult = await supabase.auth.signUp({
+      email: user.email,
+      password: user.password,
+    });
+
+    const { data: authData, error: authError } = authResult;
 
     if (authError) {
       const errorMessage = authError.message || "Failed to create auth account";
