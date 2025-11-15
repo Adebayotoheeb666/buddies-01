@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/config";
 
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/supabase/api";
@@ -67,16 +68,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const cookieFallback = localStorage.getItem("cookieFallback");
-    if (
-      cookieFallback === "[]" ||
-      cookieFallback === null ||
-      cookieFallback === undefined
-    ) {
-      navigate("/sign-in");
-    }
+    // Listen for auth state changes and update context
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event: string, session: any) => {
+        if (event === "SIGNED_IN" && session) {
+          await checkAuthUser();
+        } else if (event === "SIGNED_OUT") {
+          setUser(INITIAL_USER);
+          setIsAuthenticated(false);
+          navigate("/sign-in");
+        }
+      }
+    );
 
+    // Initial check on mount
     checkAuthUser();
+
+    // Cleanup listener on unmount
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   const value = {
