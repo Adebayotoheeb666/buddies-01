@@ -3249,11 +3249,14 @@ export async function getSafetyAlerts() {
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      logErrorDetails("getSafetyAlerts - Error:", error);
+      return [];
+    }
 
     return data || [];
   } catch (error) {
-    console.log(error);
+    logErrorDetails("getSafetyAlerts - Catch error:", error);
     return [];
   }
 }
@@ -3433,11 +3436,14 @@ export async function getEmergencyResources() {
       .select("*")
       .order("resource_type", { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      logErrorDetails("getEmergencyResources - Error:", error);
+      return [];
+    }
 
     return data || [];
   } catch (error) {
-    console.log(error);
+    logErrorDetails("getEmergencyResources - Catch error:", error);
     return [];
   }
 }
