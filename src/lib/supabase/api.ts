@@ -130,8 +130,11 @@ import {
 // ============================================================
 
 // Utility function to safely serialize error objects for logging
-function serializeError(error: any): string {
-  if (!error) return "Unknown error";
+function logErrorDetails(label: string, error: any): void {
+  if (!error) {
+    console.error(label, "Unknown error");
+    return;
+  }
 
   const serialized: Record<string, any> = {};
 
@@ -189,10 +192,11 @@ function serializeError(error: any): string {
       serialized.hint = (error as any).hint;
     }
 
-    // Return as formatted string
-    return JSON.stringify(serialized, null, 2);
+    // Log as formatted JSON string to ensure proper display
+    const errorLog = JSON.stringify(serialized, null, 2);
+    console.error(label, "\n" + errorLog);
   } catch (e) {
-    return `Error serialization failed: ${String(e)}`;
+    console.error(label, `Serialization failed: ${String(e)}`);
   }
 }
 
