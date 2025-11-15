@@ -179,6 +179,24 @@ export const sidebarLinks = [
     label: "Research & Startups",
     category: "Career",
   },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/safety",
+    label: "Safety",
+    category: "Safety & Wellness",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/wellness",
+    label: "Wellness",
+    category: "Safety & Wellness",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/moderation",
+    label: "Moderation",
+    category: "Admin",
+  },
 ];
 
 export const bottombarLinks = [
