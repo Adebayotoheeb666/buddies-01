@@ -2,6 +2,7 @@ export type INavLink = {
   imgURL: string;
   route: string;
   label: string;
+  category?: string;
 };
 
 export type IUpdateUser = {
