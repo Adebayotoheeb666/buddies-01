@@ -216,7 +216,7 @@ export async function createUserAccount(user: INewUser) {
 
     if (authError) {
       const errorMessage = authError.message || "Failed to create auth account";
-      console.error("Auth signup error details:\n" + serializeError(authError));
+      logErrorDetails("Auth signup error details:", authError);
       throw new Error(errorMessage);
     }
 
