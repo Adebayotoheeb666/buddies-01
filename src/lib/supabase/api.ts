@@ -311,7 +311,7 @@ export async function getCurrentUser() {
     } = await supabase.auth.getUser();
 
     if (authError) {
-      console.error("getCurrentUser - Auth error details:", serializeError(authError));
+      logErrorDetails("getCurrentUser - Auth error details:", authError);
       return null;
     }
 
