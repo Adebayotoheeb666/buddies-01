@@ -45,7 +45,15 @@ const LeftSidebar = () => {
     {} as Record<string, INavLink[]>
   );
 
-  const categoryOrder = ["Core", "Academic", "Study", "Resources", "Campus", "Social", "Career"];
+  const categoryOrder = [
+    "Core",
+    "Academic",
+    "Study",
+    "Resources",
+    "Campus",
+    "Social",
+    "Career",
+  ];
 
   const handleSignOut = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -99,9 +107,7 @@ const LeftSidebar = () => {
                 <button
                   onClick={() => toggleCategory(category)}
                   className="flex gap-3 items-center px-4 py-2 text-light-2 hover:bg-dark-4 rounded-lg transition font-semibold text-sm">
-                  <span className="text-base">
-                    {isExpanded ? "▼" : "▶"}
-                  </span>
+                  <span className="text-base">{isExpanded ? "▼" : "▶"}</span>
                   {category}
                 </button>
 
