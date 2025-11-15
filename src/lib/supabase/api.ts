@@ -245,13 +245,8 @@ export async function createUserAccount(user: INewUser) {
     }
 
     return userData;
-
-    return userData;
   } catch (error) {
-    console.error("createUserAccount error details:", {
-      userId: authUserId,
-      ...serializeError(error),
-    });
+    console.error("createUserAccount error details:", serializeError(error));
 
     // Note: We cannot clean up the auth account with just the anon key
     // The auth user will remain in the system but the profile creation failed
