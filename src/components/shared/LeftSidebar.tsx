@@ -55,6 +55,8 @@ const LeftSidebar = () => {
     "Campus",
     "Social",
     "Career",
+    "Safety & Wellness",
+    "Admin",
   ];
 
   const handleSignOut = async (
