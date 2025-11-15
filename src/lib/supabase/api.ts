@@ -327,7 +327,7 @@ export async function getCurrentUser() {
       .single();
 
     if (dbError) {
-      console.error("getCurrentUser - Database error details:", serializeError(dbError));
+      logErrorDetails("getCurrentUser - Database error details:", dbError);
       return null;
     }
 
