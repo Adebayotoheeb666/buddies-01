@@ -254,11 +254,17 @@ export async function getCurrentUser() {
       error: authError,
     } = await supabase.auth.getUser();
 
-    if (authError || !authUser) {
-      console.error(
-        "getCurrentUser - No authenticated user:",
-        authError?.message
-      );
+    if (authError) {
+      console.error("getCurrentUser - Auth error:", {
+        message: authError.message || "Unknown auth error",
+        status: authError.status,
+        code: (authError as any).code,
+      });
+      return null;
+    }
+
+    if (!authUser) {
+      console.warn("getCurrentUser - No authenticated user found");
       return null;
     }
 
@@ -269,21 +275,24 @@ export async function getCurrentUser() {
       .single();
 
     if (dbError) {
-      console.error("getCurrentUser dbError details:", {
-        message: dbError.message || "Unknown error",
-        code: dbError.code || "UNKNOWN",
-        details: dbError.details || "No details",
-        hint: (dbError as any).hint || "No hint",
-        status: (dbError as any).status || "Unknown status",
+      console.error("getCurrentUser - Database error:", {
+        message: dbError.message || "Unknown database error",
+        code: dbError.code || "UNKNOWN_CODE",
+        details: dbError.details || null,
+        hint: (dbError as any).hint || null,
+        status: (dbError as any).status || "UNKNOWN_STATUS",
+        fullError: JSON.stringify(dbError, null, 2),
       });
       return null;
     }
 
     return userData;
   } catch (error) {
-    console.error("getCurrentUser try-catch error:", {
-      message: error instanceof Error ? error.message : String(error),
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("getCurrentUser - Try-catch error:", {
+      message: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
+      error: error,
     });
     return null;
   }
