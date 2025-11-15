@@ -134,6 +134,21 @@ export const sidebarLinks = [
     route: "/network",
     label: "Network",
   },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/jobs",
+    label: "Jobs",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/alumni",
+    label: "Alumni",
+  },
+  {
+    imgURL: "/assets/icons/add-post.svg",
+    route: "/research-startups",
+    label: "Research & Startups",
+  },
 ];
 
 export const bottombarLinks = [
