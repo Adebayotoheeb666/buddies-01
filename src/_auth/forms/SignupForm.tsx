@@ -100,13 +100,13 @@ const SignupForm = () => {
         <h2 className="h3-bold md:h2-bold pt-3 sm:pt-5 lg:pt-12">
           Create a new account
         </h2>
-        <p className="text-light-3 small-medium md:base-regular mt-2">
+        <p className="text-light-3 small-medium md:base-regular mt-2 sm:mt-3">
           To use Buddies, please enter your details
         </p>
 
         <form
           onSubmit={form.handleSubmit(handleSignup)}
-          className="flex flex-col gap-5 w-full mt-4">
+          className="flex flex-col gap-4 sm:gap-5 w-full mt-4 sm:mt-6">
           <FormField
             control={form.control}
             name="name"
