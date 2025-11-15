@@ -245,6 +245,8 @@ export async function createUserAccount(user: INewUser) {
     }
 
     return userData;
+
+    return userData;
   } catch (error) {
     console.error("createUserAccount error details:", {
       userId: authUserId,
