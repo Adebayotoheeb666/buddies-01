@@ -292,7 +292,7 @@ export async function getAccount() {
     } = await supabase.auth.getUser();
 
     if (error) {
-      console.error("getAccount - Auth error details:", serializeError(error));
+      logErrorDetails("getAccount - Auth error details:", error);
       throw error;
     }
 
