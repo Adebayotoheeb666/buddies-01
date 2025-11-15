@@ -269,7 +269,7 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     if (error) {
       const errorMessage = error.message || "Sign in failed";
-      console.error("signInAccount error details:", serializeError(error));
+      logErrorDetails("signInAccount error details:", error);
       throw new Error(errorMessage);
     }
 
