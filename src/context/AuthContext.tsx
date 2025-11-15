@@ -68,27 +68,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        await checkAuthUser();
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+        if (isMounted) {
+          setIsAuthenticated(false);
+          setUser(INITIAL_USER);
+        }
+      }
+    };
+
     // Listen for auth state changes and update context
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event: string, session: any) => {
         if (event === "SIGNED_IN" && session) {
           await checkAuthUser();
         } else if (event === "SIGNED_OUT") {
-          setUser(INITIAL_USER);
-          setIsAuthenticated(false);
-          navigate("/sign-in");
+          if (isMounted) {
+            setUser(INITIAL_USER);
+            setIsAuthenticated(false);
+            navigate("/sign-in");
+          }
         }
       }
     );
 
     // Initial check on mount
-    checkAuthUser();
+    initializeAuth();
 
     // Cleanup listener on unmount
     return () => {
+      isMounted = false;
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   const value = {
     user,
