@@ -330,10 +330,12 @@ export async function signInAccount(user: { email: string; password: string }) {
 
 export async function getAccount() {
   try {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+    const { data, error } = await retryWithBackoff(
+      () => supabase.auth.getUser(),
+      3,
+      200
+    );
+    const { user } = data;
 
     if (error) {
       logErrorDetails("getAccount - Auth error details:", error);
