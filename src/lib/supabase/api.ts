@@ -129,6 +129,40 @@ import {
 // UTILITY FUNCTIONS
 // ============================================================
 
+// Utility function to retry failed requests with exponential backoff
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  initialDelayMs: number = 100
+): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      const errorMessage = (error as any).message || String(error);
+
+      // Only retry on body stream errors and network errors
+      const isRetryableError =
+        errorMessage.includes("body stream already read") ||
+        errorMessage.includes("Failed to fetch") ||
+        errorMessage.includes("NetworkError");
+
+      if (!isRetryableError || attempt === maxRetries - 1) {
+        throw error;
+      }
+
+      // Exponential backoff
+      const delayMs = initialDelayMs * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+
+  throw lastError;
+}
+
 // Utility function to safely serialize error objects for logging
 function logErrorDetails(label: string, error: any): void {
   if (!error) {
