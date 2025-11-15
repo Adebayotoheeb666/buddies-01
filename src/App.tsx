@@ -44,6 +44,13 @@ import {
   Safety,
   Wellness,
   ModerationDashboard,
+  Achievements,
+  Challenges,
+  Leaderboard,
+  AnalyticsDashboard,
+  SemesterRecap,
+  BucketList,
+  PhotoContests,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
