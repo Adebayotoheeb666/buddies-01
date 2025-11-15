@@ -10,8 +10,8 @@ export default function AuthLayout() {
       {isAuthenticated ? (
         <Navigate to="/" />
       ) : (
-        <>
-          <section className="flex flex-1 justify-center items-center flex-col py-10">
+        <div className="w-full min-h-screen flex flex-col xl:flex-row">
+          <section className="flex flex-1 justify-center items-center flex-col py-6 sm:py-10 px-4 sm:px-6 w-full xl:w-1/2">
             <Outlet />
           </section>
 
@@ -20,7 +20,7 @@ export default function AuthLayout() {
             alt="logo"
             className="hidden xl:block h-screen w-1/2 object-cover bg-no-repeat"
           />
-        </>
+        </div>
       )}
     </>
   );
