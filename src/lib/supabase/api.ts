@@ -300,12 +300,7 @@ export async function getCurrentUser() {
 
     return userData;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("getCurrentUser - Try-catch error:", {
-      message: errorMessage,
-      stack: error instanceof Error ? error.stack : undefined,
-      error: error,
-    });
+    console.error("getCurrentUser - Try-catch error details:", serializeError(error));
     return null;
   }
 }
