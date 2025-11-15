@@ -306,11 +306,7 @@ export async function getCurrentUser() {
     } = await supabase.auth.getUser();
 
     if (authError) {
-      console.error("getCurrentUser - Auth error:", {
-        message: authError.message || "Unknown auth error",
-        status: authError.status,
-        code: (authError as any).code,
-      });
+      console.error("getCurrentUser - Auth error details:", serializeError(authError));
       return null;
     }
 
