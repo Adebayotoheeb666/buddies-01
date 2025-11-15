@@ -327,11 +327,7 @@ export async function signInAccount(user: { email: string; password: string }) {
 
 export async function getAccount() {
   try {
-    const { data, error } = await retryWithBackoff(
-      () => supabase.auth.getUser(),
-      3,
-      200
-    );
+    const { data, error } = await supabase.auth.getUser();
     const { user } = data;
 
     if (error) {
@@ -348,11 +344,7 @@ export async function getAccount() {
 
 export async function getCurrentUser() {
   try {
-    const { data, error: authError } = await retryWithBackoff(
-      () => supabase.auth.getUser(),
-      3,
-      200
-    );
+    const { data, error: authError } = await supabase.auth.getUser();
     const { user: authUser } = data;
 
     if (authError) {
