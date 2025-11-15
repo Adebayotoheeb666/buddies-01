@@ -160,6 +160,15 @@ const App = () => {
           <Route path="/safety" element={<Safety />} />
           <Route path="/wellness" element={<Wellness />} />
           <Route path="/moderation" element={<ModerationDashboard />} />
+
+          {/* Phase 7 Gamification & Analytics */}
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/analytics" element={<AnalyticsDashboard />} />
+          <Route path="/semester-recap" element={<SemesterRecap />} />
+          <Route path="/bucket-list" element={<BucketList />} />
+          <Route path="/photo-contests" element={<PhotoContests />} />
         </Route>
       </Routes>
 
