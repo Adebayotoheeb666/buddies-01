@@ -144,11 +144,14 @@ async function retryWithBackoff<T>(
       lastError = error as Error;
       const errorMessage = (error as any).message || String(error);
 
-      // Only retry on body stream errors and network errors
+      // Do NOT retry on "body stream already read" - this indicates the response
+      // was already consumed and retrying won't help. Only retry on network errors.
       const isRetryableError =
-        errorMessage.includes("body stream already read") ||
         errorMessage.includes("Failed to fetch") ||
-        errorMessage.includes("NetworkError");
+        errorMessage.includes("NetworkError") ||
+        errorMessage.includes("ECONNREFUSED") ||
+        errorMessage.includes("ECONNRESET") ||
+        errorMessage.includes("ETIMEDOUT");
 
       if (!isRetryableError || attempt === maxRetries - 1) {
         throw error;
