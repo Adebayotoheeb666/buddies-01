@@ -108,6 +108,35 @@
     background: #7878a3;
   }
 
+  /* Responsive Utilities */
+  .container-responsive {
+    @apply px-4 sm:px-6 md:px-8 lg:px-10;
+  }
+
+  .sidebar-responsive {
+    @apply fixed inset-0 z-40 overflow-hidden md:relative md:z-auto;
+  }
+
+  @media (max-width: 768px) {
+    .hide-on-mobile {
+      @apply hidden;
+    }
+
+    .show-on-mobile {
+      @apply block;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hide-on-desktop {
+      @apply hidden;
+    }
+
+    .show-on-desktop {
+      @apply block;
+    }
+  }
+
   .common-container {
     @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar;
   }
