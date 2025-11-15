@@ -279,7 +279,7 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     return data.session;
   } catch (error) {
-    console.error("signInAccount try-catch error details:", serializeError(error));
+    logErrorDetails("signInAccount try-catch error details:", error);
     throw error;
   }
 }
