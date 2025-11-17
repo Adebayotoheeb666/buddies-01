@@ -44,6 +44,39 @@ const ProjectListings = () => {
     }
   };
 
+  const handleCreateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.id || !formData.title.trim() || !formData.description.trim()) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      await createMutation.mutateAsync({
+        title: formData.title,
+        description: formData.description,
+        skills: formData.skills.length > 0 ? formData.skills : ["General"],
+        creatorId: user.id,
+        status: "recruiting",
+      });
+      alert("Project created successfully!");
+      setFormData({ title: "", description: "", skills: [] });
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error("Error creating project:", error);
+      alert("Failed to create project. Please try again.");
+    }
+  };
+
+  const toggleSkill = (skillName: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      skills: prev.skills.includes(skillName)
+        ? prev.skills.filter((s) => s !== skillName)
+        : [...prev.skills, skillName],
+    }));
+  };
+
   return (
     <div className="flex flex-col gap-9 w-full max-w-6xl">
       <div className="flex gap-2 justify-start w-full max-w-full">
