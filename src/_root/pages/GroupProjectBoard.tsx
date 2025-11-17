@@ -19,63 +19,8 @@ const GroupProjectBoard = () => {
   // Filter only group projects
   const groupProjects = assignments.filter((a) => a.is_group_project);
 
-  // Mock tasks
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: "1",
-      title: "Research and Planning",
-      description: "Gather requirements and create project plan",
-      assignedTo: "Alice Johnson",
-      status: "in_progress",
-      priority: "high",
-      dueDate: "2024-09-20",
-    },
-    {
-      id: "2",
-      title: "Frontend Development",
-      description: "Build UI components and pages",
-      assignedTo: "Bob Smith",
-      status: "in_progress",
-      priority: "high",
-      dueDate: "2024-10-01",
-    },
-    {
-      id: "3",
-      title: "Backend API",
-      description: "Develop REST API endpoints",
-      assignedTo: "Carol Davis",
-      status: "todo",
-      priority: "high",
-      dueDate: "2024-10-01",
-    },
-    {
-      id: "4",
-      title: "Testing & QA",
-      description: "Write tests and fix bugs",
-      assignedTo: "David Lee",
-      status: "todo",
-      priority: "medium",
-      dueDate: "2024-10-10",
-    },
-    {
-      id: "5",
-      title: "Documentation",
-      description: "Write project documentation",
-      assignedTo: "Emma Wilson",
-      status: "todo",
-      priority: "low",
-      dueDate: "2024-10-15",
-    },
-    {
-      id: "6",
-      title: "Presentation Slides",
-      description: "Create final presentation",
-      assignedTo: "Alice Johnson",
-      status: "done",
-      priority: "medium",
-      dueDate: "2024-12-01",
-    },
-  ]);
+  // Tasks state - dynamically fetch from assignments
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const moveTask = (
     taskId: string,
