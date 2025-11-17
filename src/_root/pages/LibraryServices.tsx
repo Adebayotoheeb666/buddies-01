@@ -191,9 +191,18 @@ const LibraryServices = () => {
                           / {book.total_copies}
                         </p>
                         <Button
-                          disabled={book.available_copies === 0}
-                          className="bg-purple-500 text-white px-3 py-1 text-xs rounded">
-                          {book.available_copies > 0 ? "Checkout" : "Hold"}
+                          onClick={() =>
+                            book.available_copies > 0
+                              ? handleCheckout(book.id)
+                              : handleHold(book.id)
+                          }
+                          disabled={createReservationMutation.isPending}
+                          className="bg-purple-500 text-white px-3 py-1 text-xs rounded hover:bg-purple-600">
+                          {createReservationMutation.isPending
+                            ? "Processing..."
+                            : book.available_copies > 0
+                            ? "Checkout"
+                            : "Hold"}
                         </Button>
                       </div>
                     </div>
