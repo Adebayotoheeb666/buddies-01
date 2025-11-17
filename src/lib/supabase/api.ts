@@ -4419,3 +4419,265 @@ export async function updateAtRiskStudentIntervention(
     console.log(error);
   }
 }
+
+// ============================================================
+// UPDATE OPERATIONS
+// ============================================================
+
+export async function updateMemePost(
+  memeId: string,
+  updates: {
+    caption?: string;
+    likes?: number;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("meme_posts")
+      .update(updates)
+      .eq("id", memeId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateMemePost error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function likeMemePost(
+  memeId: string,
+  likesArray: string[]
+) {
+  try {
+    const { data, error } = await supabase
+      .from("meme_posts")
+      .update({ likes: likesArray })
+      .eq("id", memeId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("likeMemePost error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateConfessionStatus(
+  confessionId: string,
+  status: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("anonymous_confessions")
+      .update({ status })
+      .eq("id", confessionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateConfessionStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateJobApplicationStatus(
+  applicationId: string,
+  status: string,
+  feedback?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("job_applications")
+      .update({
+        status,
+        feedback: feedback || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", applicationId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateJobApplicationStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateLibraryReservationStatus(
+  reservationId: string,
+  status: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("library_reservations")
+      .update({ status })
+      .eq("id", reservationId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateLibraryReservationStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function cancelLibraryReservation(reservationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("library_reservations")
+      .update({ status: "cancelled" })
+      .eq("id", reservationId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("cancelLibraryReservation error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateFacilityBookingStatus(
+  bookingId: string,
+  status: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .update({ status })
+      .eq("id", bookingId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateFacilityBookingStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function cancelFacilityBooking(bookingId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .update({ status: "cancelled" })
+      .eq("id", bookingId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("cancelFacilityBooking error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateEventRsvpStatus(
+  eventId: string,
+  userId: string,
+  status: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("event_rsvps")
+      .update({ status })
+      .eq("event_id", eventId)
+      .eq("user_id", userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateEventRsvpStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateWellnessEventRsvpStatus(
+  eventId: string,
+  userId: string,
+  status: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("wellness_event_rsvps")
+      .update({ status })
+      .eq("event_id", eventId)
+      .eq("user_id", userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateWellnessEventRsvpStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateSharedNoteStatus(
+  noteId: string,
+  isPublic: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("shared_notes")
+      .update({ is_public: isPublic })
+      .eq("id", noteId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateSharedNoteStatus error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateResourceVisibility(
+  resourceId: string,
+  isPublic: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("resources")
+      .update({ is_public: isPublic })
+      .eq("id", resourceId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateResourceVisibility error:", errorMsg);
+    throw error;
+  }
+}
