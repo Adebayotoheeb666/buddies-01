@@ -205,12 +205,14 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
     const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
     if (error) {
-      console.error("getGroupChats error:", {
-        code: (error as any).code,
-        message: (error as any).message,
+      const errorDetails = {
+        code: (error as any).code || "UNKNOWN",
+        message: (error as any).message || String(error),
         details: (error as any).details,
         hint: (error as any).hint,
-      });
+        status: (error as any).status,
+      };
+      console.error("getGroupChats error:", JSON.stringify(errorDetails, null, 2));
       // Return empty array on error instead of throwing to prevent infinite retries
       return [];
     }
