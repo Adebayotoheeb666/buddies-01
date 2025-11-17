@@ -13,7 +13,7 @@ interface LeftSidebarProps {
   onLinkClick?: () => void;
 }
 
-const LeftSidebar = ({ _isMobile, _onLinkClick }: LeftSidebarProps = {}) => {
+const LeftSidebar = ({ isMobile: _isMobile, onLinkClick: _onLinkClick }: LeftSidebarProps = {}) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
