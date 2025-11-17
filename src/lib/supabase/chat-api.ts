@@ -49,38 +49,67 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
 
   if (!user) throw new Error("User not authenticated");
 
-  const { data, error } = await supabase
-    .from("chats")
-    .select(
+  try {
+    // Add timeout protection for private chats query
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Private chats query timeout after 8 seconds")), 8000)
+    );
+
+    const queryPromise = supabase
+      .from("chats")
+      .select(
+        `
+        *,
+        messages(id, content, sender_id, created_at, is_deleted)
       `
-      *,
-      messages(id, content, sender_id, created_at, is_deleted)
-    `
-    )
-    .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`)
-    .order("last_message_at", { ascending: false, nullsFirst: false });
+      )
+      .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`)
+      .order("last_message_at", { ascending: false, nullsFirst: false });
 
-  if (error) throw error;
+    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
-  // Fetch user details for other participants
-  const chatsWithUsers = await Promise.all(
-    data.map(async (chat: any) => {
-      const otherUserId =
-        chat.user1_id === user.id ? chat.user2_id : chat.user1_id;
-      const { data: userData } = await supabase
-        .from("users")
-        .select("id, name, imageUrl, username")
-        .eq("id", otherUserId)
-        .single();
+    if (error) {
+      console.error("getPrivateChats error:", {
+        code: (error as any).code,
+        message: (error as any).message,
+        details: (error as any).details,
+        hint: (error as any).hint,
+      });
+      // Return empty array on error instead of throwing to prevent infinite retries
+      return [];
+    }
 
-      return {
-        ...chat,
-        otherUser: userData,
-      };
-    })
-  );
+    if (!data) return [];
 
-  return chatsWithUsers;
+    // Fetch user details for other participants with timeout protection
+    const chatsWithUsers = await Promise.all(
+      data.map(async (chat: any) => {
+        try {
+          const otherUserId =
+            chat.user1_id === user.id ? chat.user2_id : chat.user1_id;
+          const { data: userData } = await supabase
+            .from("users")
+            .select("id, name, imageUrl, username")
+            .eq("id", otherUserId)
+            .single();
+
+          return {
+            ...chat,
+            otherUser: userData,
+          };
+        } catch (err) {
+          console.error("Error fetching user details:", err);
+          return chat;
+        }
+      })
+    );
+
+    return chatsWithUsers;
+  } catch (error) {
+    console.error("getPrivateChats exception:", error);
+    // Return empty array on error instead of throwing to prevent infinite retries
+    return [];
+  }
 };
 
 export const getPrivateChatMessages = async (
