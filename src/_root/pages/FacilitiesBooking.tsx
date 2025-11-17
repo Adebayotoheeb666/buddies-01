@@ -65,6 +65,23 @@ const FacilitiesBooking = () => {
       alert("Booking submitted! It will be reviewed shortly.");
       setPurpose("");
       setNumberOfPeople(1);
+      queryClient.invalidateQueries({
+        queryKey: ["user-facility-bookings", user?.id],
+      });
+    },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: (bookingId: string) => cancelFacilityBooking(bookingId),
+    onSuccess: () => {
+      alert("Booking cancelled successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["user-facility-bookings", user?.id],
+      });
+    },
+    onError: (error) => {
+      console.error("Cancel booking error:", error);
+      alert("Failed to cancel booking. Please try again.");
     },
   });
 
