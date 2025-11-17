@@ -116,6 +116,19 @@ import {
   joinOrganization,
   createUserConnection,
   addUserSkill,
+  updateStudyGroup,
+  leaveStudyGroup,
+  submitAssignmentSolution,
+  markQAAnswerAsVerified,
+  updateProjectListing,
+  updateChallengeSubmission,
+  updateBucketListItem,
+  updateTutoringProfile,
+  completeTutorSession,
+  updatePhotoContestSubmission,
+  updateInterestGroup,
+  leaveInterestGroup,
+  updateAssignmentSubmissionStatus,
 } from "@/lib/supabase/academic-api";
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 
