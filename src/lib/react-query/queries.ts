@@ -25,6 +25,18 @@ import {
   searchPosts,
   savePost,
   deleteSavedPost,
+  updateMemePost,
+  likeMemePost,
+  updateConfessionStatus,
+  updateJobApplicationStatus,
+  updateLibraryReservationStatus,
+  cancelLibraryReservation,
+  updateFacilityBookingStatus,
+  cancelFacilityBooking,
+  updateEventRsvpStatus,
+  updateWellnessEventRsvpStatus,
+  updateSharedNoteStatus,
+  updateResourceVisibility,
 } from "@/lib/supabase/api";
 import {
   getCourses,
