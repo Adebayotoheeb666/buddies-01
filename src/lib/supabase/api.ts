@@ -4121,6 +4121,14 @@ export async function addBucketListItem(
   }
 }
 
+export async function createBucketListItem(
+  bucketListId: string,
+  activity: string,
+  locationId?: string
+) {
+  return addBucketListItem(bucketListId, activity, locationId);
+}
+
 export async function completeBucketListItem(
   itemId: string,
   photoUrl?: string
@@ -4142,6 +4150,23 @@ export async function completeBucketListItem(
     return data;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function deleteBucketListItem(itemId: string) {
+  try {
+    const { error } = await supabase
+      .from("bucket_list_items")
+      .delete()
+      .eq("id", itemId);
+
+    if (error) throw error;
+
+    return true;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("deleteBucketListItem error:", errorMsg);
+    throw error;
   }
 }
 
@@ -4530,27 +4555,6 @@ export async function cancelLibraryReservation(reservationId: string) {
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error("cancelLibraryReservation error:", errorMsg);
-    throw error;
-  }
-}
-
-export async function updateFacilityBookingStatus(
-  bookingId: string,
-  status: string
-) {
-  try {
-    const { data, error } = await supabase
-      .from("facility_bookings")
-      .update({ status })
-      .eq("id", bookingId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("updateFacilityBookingStatus error:", errorMsg);
     throw error;
   }
 }

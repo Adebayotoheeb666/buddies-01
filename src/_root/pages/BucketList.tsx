@@ -6,6 +6,7 @@ import {
   createBucketList,
   addBucketListItem,
   completeBucketListItem,
+  deleteBucketListItem,
 } from "@/lib/supabase/api";
 import {
   BucketList as BucketListType,
@@ -90,6 +91,15 @@ const BucketList = () => {
       setListItems(
         listItems.map((item) => (item.id === itemId ? completed : item))
       );
+    }
+  };
+
+  const handleDeleteItem = async (itemId: string) => {
+    try {
+      await deleteBucketListItem(itemId);
+      setListItems(listItems.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.error("Failed to delete item:", error);
     }
   };
 
@@ -200,6 +210,12 @@ const BucketList = () => {
                   {item.completed && (
                     <div className="flex-shrink-0 text-primary-500">✓ Done</div>
                   )}
+                  <button
+                    onClick={() => handleDeleteItem(item.id)}
+                    className="flex-shrink-0 text-light-4 hover:text-red-500 transition"
+                    title="Delete item">
+                    ✕
+                  </button>
                 </div>
               ))
             ) : (

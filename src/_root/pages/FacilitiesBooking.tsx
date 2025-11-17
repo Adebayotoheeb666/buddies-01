@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getFacilities,
   getFacilityEquipment,
   getFacilityReviews,
   bookFacility,
   getUserFacilityBookings,
+  cancelFacilityBooking,
 } from "@/lib/supabase/api";
 import { useAuthContext } from "@/context/AuthContext";
 import { Loader } from "@/components/shared";
@@ -14,6 +15,7 @@ import { Input } from "@/components/ui/input";
 
 const FacilitiesBooking = () => {
   const { user } = useAuthContext();
+  const queryClient = useQueryClient();
   const [selectedFacility, setSelectedFacility] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState("");
   const [bookingDate, setBookingDate] = useState(
@@ -63,6 +65,23 @@ const FacilitiesBooking = () => {
       alert("Booking submitted! It will be reviewed shortly.");
       setPurpose("");
       setNumberOfPeople(1);
+      queryClient.invalidateQueries({
+        queryKey: ["user-facility-bookings", user?.id],
+      });
+    },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: (bookingId: string) => cancelFacilityBooking(bookingId),
+    onSuccess: () => {
+      alert("Booking cancelled successfully.");
+      queryClient.invalidateQueries({
+        queryKey: ["user-facility-bookings", user?.id],
+      });
+    },
+    onError: (error) => {
+      console.error("Cancel booking error:", error);
+      alert("Failed to cancel booking. Please try again.");
     },
   });
 
@@ -158,13 +177,15 @@ const FacilitiesBooking = () => {
                     )}
                     {facility.amenities && facility.amenities.length > 0 && (
                       <div className="flex gap-1 flex-wrap mt-2">
-                        {facility.amenities.slice(0, 3).map((amenity: string) => (
-                          <span
-                            key={amenity}
-                            className="text-xs bg-dark-4 px-2 py-1 rounded">
-                            {amenity}
-                          </span>
-                        ))}
+                        {facility.amenities
+                          .slice(0, 3)
+                          .map((amenity: string) => (
+                            <span
+                              key={amenity}
+                              className="text-xs bg-dark-4 px-2 py-1 rounded">
+                              {amenity}
+                            </span>
+                          ))}
                       </div>
                     )}
                   </div>
@@ -353,8 +374,11 @@ const FacilitiesBooking = () => {
                       )}
                     </div>
                     {booking.status === "pending" && (
-                      <Button className="bg-dark-4 text-light-2 px-3 py-1 text-xs rounded mt-3">
-                        Cancel
+                      <Button
+                        onClick={() => cancelMutation.mutate(booking.id)}
+                        disabled={cancelMutation.isPending}
+                        className="bg-dark-4 text-light-2 px-3 py-1 text-xs rounded mt-3 hover:bg-red-500/20">
+                        {cancelMutation.isPending ? "Cancelling..." : "Cancel"}
                       </Button>
                     )}
                   </div>

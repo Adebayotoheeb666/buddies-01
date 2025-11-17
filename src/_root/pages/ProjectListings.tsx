@@ -1,12 +1,26 @@
 import { useState } from "react";
-import { useGetProjectListings, useGetSkills } from "@/lib/react-query/queries";
+import {
+  useGetProjectListings,
+  useGetSkills,
+  useCreateProjectListing,
+} from "@/lib/react-query/queries";
+import { useAuthContext } from "@/context/AuthContext";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const ProjectListings = () => {
+  const { user } = useAuthContext();
   const { data: projectsData, isLoading } = useGetProjectListings();
   const { data: skillsData } = useGetSkills();
+  const createMutation = useCreateProjectListing();
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    skills: [] as string[],
+  });
 
   const projects = projectsData?.documents || [];
   const skills = skillsData?.documents || [];
@@ -34,16 +48,56 @@ const ProjectListings = () => {
     }
   };
 
+  const handleCreateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.id || !formData.title.trim() || !formData.description.trim()) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      await createMutation.mutateAsync({
+        title: formData.title,
+        description: formData.description,
+        skills: formData.skills.length > 0 ? formData.skills : ["General"],
+        creatorId: user.id,
+        status: "recruiting",
+      });
+      alert("Project created successfully!");
+      setFormData({ title: "", description: "", skills: [] });
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error("Error creating project:", error);
+      alert("Failed to create project. Please try again.");
+    }
+  };
+
+  const toggleSkill = (skillName: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      skills: prev.skills.includes(skillName)
+        ? prev.skills.filter((s) => s !== skillName)
+        : [...prev.skills, skillName],
+    }));
+  };
+
   return (
     <div className="flex flex-col gap-9 w-full max-w-6xl">
-      <div className="flex gap-2 justify-start w-full max-w-full">
-        <img
-          src="/assets/icons/add-post.svg"
-          width={36}
-          height={36}
-          alt="projects"
-        />
-        <h2 className="h3-bold md:h2-bold w-full">Project Marketplace</h2>
+      <div className="flex gap-2 justify-between items-center w-full max-w-full">
+        <div className="flex gap-2 items-center">
+          <img
+            src="/assets/icons/add-post.svg"
+            width={36}
+            height={36}
+            alt="projects"
+          />
+          <h2 className="h3-bold md:h2-bold">Project Marketplace</h2>
+        </div>
+        <Button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-primary-500 text-white hover:bg-primary-600">
+          + Create Project
+        </Button>
       </div>
 
       <div className="flex gap-2 flex-wrap">
@@ -119,7 +173,9 @@ const ProjectListings = () => {
               <div>
                 <p className="text-light-3 text-tiny-medium">Due Date</p>
                 <p className="text-light-1 text-small-medium">
-                  {project.due_date ? new Date(project.due_date as string).toLocaleDateString() : "N/A"}
+                  {project.due_date
+                    ? new Date(project.due_date as string).toLocaleDateString()
+                    : "N/A"}
                 </p>
               </div>
               <div>
@@ -140,6 +196,87 @@ const ProjectListings = () => {
       {filteredProjects.length === 0 && !isLoading && (
         <div className="flex flex-col gap-4 items-center justify-center min-h-96">
           <p className="text-light-3 text-body-medium">No projects found</p>
+        </div>
+      )}
+
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
+            <h2 className="text-xl font-bold text-white mb-4">
+              Create Project
+            </h2>
+
+            <form onSubmit={handleCreateProject} className="space-y-4">
+              <div>
+                <label className="text-light-2 text-sm font-semibold block mb-2">
+                  Project Title *
+                </label>
+                <Input
+                  type="text"
+                  placeholder="e.g., Campus Event Management App"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  className="rounded-lg bg-dark-3 border border-dark-4 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-light-2 text-sm font-semibold block mb-2">
+                  Description *
+                </label>
+                <textarea
+                  placeholder="Describe your project, goals, and requirements..."
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full p-3 rounded-lg bg-dark-3 border border-dark-4 text-white text-sm"
+                  rows={4}
+                />
+              </div>
+
+              <div>
+                <label className="text-light-2 text-sm font-semibold block mb-2">
+                  Required Skills (optional)
+                </label>
+                <div className="flex gap-2 flex-wrap mb-3">
+                  {skills.slice(0, 6).map((skill) => (
+                    <button
+                      key={skill.id}
+                      type="button"
+                      onClick={() => toggleSkill(skill.name)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium transition ${
+                        formData.skills.includes(skill.name)
+                          ? "bg-primary-500 text-white"
+                          : "bg-dark-4 text-light-3 hover:bg-dark-3"
+                      }`}>
+                      {skill.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setFormData({ title: "", description: "", skills: [] });
+                  }}
+                  className="flex-1 bg-dark-4 text-light-2 py-2 rounded-lg font-semibold hover:bg-dark-3">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="flex-1 bg-primary-500 text-white py-2 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50">
+                  {createMutation.isPending ? "Creating..." : "Create"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

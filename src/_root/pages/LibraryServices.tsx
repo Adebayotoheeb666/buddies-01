@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getLibraryBooks,
   getUserCheckouts,
@@ -7,6 +7,10 @@ import {
   getUserBookHolds,
   getStudyRooms,
 } from "@/lib/supabase/api";
+import {
+  useCreateLibraryReservation,
+  useCancelLibraryReservation,
+} from "@/lib/react-query/queries";
 import { useAuthContext } from "@/context/AuthContext";
 import { Loader } from "@/components/shared";
 import { Input } from "@/components/ui/input";
@@ -14,6 +18,9 @@ import { Button } from "@/components/ui/button";
 
 const LibraryServices = () => {
   const { user } = useAuthContext();
+  const queryClient = useQueryClient();
+  const createReservationMutation = useCreateLibraryReservation();
+  const cancelReservationMutation = useCancelLibraryReservation();
   const [searchTitle, setSearchTitle] = useState("");
   const [searchAuthor, setSearchAuthor] = useState("");
   const [searchSubject, setSearchSubject] = useState("");
@@ -52,6 +59,50 @@ const LibraryServices = () => {
     queryKey: ["study-rooms"],
     queryFn: getStudyRooms,
   });
+
+  const handleCheckout = async (bookId: string) => {
+    if (!user?.id) {
+      alert("Please sign in to checkout books");
+      return;
+    }
+
+    try {
+      await createReservationMutation.mutateAsync({
+        userId: user.id,
+        bookId: bookId,
+        reservationDate: new Date().toISOString().split("T")[0],
+      });
+      alert("Book checked out successfully!");
+      queryClient.invalidateQueries({ queryKey: ["user-checkouts", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["library-books"] });
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("Failed to checkout book. Please try again.");
+    }
+  };
+
+  const handleHold = async (bookId: string) => {
+    if (!user?.id) {
+      alert("Please sign in to place a hold");
+      return;
+    }
+
+    try {
+      await createReservationMutation.mutateAsync({
+        userId: user.id,
+        bookId: bookId,
+        reservationDate: new Date().toISOString().split("T")[0],
+      });
+      alert(
+        "Book hold placed successfully! You'll be notified when it's available."
+      );
+      queryClient.invalidateQueries({ queryKey: ["user-book-holds", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["library-books"] });
+    } catch (error) {
+      console.error("Hold error:", error);
+      alert("Failed to place hold. Please try again.");
+    }
+  };
 
   return (
     <div className="common-container">
@@ -142,9 +193,18 @@ const LibraryServices = () => {
                           / {book.total_copies}
                         </p>
                         <Button
-                          disabled={book.available_copies === 0}
-                          className="bg-purple-500 text-white px-3 py-1 text-xs rounded">
-                          {book.available_copies > 0 ? "Checkout" : "Hold"}
+                          onClick={() =>
+                            book.available_copies > 0
+                              ? handleCheckout(book.id)
+                              : handleHold(book.id)
+                          }
+                          disabled={createReservationMutation.isPending}
+                          className="bg-purple-500 text-white px-3 py-1 text-xs rounded hover:bg-purple-600">
+                          {createReservationMutation.isPending
+                            ? "Processing..."
+                            : book.available_copies > 0
+                            ? "Checkout"
+                            : "Hold"}
                         </Button>
                       </div>
                     </div>
@@ -206,9 +266,21 @@ const LibraryServices = () => {
                         </p>
                       </div>
                     </div>
-                    <Button className="bg-dark-4 text-light-2 px-3 py-1 text-xs rounded mt-2">
-                      Renew
-                    </Button>
+                    <div className="flex gap-2 mt-2">
+                      <Button className="flex-1 bg-dark-4 text-light-2 px-3 py-1 text-xs rounded hover:bg-dark-3">
+                        Renew
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          cancelReservationMutation.mutate(checkout.id)
+                        }
+                        disabled={cancelReservationMutation.isPending}
+                        className="flex-1 bg-red-500/20 text-red-400 px-3 py-1 text-xs rounded hover:bg-red-500/30">
+                        {cancelReservationMutation.isPending
+                          ? "Cancelling..."
+                          : "Return"}
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -226,15 +298,29 @@ const LibraryServices = () => {
                     <div
                       key={hold.id}
                       className="p-4 rounded-lg bg-dark-3 border border-dark-4">
-                      <p className="font-semibold text-light-1">
-                        Book ID: {hold.book_id}
-                      </p>
-                      <p className="text-light-3 text-sm mt-1">
-                        Position in queue:{" "}
-                        <span className="font-bold">
-                          {hold.position_in_queue}
-                        </span>
-                      </p>
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <p className="font-semibold text-light-1">
+                            Book ID: {hold.book_id}
+                          </p>
+                          <p className="text-light-3 text-sm mt-1">
+                            Position in queue:{" "}
+                            <span className="font-bold">
+                              {hold.position_in_queue}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() =>
+                          cancelReservationMutation.mutate(hold.id)
+                        }
+                        disabled={cancelReservationMutation.isPending}
+                        className="w-full bg-red-500/20 text-red-400 px-3 py-1 text-xs rounded hover:bg-red-500/30">
+                        {cancelReservationMutation.isPending
+                          ? "Cancelling..."
+                          : "Cancel Hold"}
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -264,7 +350,9 @@ const LibraryServices = () => {
                         <p className="text-light-3 text-sm mb-2">Equipment:</p>
                         <div className="flex gap-2 flex-wrap">
                           {zone.equipment_available.map((equipment: string) => (
-                            <span key={equipment} className="bg-dark-4 px-2 py-1 rounded text-xs">
+                            <span
+                              key={equipment}
+                              className="bg-dark-4 px-2 py-1 rounded text-xs">
                               {equipment}
                             </span>
                           ))}
@@ -315,7 +403,9 @@ const LibraryServices = () => {
                     {room.amenities && room.amenities.length > 0 && (
                       <div className="flex gap-2 flex-wrap mt-2">
                         {room.amenities.map((amenity: string) => (
-                          <span key={amenity} className="bg-dark-4 px-2 py-1 rounded text-xs">
+                          <span
+                            key={amenity}
+                            className="bg-dark-4 px-2 py-1 rounded text-xs">
                             {amenity}
                           </span>
                         ))}
