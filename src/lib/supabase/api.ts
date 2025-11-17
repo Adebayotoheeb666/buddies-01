@@ -44,16 +44,10 @@ export async function createUserAccount(user: INewUser) {
 
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data } = await supabase.auth.signInWithPassword({
       email: user.email,
       password: user.password,
     });
-
-    if (error) {
-      const errorMessage = error.message || "Sign in failed";
-      console.error("signInAccount error:", errorMessage);
-      throw new Error(errorMessage);
-    }
 
     if (!data.session) {
       throw new Error("Sign in failed: No session returned");
@@ -61,8 +55,8 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     return data.session;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error during sign in";
-    console.error("signInAccount catch error:", errorMessage);
+    const errorMessage = error instanceof Error ? error.message : "Sign in failed";
+    console.error("signInAccount error:", errorMessage);
     throw error;
   }
 }
