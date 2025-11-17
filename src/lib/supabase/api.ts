@@ -180,7 +180,8 @@ export async function getAccount() {
 export async function getCurrentUser() {
   try {
     // First, try to get the session to ensure it's loaded
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
 
     if (sessionError) {
       logErrorDetails("getCurrentUser - Session error details:", sessionError);
@@ -206,18 +207,67 @@ export async function getCurrentUser() {
       return null;
     }
 
-    const { data: userData, error: dbError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", authUser.id)
-      .single();
+    // Attempt to get user profile with timeout
+    try {
+      let timeoutId: NodeJS.Timeout | null = null;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new Error("Database query timeout after 5 seconds")),
+          5000
+        );
+      });
 
-    if (dbError) {
-      logErrorDetails("getCurrentUser - Database error details:", dbError);
-      return null;
+      const queryPromise = supabase
+        .from("users")
+        .select("*")
+        .eq("id", authUser.id)
+        .single();
+
+      try {
+        const result = await Promise.race([queryPromise, timeoutPromise]);
+        if (timeoutId) clearTimeout(timeoutId);
+
+        const { data: fetchedData, error: dbError } = result;
+
+        if (dbError) {
+          logErrorDetails("getCurrentUser - Database error details:", dbError);
+          // Return a minimal user object based on auth user if profile doesn't exist
+          return {
+            id: authUser.id,
+            email: authUser.email || "",
+            name: authUser.user_metadata?.name || "",
+            username: authUser.user_metadata?.username || "",
+            imageUrl: authUser.user_metadata?.imageUrl || "",
+            bio: authUser.user_metadata?.bio || "",
+          };
+        }
+
+        return fetchedData;
+      } catch (raceError) {
+        if (timeoutId) clearTimeout(timeoutId);
+        logErrorDetails("getCurrentUser - Database query error:", raceError);
+        // Return a minimal user object based on auth user if profile doesn't exist
+        return {
+          id: authUser.id,
+          email: authUser.email || "",
+          name: authUser.user_metadata?.name || "",
+          username: authUser.user_metadata?.username || "",
+          imageUrl: authUser.user_metadata?.imageUrl || "",
+          bio: authUser.user_metadata?.bio || "",
+        };
+      }
+    } catch (error) {
+      logErrorDetails("getCurrentUser - Outer catch error:", error);
+      // Final fallback
+      return {
+        id: authUser.id,
+        email: authUser.email || "",
+        name: authUser.user_metadata?.name || "",
+        username: authUser.user_metadata?.username || "",
+        imageUrl: authUser.user_metadata?.imageUrl || "",
+        bio: authUser.user_metadata?.bio || "",
+      };
     }
-
-    return userData;
   } catch (error) {
     logErrorDetails("getCurrentUser - Try-catch error details:", error);
     return null;

@@ -22,8 +22,6 @@ export const Chats = () => {
     useState<GroupChatWithMembers | null>(null);
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
 
-  const { isAuthenticated } = useAuthContext();
-
   const { data: privateChats = [], isLoading: loadingPrivate } =
     useGetPrivateChats(isAuthenticated);
   const { data: groupChats = [], isLoading: loadingGroups } =
