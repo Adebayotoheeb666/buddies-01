@@ -63,6 +63,54 @@ export async function getUserCourses(userId: string) {
   }
 }
 
+export async function getCourseEnrollmentsByUserExcluding(
+  courseId: string,
+  excludeUserId: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("course_enrollments")
+      .select("user_id")
+      .eq("course_id", courseId)
+      .neq("user_id", excludeUserId);
+
+    if (error) throw error;
+
+    const userIds = data?.map((e: any) => e.user_id) || [];
+    if (userIds.length === 0) return [];
+
+    const { data: users, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .in("id", userIds);
+
+    if (userError) throw userError;
+    return users || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseEnrollmentsByUserExcluding error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getCourseSharedNotesByCourse(courseId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("shared_notes")
+      .select("*")
+      .eq("course_id", courseId)
+      .eq("is_public", true)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseSharedNotesByCourse error:", errorMsg);
+    return [];
+  }
+}
+
 export async function getStudyGroups() {
   try {
     const { data, error } = await supabase
@@ -525,6 +573,494 @@ export async function getDepartmentNetworks() {
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error("getDepartmentNetworks error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// ACHIEVEMENTS & GAMIFICATION
+// ============================================================
+
+export async function getAchievements() {
+  try {
+    const { data, error } = await supabase
+      .from("achievements")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getAchievements error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getUserAchievements(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_achievements")
+      .select("*, achievements(*)")
+      .eq("user_id", userId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserAchievements error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getUserPoints(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_points")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+    return data || { user_id: userId, total_points: 0, current_level: 1 };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserPoints error:", errorMsg);
+    return null;
+  }
+}
+
+export async function getLeaderboard() {
+  try {
+    const { data, error } = await supabase
+      .from("leaderboard_entries")
+      .select("*, users(id, name, imageUrl, username)")
+      .order("rank", { ascending: true })
+      .limit(100);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getLeaderboard error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getChallenges() {
+  try {
+    const { data, error } = await supabase
+      .from("challenges")
+      .select("*")
+      .order("start_date", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getChallenges error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getUserChallengeParticipations(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("challenge_participations")
+      .select("*, challenges(*)")
+      .eq("user_id", userId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserChallengeParticipations error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getSemesterRecaps(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("semester_recaps")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getSemesterRecaps error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// CAMPUS FEATURES
+// ============================================================
+
+export async function getCampusLocations() {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCampusLocations error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getCampusLocationById(locationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("campus_locations")
+      .select("*")
+      .eq("id", locationId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCampusLocationById error:", errorMsg);
+    return null;
+  }
+}
+
+export async function getLibraryBooks() {
+  try {
+    const { data, error } = await supabase
+      .from("library_books")
+      .select("*")
+      .order("title", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getLibraryBooks error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getDiningHalls() {
+  try {
+    const { data, error } = await supabase
+      .from("dining_halls")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getDiningHalls error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getDiningMenus(diningHallId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("dining_menus")
+      .select("*, dining_menu_items(*)")
+      .eq("dining_hall_id", diningHallId)
+      .order("menu_date", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getDiningMenus error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getFacilities() {
+  try {
+    const { data, error } = await supabase
+      .from("facilities")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getFacilities error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getFacilityBookings(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facility_bookings")
+      .select("*, facilities(*)")
+      .eq("user_id", userId)
+      .order("booking_date", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getFacilityBookings error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getSafetyAlerts() {
+  try {
+    const { data, error } = await supabase
+      .from("safety_alerts")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getSafetyAlerts error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// ANONYMOUS CONFESSIONS
+// ============================================================
+
+export async function getAnonymousConfessions() {
+  try {
+    const { data, error } = await supabase
+      .from("anonymous_confessions")
+      .select("*")
+      .eq("moderation_status", "approved")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getAnonymousConfessions error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// USER CONNECTIONS
+// ============================================================
+
+export async function getUserConnections(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_connections")
+      .select("*")
+      .or(`follower_id.eq.${userId},following_id.eq.${userId}`);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserConnections error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// STUDY GROUP MEMBERS
+// ============================================================
+
+export async function getStudyGroupMembers(groupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("study_group_members")
+      .select("*, users(id, name, imageUrl, username)")
+      .eq("group_id", groupId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getStudyGroupMembers error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getStudyGroupMembersCount(groupId: string) {
+  try {
+    const { count, error } = await supabase
+      .from("study_group_members")
+      .select("*", { count: "exact", head: true })
+      .eq("group_id", groupId);
+
+    if (error) throw error;
+    return count || 0;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getStudyGroupMembersCount error:", errorMsg);
+    return 0;
+  }
+}
+
+// ============================================================
+// INTEREST GROUP MEMBERS
+// ============================================================
+
+export async function getInterestGroupMembers(groupId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("interest_group_members")
+      .select("*, users(id, name, imageUrl, username)")
+      .eq("group_id", groupId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getInterestGroupMembers error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// ORGANIZATION MEMBERS
+// ============================================================
+
+export async function getOrganizationMembers(organizationId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("organization_members")
+      .select("*, users(id, name, imageUrl, username)")
+      .eq("organization_id", organizationId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getOrganizationMembers error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// EVENT RSVPS
+// ============================================================
+
+export async function getEventRSVPs(eventId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("event_rsvps")
+      .select("*, users(id, name, imageUrl, username)")
+      .eq("event_id", eventId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getEventRSVPs error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// TEXTBOOKS
+// ============================================================
+
+export async function getTextbooksByCourse(courseId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("textbooks")
+      .select("*")
+      .eq("course_id", courseId);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getTextbooksByCourse error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getTextbookListings(textbookId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("textbook_listings")
+      .select("*, users(id, name, imageUrl, username)")
+      .eq("textbook_id", textbookId)
+      .eq("available", true)
+      .order("price", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getTextbookListings error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// PROFESSOR REVIEWS
+// ============================================================
+
+export async function getProfessorReviews(courseId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("professor_reviews")
+      .select("*, users(id, name, imageUrl)")
+      .eq("course_id", courseId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getProfessorReviews error:", errorMsg);
+    return [];
+  }
+}
+
+// ============================================================
+// TUTORING SESSIONS
+// ============================================================
+
+export async function getTutoringSessions(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("tutoring_sessions")
+      .select("*, tutors:tutor_id(id, name, imageUrl, username)")
+      .or(`student_id.eq.${userId},tutor_id.eq.${userId}`)
+      .order("session_date", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getTutoringSessions error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getTutoringReviews(tutorId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("tutoring_reviews")
+      .select("*, reviewers:reviewer_id(id, name, imageUrl)")
+      .eq("tutor_id", tutorId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getTutoringReviews error:", errorMsg);
     return [];
   }
 }

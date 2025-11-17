@@ -2,8 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   useGetCourseById,
   useGetCourseAssignments,
+  useGetCourseSharedNotes,
 } from "@/lib/react-query/queries";
-import { mockSharedNotes } from "@/lib/mockData/phase1MockData";
 import Loader from "@/components/shared/Loader";
 
 const CourseCommunity = () => {
@@ -11,9 +11,10 @@ const CourseCommunity = () => {
   const navigate = useNavigate();
   const { data: course, isLoading: courseLoading } = useGetCourseById(courseId);
   const { data: assignmentsData } = useGetCourseAssignments(courseId);
+  const { data: notesData } = useGetCourseSharedNotes(courseId);
 
   const assignments = assignmentsData?.documents || [];
-  const courseNotes = mockSharedNotes.filter((n) => n.course_id === courseId);
+  const courseNotes = notesData?.documents || [];
 
   if (courseLoading) return <Loader />;
   if (!course) return <div className="text-light-2">Course not found</div>;
