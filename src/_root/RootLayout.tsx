@@ -10,6 +10,11 @@ import Loader from "@/components/shared/Loader";
 const RootLayout = () => {
   const { isAuthenticated, isLoading } = useAuthContext();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated and auth is done loading
@@ -17,6 +22,19 @@ const RootLayout = () => {
       navigate("/sign-in", { replace: true });
     }
   }, [isAuthenticated, isLoading, navigate]);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isMobileMenuOpen && !target.closest('.leftsidebar') && !target.closest('.hamburger-button')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -31,25 +49,6 @@ const RootLayout = () => {
   if (!isAuthenticated) {
     return null;
   }
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (isMobileMenuOpen && !target.closest('.leftsidebar') && !target.closest('.hamburger-button')) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMobileMenuOpen]);
 
   return (
     <div className="w-full flex flex-col min-h-screen">
