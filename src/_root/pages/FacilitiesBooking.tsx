@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 
 const FacilitiesBooking = () => {
   const { user } = useAuthContext();
+  const queryClient = useQueryClient();
   const [selectedFacility, setSelectedFacility] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState("");
   const [bookingDate, setBookingDate] = useState(
