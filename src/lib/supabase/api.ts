@@ -142,44 +142,27 @@ export async function getCurrentUser() {
         .eq("id", authUser.id)
         .single();
 
-      try {
-        const result = await Promise.race([queryPromise, timeoutPromise]);
-        if (timeoutId) clearTimeout(timeoutId);
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      if (timeoutId) clearTimeout(timeoutId);
 
-        const { data: fetchedData, error: dbError } = result;
+      const { data: fetchedData } = result;
 
-        if (dbError) {
-          console.error("getCurrentUser - Database error:", dbError.message);
-          // Return a minimal user object based on auth user if profile doesn't exist
-          return {
-            id: authUser.id,
-            email: authUser.email || "",
-            name: authUser.user_metadata?.name || "",
-            username: authUser.user_metadata?.username || "",
-            imageUrl: authUser.user_metadata?.imageUrl || "",
-            bio: authUser.user_metadata?.bio || "",
-          };
-        }
-
+      if (fetchedData) {
         return fetchedData;
-      } catch (raceError) {
-        if (timeoutId) clearTimeout(timeoutId);
-        const errorMessage = raceError instanceof Error ? raceError.message : "Unknown error";
-        console.error("getCurrentUser - Database query error:", errorMessage);
-        // Return a minimal user object based on auth user if profile doesn't exist
-        return {
-          id: authUser.id,
-          email: authUser.email || "",
-          name: authUser.user_metadata?.name || "",
-          username: authUser.user_metadata?.username || "",
-          imageUrl: authUser.user_metadata?.imageUrl || "",
-          bio: authUser.user_metadata?.bio || "",
-        };
       }
+
+      // Return a minimal user object if profile doesn't exist
+      return {
+        id: authUser.id,
+        email: authUser.email || "",
+        name: authUser.user_metadata?.name || "",
+        username: authUser.user_metadata?.username || "",
+        imageUrl: authUser.user_metadata?.imageUrl || "",
+        bio: authUser.user_metadata?.bio || "",
+      };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      console.error("getCurrentUser - Outer catch error:", errorMessage);
-      // Final fallback
+      console.warn("getCurrentUser - Database query failed");
+      // Return a minimal user object based on auth user if profile doesn't exist
       return {
         id: authUser.id,
         email: authUser.email || "",
