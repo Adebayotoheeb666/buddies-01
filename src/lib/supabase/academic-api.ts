@@ -400,7 +400,8 @@ export async function getCampusPolls() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getCampusPolls error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCampusPolls error:", errorMsg);
     return [];
   }
 }
@@ -424,7 +425,8 @@ export async function getPollById(pollId: string) {
 
     return { poll, options: options || [] };
   } catch (error) {
-    logErrorDetails("getPollById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getPollById error:", errorMsg);
     return { poll: null, options: [] };
   }
 }
@@ -439,7 +441,8 @@ export async function getMemePosts() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getMemePosts error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getMemePosts error:", errorMsg);
     return [];
   }
 }
@@ -454,7 +457,8 @@ export async function getStudentOrganizations() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getStudentOrganizations error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getStudentOrganizations error:", errorMsg);
     return [];
   }
 }
@@ -470,7 +474,8 @@ export async function getOrganizationById(orgId: string) {
     if (error) throw error;
     return data;
   } catch (error) {
-    logErrorDetails("getOrganizationById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getOrganizationById error:", errorMsg);
     return null;
   }
 }
@@ -486,7 +491,8 @@ export async function getOrganizationEvents(orgId: string) {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getOrganizationEvents error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getOrganizationEvents error:", errorMsg);
     return [];
   }
 }
@@ -501,7 +507,8 @@ export async function getClassYearGroups() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getClassYearGroups error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getClassYearGroups error:", errorMsg);
     return [];
   }
 }
@@ -516,7 +523,8 @@ export async function getDepartmentNetworks() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getDepartmentNetworks error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getDepartmentNetworks error:", errorMsg);
     return [];
   }
 }
