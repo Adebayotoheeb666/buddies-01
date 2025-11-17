@@ -62,17 +62,8 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
       .order("last_message_at", { ascending: false, nullsFirst: false });
 
     if (error) {
-      const errorDetails = {
-        code: (error as any).code || "UNKNOWN",
-        message: (error as any).message || String(error),
-        details: (error as any).details,
-        hint: (error as any).hint,
-        status: (error as any).status,
-      };
-      console.error(
-        "getPrivateChats error:",
-        JSON.stringify(errorDetails, null, 2)
-      );
+      const errorMessage = error.message || "Failed to fetch private chats";
+      console.error("getPrivateChats error:", errorMessage);
       // Return empty array on error instead of throwing to prevent infinite retries
       return [];
     }
