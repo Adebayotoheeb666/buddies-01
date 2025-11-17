@@ -270,9 +270,9 @@ const ProjectListings = () => {
                 </button>
                 <button
                   type="submit"
-                  disabled={createMutation.isPending}
+                  disabled={createMutation.isLoading}
                   className="flex-1 bg-primary-500 text-white py-2 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50">
-                  {createMutation.isPending ? "Creating..." : "Create"}
+                  {createMutation.isLoading ? "Creating..." : "Create"}
                 </button>
               </div>
             </form>
