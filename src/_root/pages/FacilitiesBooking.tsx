@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getFacilities,
   getFacilityEquipment,
   getFacilityReviews,
   bookFacility,
   getUserFacilityBookings,
+  cancelFacilityBooking,
 } from "@/lib/supabase/api";
 import { useAuthContext } from "@/context/AuthContext";
 import { Loader } from "@/components/shared";
