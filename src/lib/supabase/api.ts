@@ -178,7 +178,7 @@ export async function getCurrentUser() {
       await supabase.auth.getSession();
 
     if (sessionError) {
-      logErrorDetails("getCurrentUser - Session error details:", sessionError);
+      console.error("getCurrentUser - Session error:", sessionError.message);
       return null;
     }
 
@@ -192,7 +192,7 @@ export async function getCurrentUser() {
     const { user: authUser } = data;
 
     if (authError) {
-      logErrorDetails("getCurrentUser - Auth error details:", authError);
+      console.error("getCurrentUser - Auth error:", authError.message);
       return null;
     }
 
@@ -224,7 +224,7 @@ export async function getCurrentUser() {
         const { data: fetchedData, error: dbError } = result;
 
         if (dbError) {
-          logErrorDetails("getCurrentUser - Database error details:", dbError);
+          console.error("getCurrentUser - Database error:", dbError.message);
           // Return a minimal user object based on auth user if profile doesn't exist
           return {
             id: authUser.id,
@@ -239,7 +239,8 @@ export async function getCurrentUser() {
         return fetchedData;
       } catch (raceError) {
         if (timeoutId) clearTimeout(timeoutId);
-        logErrorDetails("getCurrentUser - Database query error:", raceError);
+        const errorMessage = raceError instanceof Error ? raceError.message : "Unknown error";
+        console.error("getCurrentUser - Database query error:", errorMessage);
         // Return a minimal user object based on auth user if profile doesn't exist
         return {
           id: authUser.id,
@@ -251,7 +252,8 @@ export async function getCurrentUser() {
         };
       }
     } catch (error) {
-      logErrorDetails("getCurrentUser - Outer catch error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error("getCurrentUser - Outer catch error:", errorMessage);
       // Final fallback
       return {
         id: authUser.id,
@@ -263,7 +265,8 @@ export async function getCurrentUser() {
       };
     }
   } catch (error) {
-    logErrorDetails("getCurrentUser - Try-catch error details:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("getCurrentUser - Try-catch error:", errorMessage);
     return null;
   }
 }
