@@ -120,7 +120,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
         )}
 
         <div className={`flex flex-col gap-4 overflow-y-auto custom-scrollbar ${
-          isMobile ? "max-h-[calc(100vh-300px)]" : "max-h-[calc(100vh-280px)]"
+          isMobile ? "flex-1 max-h-none" : "max-h-[calc(100vh-280px)]"
         }`}>
           {categoryOrder.map((category) => {
             const links = groupedLinks[category];
