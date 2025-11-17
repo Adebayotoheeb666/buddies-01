@@ -100,7 +100,8 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
             otherUser: userData,
           };
         } catch (err) {
-          console.error("Error fetching user details:", err);
+          const errorMsg = err instanceof Error ? err.message : String(err);
+          console.warn("Error fetching user details for chat:", errorMsg);
           return chat;
         }
       })
