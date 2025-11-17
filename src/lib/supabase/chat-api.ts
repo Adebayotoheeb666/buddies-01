@@ -155,18 +155,41 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
 
   if (!user) throw new Error("User not authenticated");
 
-  const { data, error } = await supabase
-    .from("group_chats")
-    .select(
-      `
-      *,
-      group_chat_members(id, user_id, role, joined_at)
-    `
-    )
-    .eq("group_chat_members.user_id", user.id);
+  try {
+    // Add timeout protection for group chats query
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Group chats query timeout after 8 seconds")), 8000)
+    );
 
-  if (error) throw error;
-  return data;
+    const queryPromise = supabase
+      .from("group_chats")
+      .select(
+        `
+        *,
+        group_chat_members(id, user_id, role, joined_at)
+      `
+      )
+      .eq("group_chat_members.user_id", user.id);
+
+    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
+
+    if (error) {
+      console.error("getGroupChats error:", {
+        code: (error as any).code,
+        message: (error as any).message,
+        details: (error as any).details,
+        hint: (error as any).hint,
+      });
+      // Return empty array on error instead of throwing to prevent infinite retries
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("getGroupChats exception:", error);
+    // Return empty array on error instead of throwing to prevent infinite retries
+    return [];
+  }
 };
 
 export const getGroupChatById = async (
