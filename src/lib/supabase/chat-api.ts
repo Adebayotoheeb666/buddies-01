@@ -108,7 +108,8 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
 
     return chatsWithUsers;
   } catch (error) {
-    console.error("getPrivateChats exception:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getPrivateChats exception:", errorMsg);
     // Return empty array on error instead of throwing to prevent infinite retries
     return [];
   }
