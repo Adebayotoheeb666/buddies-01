@@ -210,6 +210,12 @@ const BucketList = () => {
                   {item.completed && (
                     <div className="flex-shrink-0 text-primary-500">✓ Done</div>
                   )}
+                  <button
+                    onClick={() => handleDeleteItem(item.id)}
+                    className="flex-shrink-0 text-light-4 hover:text-red-500 transition"
+                    title="Delete item">
+                    ✕
+                  </button>
                 </div>
               ))
             ) : (
