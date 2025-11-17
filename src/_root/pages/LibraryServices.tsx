@@ -264,9 +264,21 @@ const LibraryServices = () => {
                         </p>
                       </div>
                     </div>
-                    <Button className="bg-dark-4 text-light-2 px-3 py-1 text-xs rounded mt-2">
-                      Renew
-                    </Button>
+                    <div className="flex gap-2 mt-2">
+                      <Button className="flex-1 bg-dark-4 text-light-2 px-3 py-1 text-xs rounded hover:bg-dark-3">
+                        Renew
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          cancelReservationMutation.mutate(checkout.id)
+                        }
+                        disabled={cancelReservationMutation.isPending}
+                        className="flex-1 bg-red-500/20 text-red-400 px-3 py-1 text-xs rounded hover:bg-red-500/30">
+                        {cancelReservationMutation.isPending
+                          ? "Cancelling..."
+                          : "Return"}
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
