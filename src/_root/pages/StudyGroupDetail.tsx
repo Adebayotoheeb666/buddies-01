@@ -1,22 +1,29 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetStudyGroupById } from "@/lib/react-query/queries";
-import { mockUsers } from "@/lib/mockData/phase1MockData";
+import {
+  useGetStudyGroupById,
+  useGetStudyGroupMembers,
+  useGetUserById,
+} from "@/lib/react-query/queries";
 import Loader from "@/components/shared/Loader";
 import { useState } from "react";
 
 const StudyGroupDetail = () => {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
-  const { data: group, isLoading } = useGetStudyGroupById(groupId);
+  const { data: group, isLoading: groupLoading } =
+    useGetStudyGroupById(groupId);
+  const { data: membersData, isLoading: membersLoading } =
+    useGetStudyGroupMembers(groupId);
+  const { data: creator, isLoading: creatorLoading } = useGetUserById(
+    group?.creator_id || ""
+  );
   const [isMember, setIsMember] = useState(false);
   const [showChat, setShowChat] = useState(false);
 
-  if (isLoading) return <Loader />;
-  if (!group) return <div className="text-light-2">Study group not found</div>;
+  const members = membersData?.documents || [];
 
-  // Mock members - in real app would be fetched
-  const creator = mockUsers.find((u) => u.id === group.creator_id);
-  const members = mockUsers.slice(0, group.members_count);
+  if (groupLoading || membersLoading || creatorLoading) return <Loader />;
+  if (!group) return <div className="text-light-2">Study group not found</div>;
 
   return (
     <div className="flex flex-col gap-9 w-full max-w-5xl">
