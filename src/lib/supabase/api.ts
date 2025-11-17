@@ -181,13 +181,11 @@ export async function getCurrentUser() {
 
 export async function signOutAccount() {
   try {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) throw error;
-
+    await supabase.auth.signOut();
     return { status: "ok" };
   } catch (error) {
-    console.log(error);
+    console.warn("signOutAccount failed");
+    return { status: "ok" };
   }
 }
 
