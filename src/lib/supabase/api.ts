@@ -3106,13 +3106,14 @@ export async function getSafetyAlerts() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      logErrorDetails("getSafetyAlerts - Error:", error);
+      console.error("getSafetyAlerts error:", error.message || error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    logErrorDetails("getSafetyAlerts - Catch error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getSafetyAlerts catch error:", errorMsg);
     return [];
   }
 }
