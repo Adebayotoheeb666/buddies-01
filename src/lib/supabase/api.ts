@@ -4145,6 +4145,23 @@ export async function completeBucketListItem(
   }
 }
 
+export async function deleteBucketListItem(itemId: string) {
+  try {
+    const { error } = await supabase
+      .from("bucket_list_items")
+      .delete()
+      .eq("id", itemId);
+
+    if (error) throw error;
+
+    return true;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("deleteBucketListItem error:", errorMsg);
+    throw error;
+  }
+}
+
 export async function getBucketListItems(bucketListId: string) {
   try {
     const { data, error } = await supabase
