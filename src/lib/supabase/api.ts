@@ -63,18 +63,11 @@ export async function signInAccount(user: { email: string; password: string }) {
 
 export async function getAccount() {
   try {
-    const { data, error } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
     const { user } = data;
-
-    if (error) {
-      console.error("getAccount - Auth error:", error.message);
-      throw error;
-    }
-
     return user;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error("getAccount - Error:", errorMessage);
+    console.warn("getAccount failed");
     return null;
   }
 }
