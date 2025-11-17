@@ -1,12 +1,22 @@
 import { useState } from "react";
-import { useGetProjectListings, useGetSkills } from "@/lib/react-query/queries";
+import { useGetProjectListings, useGetSkills, useCreateProjectListing } from "@/lib/react-query/queries";
+import { useAuthContext } from "@/context/AuthContext";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const ProjectListings = () => {
+  const { user } = useAuthContext();
   const { data: projectsData, isLoading } = useGetProjectListings();
   const { data: skillsData } = useGetSkills();
+  const createMutation = useCreateProjectListing();
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    skills: [] as string[],
+  });
 
   const projects = projectsData?.documents || [];
   const skills = skillsData?.documents || [];
