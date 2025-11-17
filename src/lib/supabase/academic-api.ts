@@ -1672,3 +1672,319 @@ export async function addUserSkill(userId: string, skillId: string) {
     throw error;
   }
 }
+
+// ============================================================
+// UPDATE OPERATIONS FOR ACADEMIC FEATURES
+// ============================================================
+
+export async function updateStudyGroup(
+  groupId: string,
+  updates: {
+    name?: string;
+    description?: string;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("study_groups")
+      .update(updates)
+      .eq("id", groupId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateStudyGroup error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function leaveStudyGroup(groupId: string, userId: string) {
+  try {
+    const { error } = await supabase
+      .from("study_group_members")
+      .delete()
+      .eq("group_id", groupId)
+      .eq("user_id", userId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("leaveStudyGroup error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function submitAssignmentSolution(
+  assignmentId: string,
+  userId: string,
+  submissionContent: string,
+  submissionUrl?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("assignment_submissions")
+      .insert([
+        {
+          assignment_id: assignmentId,
+          user_id: userId,
+          submission_content: submissionContent,
+          submission_url: submissionUrl || null,
+          status: "submitted",
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("submitAssignmentSolution error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function markQAAnswerAsVerified(answerId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("qa_answers")
+      .update({ is_verified: true })
+      .eq("id", answerId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("markQAAnswerAsVerified error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateProjectListing(
+  projectId: string,
+  updates: {
+    title?: string;
+    description?: string;
+    required_skills?: string[];
+    status?: string;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("project_listings")
+      .update(updates)
+      .eq("id", projectId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateProjectListing error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateChallengeSubmission(
+  submissionId: string,
+  updates: {
+    submission_content?: string;
+    submission_url?: string;
+    status?: string;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("challenge_submissions")
+      .update(updates)
+      .eq("id", submissionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateChallengeSubmission error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateBucketListItem(
+  itemId: string,
+  completed: boolean
+) {
+  try {
+    const { data, error } = await supabase
+      .from("bucket_list_items")
+      .update({
+        completed_at: completed ? new Date().toISOString() : null,
+        is_completed: completed,
+      })
+      .eq("id", itemId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateBucketListItem error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateTutoringProfile(
+  profileId: string,
+  updates: {
+    hourly_rate?: number;
+    bio?: string;
+    subjects?: string[];
+    availability?: string;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("tutoring_profiles")
+      .update(updates)
+      .eq("id", profileId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateTutoringProfile error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function completeTutorSession(
+  sessionId: string,
+  rating?: number,
+  notes?: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("tutoring_sessions")
+      .update({
+        status: "completed",
+        completed_at: new Date().toISOString(),
+        rating: rating || null,
+        notes: notes || null,
+      })
+      .eq("id", sessionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("completeTutorSession error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updatePhotoContestSubmission(
+  submissionId: string,
+  updates: {
+    caption?: string;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("photo_contest_submissions")
+      .update(updates)
+      .eq("id", submissionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updatePhotoContestSubmission error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateInterestGroup(
+  groupId: string,
+  updates: {
+    name?: string;
+    description?: string;
+    icon_url?: string;
+  }
+) {
+  try {
+    const { data, error } = await supabase
+      .from("interest_groups")
+      .update(updates)
+      .eq("id", groupId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateInterestGroup error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function leaveInterestGroup(groupId: string, userId: string) {
+  try {
+    const { error } = await supabase
+      .from("interest_group_members")
+      .delete()
+      .eq("group_id", groupId)
+      .eq("user_id", userId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("leaveInterestGroup error:", errorMsg);
+    throw error;
+  }
+}
+
+export async function updateAssignmentSubmissionStatus(
+  submissionId: string,
+  status: string,
+  feedback?: string,
+  grade?: number
+) {
+  try {
+    const { data, error } = await supabase
+      .from("assignment_submissions")
+      .update({
+        status,
+        feedback: feedback || null,
+        grade: grade || null,
+        graded_at: ["graded", "returned"].includes(status)
+          ? new Date().toISOString()
+          : null,
+      })
+      .eq("id", submissionId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("updateAssignmentSubmissionStatus error:", errorMsg);
+    throw error;
+  }
+}
