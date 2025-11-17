@@ -4121,6 +4121,14 @@ export async function addBucketListItem(
   }
 }
 
+export async function createBucketListItem(
+  bucketListId: string,
+  activity: string,
+  locationId?: string
+) {
+  return addBucketListItem(bucketListId, activity, locationId);
+}
+
 export async function completeBucketListItem(
   itemId: string,
   photoUrl?: string
