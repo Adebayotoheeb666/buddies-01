@@ -8,16 +8,10 @@ import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
 export async function createUserAccount(user: INewUser) {
   try {
     // Create auth account directly
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    const { data: authData } = await supabase.auth.signUp({
       email: user.email,
       password: user.password,
     });
-
-    if (authError) {
-      const errorMessage = authError.message || "Failed to create auth account";
-      console.error("Auth signup error:", errorMessage);
-      throw new Error(errorMessage);
-    }
 
     if (!authData.user) {
       throw new Error("Failed to create auth account: No user returned");
@@ -27,7 +21,7 @@ export async function createUserAccount(user: INewUser) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Create user profile in database using the authenticated session
-    const { data: userData, error: dbError } = await supabase
+    const { data: userData } = await supabase
       .from("users")
       .insert({
         id: authData.user.id,
@@ -40,14 +34,9 @@ export async function createUserAccount(user: INewUser) {
       .select()
       .single();
 
-    if (dbError) {
-      console.error("User profile insert error:", dbError.message || dbError);
-      throw new Error(dbError.message || "Failed to create user profile");
-    }
-
     return userData;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error during signup";
+    const errorMessage = error instanceof Error ? error.message : "Signup failed";
     console.error("createUserAccount error:", errorMessage);
     throw error;
   }
