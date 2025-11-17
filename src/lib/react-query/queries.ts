@@ -599,13 +599,313 @@ export const useGetOrganizationById = (orgId?: string) => {
 export const useGetOrganizationEvents = (orgId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ORGANIZATION_EVENTS, orgId],
-    queryFn: () => {
-      // const events = mockOrganizationEvents.filter((e: any) => e.organization_id === orgId);
-      return Promise.resolve({
-        documents: [],
-        total: 0,
-      });
+    queryFn: async () => {
+      if (!orgId) return { documents: [], total: 0 };
+      const data = await getOrganizationEvents(orgId);
+      return { documents: data, total: data.length };
     },
     enabled: !!orgId,
+  });
+};
+
+// ============================================================
+// ACHIEVEMENTS & GAMIFICATION QUERIES
+// ============================================================
+
+export const useGetAchievements = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ACHIEVEMENTS],
+    queryFn: async () => {
+      const data = await getAchievements();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetUserAchievements = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_ACHIEVEMENTS, userId],
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserAchievements(userId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useGetUserPoints = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_POINTS, userId],
+    queryFn: () => getUserPoints(userId || ""),
+    enabled: !!userId,
+  });
+};
+
+export const useGetLeaderboard = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_LEADERBOARD],
+    queryFn: async () => {
+      const data = await getLeaderboard();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetChallenges = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CHALLENGES],
+    queryFn: async () => {
+      const data = await getChallenges();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetUserChallenges = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_CHALLENGES, userId],
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserChallengeParticipations(userId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useGetSemesterRecaps = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SEMESTER_RECAPS, userId],
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getSemesterRecaps(userId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!userId,
+  });
+};
+
+// ============================================================
+// CAMPUS FEATURES QUERIES
+// ============================================================
+
+export const useGetCampusLocations = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CAMPUS_LOCATIONS],
+    queryFn: async () => {
+      const data = await getCampusLocations();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetCampusLocationById = (locationId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CAMPUS_LOCATION_BY_ID, locationId],
+    queryFn: () => getCampusLocationById(locationId || ""),
+    enabled: !!locationId,
+  });
+};
+
+export const useGetLibraryBooks = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_LIBRARY_BOOKS],
+    queryFn: async () => {
+      const data = await getLibraryBooks();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetDiningHalls = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_DINING_HALLS],
+    queryFn: async () => {
+      const data = await getDiningHalls();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetDiningMenus = (diningHallId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_DINING_MENUS, diningHallId],
+    queryFn: async () => {
+      if (!diningHallId) return { documents: [], total: 0 };
+      const data = await getDiningMenus(diningHallId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!diningHallId,
+  });
+};
+
+export const useGetFacilities = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_FACILITIES],
+    queryFn: async () => {
+      const data = await getFacilities();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetFacilityBookings = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_FACILITY_BOOKINGS, userId],
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getFacilityBookings(userId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useGetSafetyAlerts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SAFETY_ALERTS],
+    queryFn: async () => {
+      const data = await getSafetyAlerts();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+// ============================================================
+// SOCIAL FEATURES QUERIES
+// ============================================================
+
+export const useGetAnonymousConfessions = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ANONYMOUS_CONFESSIONS],
+    queryFn: async () => {
+      const data = await getAnonymousConfessions();
+      return { documents: data, total: data.length };
+    },
+  });
+};
+
+export const useGetUserConnections = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_CONNECTIONS, userId],
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getUserConnections(userId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useGetStudyGroupMembers = (groupId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_STUDY_GROUP_MEMBERS, groupId],
+    queryFn: async () => {
+      if (!groupId) return { documents: [], total: 0 };
+      const data = await getStudyGroupMembers(groupId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!groupId,
+  });
+};
+
+export const useGetInterestGroupMembers = (groupId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_MEMBERS, groupId],
+    queryFn: async () => {
+      if (!groupId) return { documents: [], total: 0 };
+      const data = await getInterestGroupMembers(groupId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!groupId,
+  });
+};
+
+export const useGetOrganizationMembers = (orgId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ORGANIZATION_MEMBERS, orgId],
+    queryFn: async () => {
+      if (!orgId) return { documents: [], total: 0 };
+      const data = await getOrganizationMembers(orgId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!orgId,
+  });
+};
+
+export const useGetEventRSVPs = (eventId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_EVENT_RSVPS, eventId],
+    queryFn: async () => {
+      if (!eventId) return { documents: [], total: 0 };
+      const data = await getEventRSVPs(eventId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!eventId,
+  });
+};
+
+// ============================================================
+// TEXTBOOK & ACADEMIC QUERIES
+// ============================================================
+
+export const useGetTextbooksByCourse = (courseId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_TEXTBOOKS_BY_COURSE, courseId],
+    queryFn: async () => {
+      if (!courseId) return { documents: [], total: 0 };
+      const data = await getTextbooksByCourse(courseId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!courseId,
+  });
+};
+
+export const useGetTextbookListings = (textbookId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_TEXTBOOK_LISTINGS, textbookId],
+    queryFn: async () => {
+      if (!textbookId) return { documents: [], total: 0 };
+      const data = await getTextbookListings(textbookId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!textbookId,
+  });
+};
+
+export const useGetProfessorReviews = (courseId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PROFESSOR_REVIEWS, courseId],
+    queryFn: async () => {
+      if (!courseId) return { documents: [], total: 0 };
+      const data = await getProfessorReviews(courseId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!courseId,
+  });
+};
+
+export const useGetTutoringSessions = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_TUTORING_SESSIONS, userId],
+    queryFn: async () => {
+      if (!userId) return { documents: [], total: 0 };
+      const data = await getTutoringSessions(userId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useGetTutoringReviews = (tutorId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_TUTORING_REVIEWS, tutorId],
+    queryFn: async () => {
+      if (!tutorId) return { documents: [], total: 0 };
+      const data = await getTutoringReviews(tutorId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!tutorId,
   });
 };
