@@ -34,7 +34,7 @@ const QuestionDetail = () => {
           alt="back"
           className="cursor-pointer hover:opacity-80 transition"
         />
-        <h2 className="h3-bold md:h2-bold w-full">Q&A Forum</h2>
+        <h2 className="h3-bold md:h2-bold w-full">Q&amp;A Forum</h2>
       </div>
 
       <div className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7">
@@ -55,7 +55,7 @@ const QuestionDetail = () => {
             </p>
 
             <div className="flex flex-wrap gap-2 mb-4">
-              {question.tags.map((tag) => (
+              {(question.tags as string[]).map((tag: string) => (
                 <span
                   key={tag}
                   className="px-3 py-1 bg-dark-3 text-light-3 rounded-full text-tiny font-medium">

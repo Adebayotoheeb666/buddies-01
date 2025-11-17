@@ -1,12 +1,8 @@
-import {
-  useGetPrivateChats,
-  useGetGroupChats,
-} from "@/lib/react-query/chat-queries";
-import { useUserContext, useAuthContext } from "@/context/AuthContext";
+import { useGetPrivateChats, useGetGroupChats } from "@/lib/react-query/chat-queries";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "@/context/AuthContext";
 
 export const ChatNotificationBadge = () => {
-  const { user } = useUserContext();
   const { isAuthenticated } = useAuthContext();
   const { data: privateChats = [] } = useGetPrivateChats(isAuthenticated);
   const { data: groupChats = [] } = useGetGroupChats(isAuthenticated);

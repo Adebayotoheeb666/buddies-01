@@ -287,7 +287,7 @@ export async function updatePost(post: IUpdatePost) {
         throw Error;
       }
 
-      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+      image = { ...image, imageUrl: fileUrl.toString(), imageId: uploadedFile.$id };
     }
 
     // Convert tags into array
@@ -508,7 +508,7 @@ export async function updateUser(user: IUpdateUser) {
         throw Error;
       }
 
-      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+      image = { ...image, imageUrl: fileUrl.toString(), imageId: uploadedFile.$id };
     }
 
     //  Update user

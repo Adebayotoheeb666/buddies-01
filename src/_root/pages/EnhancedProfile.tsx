@@ -128,7 +128,7 @@ const EnhancedProfile = () => {
         <div className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7">
           <h3 className="h3-bold mb-4">Interests</h3>
           <div className="flex flex-wrap gap-2">
-            {profile.interests.map((interest, idx) => (
+            {profile.interests.map((interest: any, idx: number) => (
               <span
                 key={idx}
                 className="px-3 py-1 bg-primary-500/20 text-primary-500 rounded-full text-small-medium">
@@ -144,21 +144,23 @@ const EnhancedProfile = () => {
         <div className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7">
           <h3 className="h3-bold mb-4">Enrolled Courses ({courses.length})</h3>
           <div className="space-y-3">
-            {courses.map((course) => (
-              <div
-                key={course.id}
-                className="flex justify-between items-center p-3 bg-dark-3 rounded border border-dark-4">
-                <div>
-                  <p className="font-semibold">{course.course_code}</p>
+            {courses?.map((course) =>
+              course ? (
+                <div
+                  key={course.id}
+                  className="flex justify-between items-center p-3 bg-dark-3 rounded border border-dark-4">
+                  <div>
+                    <p className="font-semibold">{course.course_code}</p>
+                    <p className="text-light-3 text-small-medium">
+                      {course.course_name}
+                    </p>
+                  </div>
                   <p className="text-light-3 text-small-medium">
-                    {course.course_name}
+                    {course.professor}
                   </p>
                 </div>
-                <p className="text-light-3 text-small-medium">
-                  {course.professor}
-                </p>
-              </div>
-            ))}
+              ) : null
+            )}
           </div>
         </div>
       )}
@@ -168,18 +170,20 @@ const EnhancedProfile = () => {
         <div className="bg-dark-2 rounded-[10px] border border-dark-4 p-5 lg:p-7">
           <h3 className="h3-bold mb-4">Following ({following.length})</h3>
           <div className="flex flex-wrap gap-3">
-            {following.map((user) => (
-              <div
-                key={user.id}
-                className="flex items-center gap-2 p-2 bg-dark-3 rounded-full">
-                <img
-                  src={user.imageUrl}
-                  alt={user.name}
-                  className="w-8 h-8 rounded-full"
-                />
-                <span className="text-small-medium">{user.name}</span>
-              </div>
-            ))}
+            {following.map((user) =>
+              user ? (
+                <div
+                  key={user.id}
+                  className="flex items-center gap-2 p-2 bg-dark-3 rounded-full">
+                  <img
+                    src={user.imageUrl}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span className="text-small-medium">{user.name}</span>
+                </div>
+              ) : null
+            )}
           </div>
         </div>
       )}

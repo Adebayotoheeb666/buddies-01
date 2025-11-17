@@ -127,10 +127,10 @@ const ResearchStartups = () => {
                           Required Skills:
                         </p>
                         <div className="flex gap-2 flex-wrap">
-                          {opp.required_skills.slice(0, 3).map((skill, idx) => (
+                          {opp.required_skills.slice(0, 3).map((skill: string, idx: number) => (
                             <span
                               key={idx}
-                              className="text-xs bg-dark-4 px-2 py-1 rounded">
+                              className="bg-dark-4 px-2 py-1 rounded text-xs">
                               {skill}
                             </span>
                           ))}
@@ -214,10 +214,8 @@ const ResearchStartups = () => {
                         Looking for:
                       </p>
                       <div className="flex gap-2 flex-wrap">
-                        {startup.looking_for.map((role, idx) => (
-                          <span
-                            key={idx}
-                            className="text-xs bg-dark-4 px-2 py-1 rounded">
+                        {startup.looking_for.map((role: string, idx: number) => (
+                          <span key={idx} className="bg-dark-4 px-2 py-1 rounded text-xs">
                             {role}
                           </span>
                         ))}
@@ -271,10 +269,8 @@ const ResearchStartups = () => {
                         Industries:
                       </p>
                       <div className="flex gap-2 flex-wrap">
-                        {cofounder.industry_interest.map((industry, idx) => (
-                          <span
-                            key={idx}
-                            className="text-xs bg-dark-4 px-2 py-1 rounded">
+                        {cofounder.industry_interest.map((industry: string, idx: number) => (
+                          <span key={idx} className="bg-dark-4 px-2 py-1 rounded text-xs">
                             {industry}
                           </span>
                         ))}

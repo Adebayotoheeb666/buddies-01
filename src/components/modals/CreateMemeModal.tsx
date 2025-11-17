@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
 import { createMemePost, uploadFile, getFilePreview } from "@/lib/supabase/api";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface CreateMemeModalProps {

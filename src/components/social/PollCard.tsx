@@ -1,5 +1,4 @@
-import { CampusPoll, PollOption } from "@/types/social.types";
-import { Button } from "@/components/ui/button";
+import { CampusPoll } from "@/types/social.types";
 import { useAuthContext } from "@/context/AuthContext";
 import { getPoll, votePoll } from "@/lib/supabase/api";
 import { useQuery } from "@tanstack/react-query";
@@ -35,7 +34,7 @@ const PollCard = ({ poll }: PollCardProps) => {
   };
 
   const options = pollDetails?.options || [];
-  const totalVotes = options.reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
+  const totalVotes = options.reduce((sum: number, opt: { vote_count?: number }) => sum + (opt.vote_count || 0), 0);
 
   const getPercentage = (votes: number) => {
     if (totalVotes === 0) return 0;
@@ -63,7 +62,7 @@ const PollCard = ({ poll }: PollCardProps) => {
 
       {/* Poll Options */}
       <div className="space-y-3 mb-4">
-        {options.map((option) => {
+        {options.map((option: { id: string; option_text: string; vote_count?: number }) => {
           const percentage = getPercentage(option.vote_count || 0);
           const isSelected = userVote === option.id;
 

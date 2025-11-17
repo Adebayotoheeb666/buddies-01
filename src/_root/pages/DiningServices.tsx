@@ -184,7 +184,7 @@ const DiningServices = () => {
                       )}
                       {item.dietary_info && item.dietary_info.length > 0 && (
                         <div className="flex gap-1 flex-wrap mt-2">
-                          {item.dietary_info.map((info) => (
+                          {item.dietary_info.map((info: any) => (
                             <span
                               key={info}
                               className="text-xs bg-dark-4 px-2 py-1 rounded">

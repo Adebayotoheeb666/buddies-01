@@ -1,129 +1,5 @@
 import { supabase } from "./config";
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
-import {
-  Course,
-  CourseEnrollment,
-  StudyGroup,
-  Assignment,
-  SharedNote,
-  ProjectListing,
-  TutoringProfile,
-  Resource,
-  QAQuestion,
-  Skill,
-  UserSkill,
-} from "@/types/academic.types";
-import {
-  ClassYearGroup,
-  ClassYearMember,
-  DepartmentNetwork,
-  DepartmentMember,
-  InternationalStudentProfile,
-  CommuterProfile,
-  CampusPoll,
-  PollOption,
-  PollVote,
-  InterestGroup,
-  InterestGroupMember,
-  MemePost,
-  AnonymousConfession,
-  StudentOrganization,
-  OrganizationMember,
-  OrganizationEvent,
-  EventRSVP,
-  EventCheckIn,
-  RecruitmentPeriod,
-  RecruitmentApplication,
-} from "@/types/social.types";
-import {
-  CampusLocation,
-  Classroom,
-  BuildingRoute,
-  DiningHall,
-  Menu,
-  MenuItem,
-  DiningWaitTime,
-  MealPlan,
-  DiningReview,
-  FoodReview,
-  LibraryBook,
-  BookCheckout,
-  StudyRoomBooking,
-  LibraryZone,
-  BookHold,
-  Facility,
-  FacilityEquipment,
-  FacilityBooking,
-  FacilityReview,
-} from "@/types/campus.types";
-import {
-  SafetyAlert,
-  SafeWalkRequest,
-  LocationShare,
-  LocationUpdate,
-  EmergencyResource,
-  WellnessResource,
-  CounselingAppointment,
-  WellnessCheckIn,
-  WellnessGoal,
-  SupportForum,
-  ForumThread,
-  ForumReply,
-  ContentReport,
-  IntegrityFlag,
-  ModerationAction,
-  Appeal,
-} from "@/types/safety.types";
-import {
-  Achievement,
-  UserAchievement,
-  UserPoints,
-  PointTransaction,
-  Leaderboard,
-  LeaderboardEntry,
-  SemesterRecap,
-  Challenge,
-  ChallengeParticipation,
-  PhotoContest,
-  PhotoSubmission,
-  BucketList,
-  BucketListItem,
-  AttendanceStreak,
-  UserAnalytics,
-  FeatureUsage,
-  CampusExploration,
-  AdminMetrics,
-  EngagementSummary,
-  AtRiskStudent,
-} from "@/types/gamification.types";
-import {
-  JobPosting,
-  JobApplication,
-  InternshipPosting,
-  ApplicationTracking,
-  CareerFair,
-  CareerFairCompany,
-  CareerFairMeeting,
-  UserPortfolio,
-  PortfolioProject,
-  SkillEndorsement,
-  AlumniProfile,
-  MentorshipPair,
-  MentorshipSession,
-  MentorshipFeedback,
-  CareerPath,
-  AlumniEvent,
-  AlumniNetwork,
-  AlumniNetworkMember,
-  ResearchOpportunity,
-  ResearchApplication,
-  ResearchProject,
-  StartupOpportunity,
-  StartupTeamMember,
-  CoFounderProfile,
-  PitchCompetition,
-  PitchCompetitionRegistration,
-} from "@/types/career.types";
 
 // ============================================================
 // UTILITY FUNCTIONS
@@ -205,8 +81,6 @@ function logErrorDetails(label: string, error: any): void {
 // ============================================================
 
 export async function createUserAccount(user: INewUser) {
-  let authUserId: string | null = null;
-
   try {
     // Create auth account directly without retry on body stream errors
     const authResult = await supabase.auth.signUp({
@@ -225,8 +99,6 @@ export async function createUserAccount(user: INewUser) {
     if (!authData.user) {
       throw new Error("Failed to create auth account: No user returned");
     }
-
-    authUserId = authData.user.id;
 
     // Wait a moment for the auth user to be ready
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -372,7 +244,7 @@ export async function createPost(post: INewPost) {
   try {
     // Upload file to Supabase storage
     const fileName = `${Date.now()}_${post.file[0].name}`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from("posts")
       .upload(`public/${fileName}`, post.file[0]);
 
@@ -3184,11 +3056,9 @@ export async function addStartupTeamMember(
   }
 }
 
-export async function getCoFounderMatches(filters?: {
-  industryInterest?: string;
-}) {
+export async function getCoFounderMatches() {
   try {
-    let query = supabase
+    const query = supabase
       .from("cofounder_profiles")
       .select("*")
       .eq("looking_for_cofounders", true);

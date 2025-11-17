@@ -13,6 +13,7 @@ import { useAuthContext } from "@/context/AuthContext";
 type ChatTab = "private" | "groups";
 
 export const Chats = () => {
+  const { isAuthenticated } = useAuthContext();
   const [activeTab, setActiveTab] = useState<ChatTab>("private");
   const [selectedChat, setSelectedChat] = useState<ChatWithLastMessage | null>(
     null

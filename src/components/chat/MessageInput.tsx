@@ -22,7 +22,7 @@ export const MessageInput = ({
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const { mutate: sendMessage, isPending } = useSendMessage();
+  const { mutate: sendMessage } = useSendMessage();
   const { mutate: setTypingStatus } = useSetTypingStatus();
 
   const handleTyping = (value: string) => {
@@ -51,8 +51,8 @@ export const MessageInput = ({
     }, 1000);
   };
 
-  const handleMediaUpload = (urls: string[]) => {
-    setMediaUrls((prev) => [...prev, ...urls]);
+  const handleMediaUpload = (files: File[]) => {
+    setMediaUrls(files.map((file) => URL.createObjectURL(file)));
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -128,13 +128,13 @@ export const MessageInput = ({
           />
         </div>
 
-        <FileUploader onUpload={handleMediaUpload} maxFiles={3} />
+        <FileUploader fieldChange={handleMediaUpload} mediaUrl={mediaUrls[0] || ""} />
 
         <Button
           type="submit"
-          disabled={isPending || (!message.trim() && mediaUrls.length === 0)}
+          disabled={(!message.trim() && mediaUrls.length === 0)}
           className="shad-button_primary">
-          {isPending ? "Sending..." : "Send"}
+          Send
         </Button>
       </div>
     </form>
