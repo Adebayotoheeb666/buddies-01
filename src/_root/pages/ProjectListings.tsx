@@ -192,6 +192,85 @@ const ProjectListings = () => {
           <p className="text-light-3 text-body-medium">No projects found</p>
         </div>
       )}
+
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
+            <h2 className="text-xl font-bold text-white mb-4">Create Project</h2>
+
+            <form onSubmit={handleCreateProject} className="space-y-4">
+              <div>
+                <label className="text-light-2 text-sm font-semibold block mb-2">
+                  Project Title *
+                </label>
+                <Input
+                  type="text"
+                  placeholder="e.g., Campus Event Management App"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  className="rounded-lg bg-dark-3 border border-dark-4 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-light-2 text-sm font-semibold block mb-2">
+                  Description *
+                </label>
+                <textarea
+                  placeholder="Describe your project, goals, and requirements..."
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full p-3 rounded-lg bg-dark-3 border border-dark-4 text-white text-sm"
+                  rows={4}
+                />
+              </div>
+
+              <div>
+                <label className="text-light-2 text-sm font-semibold block mb-2">
+                  Required Skills (optional)
+                </label>
+                <div className="flex gap-2 flex-wrap mb-3">
+                  {skills.slice(0, 6).map((skill) => (
+                    <button
+                      key={skill.id}
+                      type="button"
+                      onClick={() => toggleSkill(skill.name)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium transition ${
+                        formData.skills.includes(skill.name)
+                          ? "bg-primary-500 text-white"
+                          : "bg-dark-4 text-light-3 hover:bg-dark-3"
+                      }`}>
+                      {skill.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setFormData({ title: "", description: "", skills: [] });
+                  }}
+                  className="flex-1 bg-dark-4 text-light-2 py-2 rounded-lg font-semibold hover:bg-dark-3">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="flex-1 bg-primary-500 text-white py-2 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50">
+                  {createMutation.isPending ? "Creating..." : "Create"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
