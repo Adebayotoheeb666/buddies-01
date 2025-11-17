@@ -50,12 +50,7 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
   if (!user) throw new Error("User not authenticated");
 
   try {
-    // Add timeout protection for private chats query
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Private chats query timeout after 8 seconds")), 8000)
-    );
-
-    const queryPromise = supabase
+    const { data, error } = await supabase
       .from("chats")
       .select(
         `
@@ -65,8 +60,6 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
       )
       .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`)
       .order("last_message_at", { ascending: false, nullsFirst: false });
-
-    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
     if (error) {
       const errorDetails = {
@@ -83,7 +76,7 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
 
     if (!data) return [];
 
-    // Fetch user details for other participants with timeout protection
+    // Fetch user details for other participants
     const chatsWithUsers = await Promise.all(
       data.map(async (chat: any) => {
         try {
