@@ -68,4 +68,38 @@ export enum QUERY_KEYS {
   GET_STUDENT_ORGANIZATIONS = "getStudentOrganizations",
   GET_ORGANIZATION_BY_ID = "getOrganizationById",
   GET_ORGANIZATION_EVENTS = "getOrganizationEvents",
+
+  // ACHIEVEMENTS & GAMIFICATION KEYS
+  GET_ACHIEVEMENTS = "getAchievements",
+  GET_USER_ACHIEVEMENTS = "getUserAchievements",
+  GET_USER_POINTS = "getUserPoints",
+  GET_LEADERBOARD = "getLeaderboard",
+  GET_CHALLENGES = "getChallenges",
+  GET_USER_CHALLENGES = "getUserChallenges",
+  GET_SEMESTER_RECAPS = "getSemesterRecaps",
+
+  // CAMPUS FEATURES KEYS
+  GET_CAMPUS_LOCATIONS = "getCampusLocations",
+  GET_CAMPUS_LOCATION_BY_ID = "getCampusLocationById",
+  GET_LIBRARY_BOOKS = "getLibraryBooks",
+  GET_DINING_HALLS = "getDiningHalls",
+  GET_DINING_MENUS = "getDiningMenus",
+  GET_FACILITIES = "getFacilities",
+  GET_FACILITY_BOOKINGS = "getFacilityBookings",
+  GET_SAFETY_ALERTS = "getSafetyAlerts",
+
+  // SOCIAL FEATURES KEYS
+  GET_ANONYMOUS_CONFESSIONS = "getAnonymousConfessions",
+  GET_USER_CONNECTIONS = "getUserConnections",
+  GET_STUDY_GROUP_MEMBERS = "getStudyGroupMembers",
+  GET_INTEREST_GROUP_MEMBERS = "getInterestGroupMembers",
+  GET_ORGANIZATION_MEMBERS = "getOrganizationMembers",
+  GET_EVENT_RSVPS = "getEventRSVPs",
+
+  // ACADEMIC KEYS
+  GET_TEXTBOOKS_BY_COURSE = "getTextbooksByCourse",
+  GET_TEXTBOOK_LISTINGS = "getTextbookListings",
+  GET_PROFESSOR_REVIEWS = "getProfessorReviews",
+  GET_TUTORING_SESSIONS = "getTutoringSessions",
+  GET_TUTORING_REVIEWS = "getTutoringReviews",
 }
