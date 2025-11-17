@@ -162,14 +162,17 @@ export const createGroupChat = async (
 };
 
 export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) throw new Error("User not authenticated");
-
   try {
-    const { data, error } = await supabase
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.warn("getGroupChats: User not authenticated");
+      return [];
+    }
+
+    const { data } = await supabase
       .from("group_chats")
       .select(
         `
@@ -179,18 +182,9 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
       )
       .eq("group_chat_members.user_id", user.id);
 
-    if (error) {
-      const errorMessage = error.message || "Failed to fetch group chats";
-      console.error("getGroupChats error:", errorMessage);
-      // Return empty array on error instead of throwing to prevent infinite retries
-      return [];
-    }
-
     return data || [];
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("getGroupChats exception:", errorMsg);
-    // Return empty array on error instead of throwing to prevent infinite retries
+    console.warn("getGroupChats failed");
     return [];
   }
 };
