@@ -65,6 +65,7 @@ import {
   getPollById,
   getMemePosts,
   getStudentOrganizations,
+  getOrganizationById,
   getAchievements,
   getUserAchievements,
   getUserPoints,
