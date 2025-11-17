@@ -83,7 +83,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
   return (
     <nav
       className={`leftsidebar ${
-        isMobile ? "flex md:hidden px-6 py-4 min-w-full" : ""
+        isMobile ? "flex md:hidden px-6 py-4 min-w-full flex-col h-full" : ""
       }`}>
       <div className="flex flex-col gap-11 w-full">
         {!isMobile && (
