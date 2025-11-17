@@ -30,6 +30,8 @@ import {
   getCourses,
   getCourseById,
   getUserCourses,
+  getCourseEnrollmentsByUserExcluding,
+  getCourseSharedNotesByCourse,
   getStudyGroups,
   getStudyGroupById,
   getAssignments,
