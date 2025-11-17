@@ -187,17 +187,8 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
       .eq("group_chat_members.user_id", user.id);
 
     if (error) {
-      const errorDetails = {
-        code: (error as any).code || "UNKNOWN",
-        message: (error as any).message || String(error),
-        details: (error as any).details,
-        hint: (error as any).hint,
-        status: (error as any).status,
-      };
-      console.error(
-        "getGroupChats error:",
-        JSON.stringify(errorDetails, null, 2)
-      );
+      const errorMessage = error.message || "Failed to fetch group chats";
+      console.error("getGroupChats error:", errorMessage);
       // Return empty array on error instead of throwing to prevent infinite retries
       return [];
     }
