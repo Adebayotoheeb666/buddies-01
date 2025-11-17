@@ -99,6 +99,9 @@ export const useGetGroupChats = (enabled: boolean = true) => {
     queryFn: getGroupChats,
     refetchInterval: 5000,
     enabled,
+    retry: 1,
+    retryDelay: 5000,
+    staleTime: 30000,
   });
 };
 
