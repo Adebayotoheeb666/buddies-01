@@ -207,23 +207,44 @@ export async function getCurrentUser() {
     }
 
     // Attempt to get user profile with timeout
-    let userData = null;
     try {
+      let timeoutId: NodeJS.Timeout | null = null;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new Error("Database query timeout after 5 seconds")),
+          5000
+        );
+      });
+
       const queryPromise = supabase
         .from("users")
         .select("*")
         .eq("id", authUser.id)
         .single();
 
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Database query timeout")), 5000)
-      );
+      try {
+        const result = await Promise.race([queryPromise, timeoutPromise]);
+        if (timeoutId) clearTimeout(timeoutId);
 
-      const result = await Promise.race([queryPromise, timeoutPromise]);
-      const { data: fetchedData, error: dbError } = result as any;
+        const { data: fetchedData, error: dbError } = result;
 
-      if (dbError) {
-        logErrorDetails("getCurrentUser - Database error details:", dbError);
+        if (dbError) {
+          logErrorDetails("getCurrentUser - Database error details:", dbError);
+          // Return a minimal user object based on auth user if profile doesn't exist
+          return {
+            id: authUser.id,
+            email: authUser.email || "",
+            name: authUser.user_metadata?.name || "",
+            username: authUser.user_metadata?.username || "",
+            imageUrl: authUser.user_metadata?.imageUrl || "",
+            bio: authUser.user_metadata?.bio || "",
+          };
+        }
+
+        return fetchedData;
+      } catch (raceError) {
+        if (timeoutId) clearTimeout(timeoutId);
+        logErrorDetails("getCurrentUser - Database query error:", raceError);
         // Return a minimal user object based on auth user if profile doesn't exist
         return {
           id: authUser.id,
@@ -234,11 +255,9 @@ export async function getCurrentUser() {
           bio: authUser.user_metadata?.bio || "",
         };
       }
-
-      userData = fetchedData;
     } catch (error) {
-      logErrorDetails("getCurrentUser - Database query error:", error);
-      // Return a minimal user object based on auth user if profile doesn't exist
+      logErrorDetails("getCurrentUser - Outer catch error:", error);
+      // Final fallback
       return {
         id: authUser.id,
         email: authUser.email || "",
@@ -248,8 +267,6 @@ export async function getCurrentUser() {
         bio: authUser.user_metadata?.bio || "",
       };
     }
-
-    return userData;
   } catch (error) {
     logErrorDetails("getCurrentUser - Try-catch error details:", error);
     return null;
