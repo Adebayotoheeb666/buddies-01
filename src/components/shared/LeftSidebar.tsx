@@ -8,12 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queries";
 import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
-interface LeftSidebarProps {
-  isMobile?: boolean;
-  onLinkClick?: () => void;
-}
-
-const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
+const LeftSidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
@@ -74,30 +69,19 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
     navigate("/sign-in");
   };
 
-  const handleNavLinkClick = () => {
-    if (onLinkClick && isMobile) {
-      onLinkClick();
-    }
-  };
 
   return (
-    <nav
-      className={`leftsidebar ${
-        isMobile ? "flex md:hidden px-6 py-4 min-w-full flex-col h-full" : ""
-      }`}>
-      <div
-        className={`flex flex-col gap-11 w-full ${isMobile ? "flex-1" : ""}`}>
-        {!isMobile && (
-          <Link to="/" className="flex gap-3 items-center">
-            <img
-              src="/assets/images/logo.svg"
-              alt="logo"
-              width={36}
-              height={36}
-            />
-            <span className="h3-bold text-primary-500">Buddies</span>
-          </Link>
-        )}
+    <nav className="leftsidebar">
+      <div className="flex flex-col gap-11 w-full">
+        <Link to="/" className="flex gap-3 items-center">
+          <img
+            src="/assets/images/logo.svg"
+            alt="logo"
+            width={36}
+            height={36}
+          />
+          <span className="h3-bold text-primary-500">Buddies</span>
+        </Link>
 
         {isLoading || !user.email ? (
           <div className="h-14">
@@ -106,8 +90,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
         ) : (
           <Link
             to={`/profile/${user.id}`}
-            className="flex gap-3 items-center"
-            onClick={handleNavLinkClick}>
+            className="flex gap-3 items-center">
             <img
               src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
               alt="profile"
@@ -120,10 +103,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
           </Link>
         )}
 
-        <div
-          className={`flex flex-col gap-4 overflow-y-auto custom-scrollbar ${
-            isMobile ? "flex-1 max-h-none" : "max-h-[calc(100vh-280px)]"
-          }`}>
+        <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar max-h-[calc(100vh-280px)]">
           {categoryOrder.map((category) => {
             const links = groupedLinks[category];
             if (!links) return null;
@@ -152,7 +132,6 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
                           }`}>
                           <NavLink
                             to={link.route}
-                            onClick={handleNavLinkClick}
                             className="flex gap-4 items-center p-4">
                             <img
                               src={link.imgURL}
@@ -176,7 +155,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
 
       <Button
         variant="ghost"
-        className={`shad-button_ghost ${isMobile ? "mt-auto" : ""}`}
+        className="shad-button_ghost"
         onClick={(e) => handleSignOut(e)}>
         <img src="/assets/icons/logout.svg" alt="logout" />
         <p className="small-medium lg:base-medium">Logout</p>

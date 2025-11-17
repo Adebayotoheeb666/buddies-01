@@ -135,7 +135,11 @@ CREATE POLICY "Users can create group chats" ON group_chats
 -- RLS Policies for group_chat_members
 CREATE POLICY "Users can view group members they share a group with" ON group_chat_members
   FOR SELECT USING (
-    group_chat_id IN (SELECT group_chat_id FROM group_chat_members WHERE user_id = auth.uid())
+    EXISTS (
+      SELECT 1 FROM group_chat_members gcm
+      WHERE gcm.group_chat_id = group_chat_members.group_chat_id
+      AND gcm.user_id = auth.uid()
+    )
   );
 
 CREATE POLICY "Users can join groups" ON group_chat_members

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/context/AuthContext";
 
@@ -8,11 +8,8 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import Loader from "@/components/shared/Loader";
 
 const RootLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isAuthenticated, isLoading } = useAuthContext();
   const navigate = useNavigate();
-
-  const closeSidebar = () => setSidebarOpen(false);
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated and auth is done loading
@@ -35,29 +32,52 @@ const RootLayout = () => {
     return null;
   }
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isMobileMenuOpen && !target.closest('.leftsidebar') && !target.closest('.hamburger-button')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
+
   return (
-    <div className="w-full flex flex-col md:flex min-h-screen">
-      <Topbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+    <div className="w-full flex flex-col min-h-screen">
+      <Topbar onMenuToggle={toggleMobileMenu} isMenuOpen={isMobileMenuOpen} />
 
       <div className="flex flex-1 relative">
-        {/* Desktop Sidebar */}
-        <LeftSidebar isMobile={false} onLinkClick={closeSidebar} />
-
-        {/* Mobile Sidebar */}
-        {sidebarOpen && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/50 md:hidden z-30"
-              onClick={closeSidebar}
-            />
-            <div className="fixed left-0 top-16 bottom-0 w-72 bg-dark-2 z-40 overflow-y-auto md:hidden">
-              <LeftSidebar isMobile={true} onLinkClick={closeSidebar} />
-            </div>
-          </>
+        {/* Mobile Overlay */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
         )}
+        
+        {/* Sidebar */}
+        <div 
+          className={`fixed left-0 top-0 h-full z-50 w-64 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:relative lg:translate-x-0`}
+        >
+          <LeftSidebar />
+        </div>
 
-        <section className="flex flex-1 h-full">
-          <Outlet />
+        {/* Main Content */}
+        <section className="flex-1 h-full w-full lg:pl-64 transition-all duration-300">
+          <div className="p-4 md:p-8">
+            <Outlet />
+          </div>
         </section>
       </div>
 
