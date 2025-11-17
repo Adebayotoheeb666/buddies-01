@@ -27,13 +27,17 @@ const RootLayout = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (isMobileMenuOpen && !target.closest('.leftsidebar') && !target.closest('.hamburger-button')) {
+      if (
+        isMobileMenuOpen &&
+        !target.closest(".leftsidebar") &&
+        !target.closest(".hamburger-button")
+      ) {
         setIsMobileMenuOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobileMenuOpen]);
 
   // Show loading state while checking authentication
@@ -57,18 +61,17 @@ const RootLayout = () => {
       <div className="flex flex-1 relative">
         {/* Mobile Overlay */}
         {isMobileMenuOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
           />
         )}
-        
+
         {/* Sidebar */}
-        <div 
+        <div
           className={`fixed left-0 top-0 h-full z-50 w-64 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:relative lg:translate-x-0`}
-        >
+            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:relative lg:translate-x-0`}>
           <LeftSidebar />
         </div>
 

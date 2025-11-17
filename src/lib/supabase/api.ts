@@ -36,7 +36,8 @@ export async function createUserAccount(user: INewUser) {
 
     return userData;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Signup failed";
+    const errorMessage =
+      error instanceof Error ? error.message : "Signup failed";
     console.error("createUserAccount error:", errorMessage);
     throw error;
   }
@@ -55,7 +56,8 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     return data.session;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Sign in failed";
+    const errorMessage =
+      error instanceof Error ? error.message : "Sign in failed";
     console.error("signInAccount error:", errorMessage);
     throw error;
   }
@@ -138,7 +140,8 @@ export async function getCurrentUser() {
       };
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("getCurrentUser - Try-catch error:", errorMessage);
     return null;
   }
