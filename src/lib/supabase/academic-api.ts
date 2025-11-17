@@ -14,7 +14,8 @@ export async function getCourses() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getCourses error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourses error:", errorMsg);
     return [];
   }
 }
