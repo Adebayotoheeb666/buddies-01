@@ -295,9 +295,7 @@ const seedDatabase = async () => {
     ];
 
     for (const group of studyGroups) {
-      await supabase
-        .from("study_groups")
-        .upsert([group], { onConflict: "id" });
+      await supabase.from("study_groups").upsert([group], { onConflict: "id" });
     }
     console.log("✅ Study groups seeded");
 
@@ -380,7 +378,8 @@ const seedDatabase = async () => {
         creator_id: users[2].id,
         course_id: courses[2].id,
         title: "Modern Physics Equations Sheet",
-        content: "All important equations for the physics course with derivations...",
+        content:
+          "All important equations for the physics course with derivations...",
         tags: ["physics", "equations", "reference"],
         is_public: true,
       },
@@ -471,7 +470,9 @@ const seedDatabase = async () => {
     ];
 
     for (const userSkill of userSkills) {
-      await supabase.from("user_skills").upsert([userSkill], { onConflict: "id" });
+      await supabase
+        .from("user_skills")
+        .upsert([userSkill], { onConflict: "id" });
     }
     console.log("✅ User skills seeded");
 
@@ -787,7 +788,9 @@ const seedDatabase = async () => {
     ];
 
     for (const option of pollOptions) {
-      await supabase.from("poll_options").upsert([option], { onConflict: "id" });
+      await supabase
+        .from("poll_options")
+        .upsert([option], { onConflict: "id" });
     }
     console.log("✅ Poll options seeded");
 
@@ -837,7 +840,8 @@ const seedDatabase = async () => {
       {
         id: "oo0e8400-e29b-41d4-a716-446655440001",
         name: "Robotics Club",
-        description: "Building and competing with robots in national competitions",
+        description:
+          "Building and competing with robots in national competitions",
         founder_id: users[0].id,
         member_count: 45,
         is_active: true,
@@ -853,7 +857,8 @@ const seedDatabase = async () => {
       {
         id: "oo0e8400-e29b-41d4-a716-446655440003",
         name: "Cultural Exchange Club",
-        description: "Celebrating diverse cultures and international traditions",
+        description:
+          "Celebrating diverse cultures and international traditions",
         founder_id: users[2].id,
         member_count: 67,
         is_active: true,
@@ -1031,7 +1036,9 @@ const seedDatabase = async () => {
     }
     console.log("✅ Department networks seeded");
 
-    console.log("\n✅ ✅ ✅ DATABASE SEEDING COMPLETED SUCCESSFULLY! ✅ ✅ ✅\n");
+    console.log(
+      "\n✅ ✅ ✅ DATABASE SEEDING COMPLETED SUCCESSFULLY! ✅ ✅ ✅\n"
+    );
   } catch (error) {
     console.error("❌ Seeding error:", error);
     throw error;
