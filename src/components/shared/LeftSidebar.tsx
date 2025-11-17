@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queries";
 import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
-const LeftSidebar = () => {
+interface LeftSidebarProps {
+  isMobile?: boolean;
+  onLinkClick?: () => void;
+}
+
+const LeftSidebar = ({ isMobile, onLinkClick }: LeftSidebarProps = {}) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
