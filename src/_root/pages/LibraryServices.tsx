@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getLibraryBooks,
   getUserCheckouts,
@@ -7,6 +7,10 @@ import {
   getUserBookHolds,
   getStudyRooms,
 } from "@/lib/supabase/api";
+import {
+  useCreateLibraryReservation,
+  useCancelLibraryReservation,
+} from "@/lib/react-query/queries";
 import { useAuthContext } from "@/context/AuthContext";
 import { Loader } from "@/components/shared";
 import { Input } from "@/components/ui/input";
@@ -14,6 +18,9 @@ import { Button } from "@/components/ui/button";
 
 const LibraryServices = () => {
   const { user } = useAuthContext();
+  const queryClient = useQueryClient();
+  const createReservationMutation = useCreateLibraryReservation();
+  const cancelReservationMutation = useCancelLibraryReservation();
   const [searchTitle, setSearchTitle] = useState("");
   const [searchAuthor, setSearchAuthor] = useState("");
   const [searchSubject, setSearchSubject] = useState("");
