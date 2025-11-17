@@ -1,53 +1,5 @@
 import { supabase } from "./config";
 
-function logErrorDetails(label: string, error: any): void {
-  if (!error) {
-    console.error(label, "Unknown error");
-    return;
-  }
-
-  const serialized: Record<string, any> = {};
-
-  try {
-    if (error instanceof Error) {
-      serialized.type = "Error";
-      serialized.name = error.name;
-      serialized.message = error.message;
-      serialized.stack = error.stack;
-    }
-
-    try {
-      const ownProps = Object.getOwnPropertyNames(error);
-      for (const key of ownProps) {
-        try {
-          const value = error[key];
-          if (typeof value !== "function") {
-            serialized[key] = value;
-          }
-        } catch (e) {
-          serialized[key] = "[Unable to access property]";
-        }
-      }
-    } catch (e) {
-      for (const key in error) {
-        try {
-          const value = error[key];
-          if (typeof value !== "function") {
-            serialized[key] = value;
-          }
-        } catch (e) {
-          serialized[key] = "[Unable to access property]";
-        }
-      }
-    }
-
-    const errorLog = JSON.stringify(serialized, null, 2);
-    console.error(label, "\n" + errorLog);
-  } catch (e) {
-    console.error(label, `Serialization failed: ${String(e)}`);
-  }
-}
-
 // ============================================================
 // ACADEMIC FEATURES
 // ============================================================
