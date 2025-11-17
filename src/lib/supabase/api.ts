@@ -82,17 +82,15 @@ function logErrorDetails(label: string, error: any): void {
 
 export async function createUserAccount(user: INewUser) {
   try {
-    // Create auth account directly without retry on body stream errors
-    const authResult = await supabase.auth.signUp({
+    // Create auth account directly
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: user.email,
       password: user.password,
     });
 
-    const { data: authData, error: authError } = authResult;
-
     if (authError) {
       const errorMessage = authError.message || "Failed to create auth account";
-      logErrorDetails("Auth signup error details:", authError);
+      console.error("Auth signup error:", errorMessage);
       throw new Error(errorMessage);
     }
 
@@ -118,18 +116,14 @@ export async function createUserAccount(user: INewUser) {
       .single();
 
     if (dbError) {
-      logErrorDetails("User profile insert error details:", dbError);
+      console.error("User profile insert error:", dbError.message || dbError);
       throw new Error(dbError.message || "Failed to create user profile");
     }
 
     return userData;
   } catch (error) {
-    logErrorDetails("createUserAccount error details:", error);
-
-    // Note: We cannot clean up the auth account with just the anon key
-    // The auth user will remain in the system but the profile creation failed
-    // This should be handled by the user retrying signup or contacting support
-
+    const errorMessage = error instanceof Error ? error.message : "Unknown error during signup";
+    console.error("createUserAccount error:", errorMessage);
     throw error;
   }
 }
