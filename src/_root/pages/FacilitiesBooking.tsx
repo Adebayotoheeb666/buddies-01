@@ -376,9 +376,9 @@ const FacilitiesBooking = () => {
                     {booking.status === "pending" && (
                       <Button
                         onClick={() => cancelMutation.mutate(booking.id)}
-                        disabled={cancelMutation.isPending}
+                        disabled={cancelMutation.isLoading}
                         className="bg-dark-4 text-light-2 px-3 py-1 text-xs rounded mt-3 hover:bg-red-500/20">
-                        {cancelMutation.isPending ? "Cancelling..." : "Cancel"}
+                        {cancelMutation.isLoading ? "Cancelling..." : "Cancel"}
                       </Button>
                     )}
                   </div>
