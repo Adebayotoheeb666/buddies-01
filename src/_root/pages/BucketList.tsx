@@ -94,6 +94,15 @@ const BucketList = () => {
     }
   };
 
+  const handleDeleteItem = async (itemId: string) => {
+    try {
+      await deleteBucketListItem(itemId);
+      setListItems(listItems.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
