@@ -66,6 +66,7 @@ import {
   getMemePosts,
   getStudentOrganizations,
   getOrganizationById,
+  getOrganizationEvents,
   getAchievements,
   getUserAchievements,
   getUserPoints,
@@ -84,7 +85,6 @@ import {
   getAnonymousConfessions,
   getUserConnections,
   getStudyGroupMembers,
-  getStudyGroupMembersCount,
   getInterestGroupMembers,
   getOrganizationMembers,
   getEventRSVPs,
@@ -1562,7 +1562,7 @@ export const useUpdateProjectListing = () => {
         status?: string;
       };
     }) => updateProjectListing(projectId, updates),
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_PROJECT_LISTINGS],
       });
@@ -1762,7 +1762,7 @@ export const useLikeMemePost = () => {
     }: {
       memeId: string;
       likesArray: string[];
-    }) => likeMemePost(memeId, likesArray),
+    }) => likeMemePost(memeId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_MEME_POSTS],
