@@ -60,6 +60,48 @@ const LibraryServices = () => {
     queryFn: getStudyRooms,
   });
 
+  const handleCheckout = async (bookId: string) => {
+    if (!user?.id) {
+      alert("Please sign in to checkout books");
+      return;
+    }
+
+    try {
+      await createReservationMutation.mutateAsync({
+        userId: user.id,
+        bookId: bookId,
+        reservationDate: new Date().toISOString().split("T")[0],
+      });
+      alert("Book checked out successfully!");
+      queryClient.invalidateQueries({ queryKey: ["user-checkouts", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["library-books"] });
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("Failed to checkout book. Please try again.");
+    }
+  };
+
+  const handleHold = async (bookId: string) => {
+    if (!user?.id) {
+      alert("Please sign in to place a hold");
+      return;
+    }
+
+    try {
+      await createReservationMutation.mutateAsync({
+        userId: user.id,
+        bookId: bookId,
+        reservationDate: new Date().toISOString().split("T")[0],
+      });
+      alert("Book hold placed successfully! You'll be notified when it's available.");
+      queryClient.invalidateQueries({ queryKey: ["user-book-holds", user.id] });
+      queryClient.invalidateQueries({ queryKey: ["library-books"] });
+    } catch (error) {
+      console.error("Hold error:", error);
+      alert("Failed to place hold. Please try again.");
+    }
+  };
+
   return (
     <div className="common-container">
       <div className="max-w-5xl w-full">
