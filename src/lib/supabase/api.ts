@@ -180,7 +180,8 @@ export async function getAccount() {
 export async function getCurrentUser() {
   try {
     // First, try to get the session to ensure it's loaded
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
 
     if (sessionError) {
       logErrorDetails("getCurrentUser - Session error details:", sessionError);

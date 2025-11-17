@@ -85,7 +85,8 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
       className={`leftsidebar ${
         isMobile ? "flex md:hidden px-6 py-4 min-w-full flex-col h-full" : ""
       }`}>
-      <div className={`flex flex-col gap-11 w-full ${isMobile ? "flex-1" : ""}`}>
+      <div
+        className={`flex flex-col gap-11 w-full ${isMobile ? "flex-1" : ""}`}>
         {!isMobile && (
           <Link to="/" className="flex gap-3 items-center">
             <img
@@ -119,9 +120,10 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
           </Link>
         )}
 
-        <div className={`flex flex-col gap-4 overflow-y-auto custom-scrollbar ${
-          isMobile ? "flex-1 max-h-none" : "max-h-[calc(100vh-280px)]"
-        }`}>
+        <div
+          className={`flex flex-col gap-4 overflow-y-auto custom-scrollbar ${
+            isMobile ? "flex-1 max-h-none" : "max-h-[calc(100vh-280px)]"
+          }`}>
           {categoryOrder.map((category) => {
             const links = groupedLinks[category];
             if (!links) return null;

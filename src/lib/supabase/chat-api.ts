@@ -69,7 +69,10 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
         hint: (error as any).hint,
         status: (error as any).status,
       };
-      console.error("getPrivateChats error:", JSON.stringify(errorDetails, null, 2));
+      console.error(
+        "getPrivateChats error:",
+        JSON.stringify(errorDetails, null, 2)
+      );
       // Return empty array on error instead of throwing to prevent infinite retries
       return [];
     }
@@ -200,7 +203,10 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
         hint: (error as any).hint,
         status: (error as any).status,
       };
-      console.error("getGroupChats error:", JSON.stringify(errorDetails, null, 2));
+      console.error(
+        "getGroupChats error:",
+        JSON.stringify(errorDetails, null, 2)
+      );
       // Return empty array on error instead of throwing to prevent infinite retries
       return [];
     }
