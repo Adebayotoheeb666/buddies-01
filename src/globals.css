@@ -248,7 +248,7 @@
 
   /* Left sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2 h-screen sticky top-0 overflow-y-auto custom-scrollbar;
+    @apply flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2 h-screen sticky top-0 overflow-y-auto custom-scrollbar;
   }
 
   .leftsidebar-link {
