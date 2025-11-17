@@ -206,15 +206,47 @@ export async function getCurrentUser() {
       return null;
     }
 
-    const { data: userData, error: dbError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", authUser.id)
-      .single();
+    // Attempt to get user profile with timeout
+    let userData = null;
+    try {
+      const queryPromise = supabase
+        .from("users")
+        .select("*")
+        .eq("id", authUser.id)
+        .single();
 
-    if (dbError) {
-      logErrorDetails("getCurrentUser - Database error details:", dbError);
-      return null;
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Database query timeout")), 5000)
+      );
+
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      const { data: fetchedData, error: dbError } = result as any;
+
+      if (dbError) {
+        logErrorDetails("getCurrentUser - Database error details:", dbError);
+        // Return a minimal user object based on auth user if profile doesn't exist
+        return {
+          id: authUser.id,
+          email: authUser.email || "",
+          name: authUser.user_metadata?.name || "",
+          username: authUser.user_metadata?.username || "",
+          imageUrl: authUser.user_metadata?.imageUrl || "",
+          bio: authUser.user_metadata?.bio || "",
+        };
+      }
+
+      userData = fetchedData;
+    } catch (error) {
+      logErrorDetails("getCurrentUser - Database query error:", error);
+      // Return a minimal user object based on auth user if profile doesn't exist
+      return {
+        id: authUser.id,
+        email: authUser.email || "",
+        name: authUser.user_metadata?.name || "",
+        username: authUser.user_metadata?.username || "",
+        imageUrl: authUser.user_metadata?.imageUrl || "",
+        bio: authUser.user_metadata?.bio || "",
+      };
     }
 
     return userData;
