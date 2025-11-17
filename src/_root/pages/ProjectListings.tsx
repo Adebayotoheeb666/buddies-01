@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { useGetProjectListings, useGetSkills, useCreateProjectListing } from "@/lib/react-query/queries";
+import {
+  useGetProjectListings,
+  useGetSkills,
+  useCreateProjectListing,
+} from "@/lib/react-query/queries";
 import { useAuthContext } from "@/context/AuthContext";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
@@ -169,7 +173,9 @@ const ProjectListings = () => {
               <div>
                 <p className="text-light-3 text-tiny-medium">Due Date</p>
                 <p className="text-light-1 text-small-medium">
-                  {project.due_date ? new Date(project.due_date as string).toLocaleDateString() : "N/A"}
+                  {project.due_date
+                    ? new Date(project.due_date as string).toLocaleDateString()
+                    : "N/A"}
                 </p>
               </div>
               <div>
@@ -196,7 +202,9 @@ const ProjectListings = () => {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-lg bg-dark-2 p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Create Project</h2>
+            <h2 className="text-xl font-bold text-white mb-4">
+              Create Project
+            </h2>
 
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div>

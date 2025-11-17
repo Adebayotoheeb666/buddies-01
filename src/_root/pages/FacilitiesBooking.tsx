@@ -177,13 +177,15 @@ const FacilitiesBooking = () => {
                     )}
                     {facility.amenities && facility.amenities.length > 0 && (
                       <div className="flex gap-1 flex-wrap mt-2">
-                        {facility.amenities.slice(0, 3).map((amenity: string) => (
-                          <span
-                            key={amenity}
-                            className="text-xs bg-dark-4 px-2 py-1 rounded">
-                            {amenity}
-                          </span>
-                        ))}
+                        {facility.amenities
+                          .slice(0, 3)
+                          .map((amenity: string) => (
+                            <span
+                              key={amenity}
+                              className="text-xs bg-dark-4 px-2 py-1 rounded">
+                              {amenity}
+                            </span>
+                          ))}
                       </div>
                     )}
                   </div>

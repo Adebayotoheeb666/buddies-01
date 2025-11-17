@@ -93,7 +93,9 @@ const LibraryServices = () => {
         bookId: bookId,
         reservationDate: new Date().toISOString().split("T")[0],
       });
-      alert("Book hold placed successfully! You'll be notified when it's available.");
+      alert(
+        "Book hold placed successfully! You'll be notified when it's available."
+      );
       queryClient.invalidateQueries({ queryKey: ["user-book-holds", user.id] });
       queryClient.invalidateQueries({ queryKey: ["library-books"] });
     } catch (error) {
@@ -348,7 +350,9 @@ const LibraryServices = () => {
                         <p className="text-light-3 text-sm mb-2">Equipment:</p>
                         <div className="flex gap-2 flex-wrap">
                           {zone.equipment_available.map((equipment: string) => (
-                            <span key={equipment} className="bg-dark-4 px-2 py-1 rounded text-xs">
+                            <span
+                              key={equipment}
+                              className="bg-dark-4 px-2 py-1 rounded text-xs">
                               {equipment}
                             </span>
                           ))}
@@ -399,7 +403,9 @@ const LibraryServices = () => {
                     {room.amenities && room.amenities.length > 0 && (
                       <div className="flex gap-2 flex-wrap mt-2">
                         {room.amenities.map((amenity: string) => (
-                          <span key={amenity} className="bg-dark-4 px-2 py-1 rounded text-xs">
+                          <span
+                            key={amenity}
+                            className="bg-dark-4 px-2 py-1 rounded text-xs">
                             {amenity}
                           </span>
                         ))}
