@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useGetUserCourses } from "@/lib/react-query/queries";
-import { useUserContext } from "@/context/AuthContext";
 import {
-  mockCourseEnrollments,
-  mockUsers,
-} from "@/lib/mockData/phase1MockData";
+  useGetUserCourses,
+  useGetCourseClassmates,
+} from "@/lib/react-query/queries";
+import { useUserContext } from "@/context/AuthContext";
 import Loader from "@/components/shared/Loader";
 
 const ClassmateFinder = () => {
@@ -15,23 +14,12 @@ const ClassmateFinder = () => {
   const courses = coursesData?.documents || [];
   const [selectedCourse, setSelectedCourse] = useState<string>("");
 
-  if (coursesLoading) return <Loader />;
+  const { data: classmatesData, isLoading: classmatesLoading } =
+    useGetCourseClassmates(selectedCourse, user?.id);
+  const classmates = classmatesData?.documents || [];
 
-  // Get classmates for selected course
-  const getClassmates = () => {
-    if (!selectedCourse) return [];
-
-    const enrollments = mockCourseEnrollments.filter(
-      (e) => e.course_id === selectedCourse && e.user_id !== user?.id
-    );
-    const classmates = enrollments
-      .map((e) => mockUsers.find((u) => u.id === e.user_id))
-      .filter(Boolean);
-
-    return classmates;
-  };
-
-  const classmates = getClassmates();
+  if (coursesLoading || (selectedCourse && classmatesLoading))
+    return <Loader />;
 
   return (
     <div className="flex flex-col gap-9 w-full max-w-5xl">
