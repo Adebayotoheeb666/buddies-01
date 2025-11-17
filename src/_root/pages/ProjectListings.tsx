@@ -79,14 +79,21 @@ const ProjectListings = () => {
 
   return (
     <div className="flex flex-col gap-9 w-full max-w-6xl">
-      <div className="flex gap-2 justify-start w-full max-w-full">
-        <img
-          src="/assets/icons/add-post.svg"
-          width={36}
-          height={36}
-          alt="projects"
-        />
-        <h2 className="h3-bold md:h2-bold w-full">Project Marketplace</h2>
+      <div className="flex gap-2 justify-between items-center w-full max-w-full">
+        <div className="flex gap-2 items-center">
+          <img
+            src="/assets/icons/add-post.svg"
+            width={36}
+            height={36}
+            alt="projects"
+          />
+          <h2 className="h3-bold md:h2-bold">Project Marketplace</h2>
+        </div>
+        <Button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-primary-500 text-white hover:bg-primary-600">
+          + Create Project
+        </Button>
       </div>
 
       <div className="flex gap-2 flex-wrap">
