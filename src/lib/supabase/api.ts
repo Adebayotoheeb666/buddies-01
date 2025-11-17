@@ -2,99 +2,16 @@ import { supabase } from "./config";
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
 
 // ============================================================
-// UTILITY FUNCTIONS
-// ============================================================
-
-// Utility function to safely serialize error objects for logging
-function logErrorDetails(label: string, error: any): void {
-  if (!error) {
-    console.error(label, "Unknown error");
-    return;
-  }
-
-  const serialized: Record<string, any> = {};
-
-  try {
-    // Handle Error objects
-    if (error instanceof Error) {
-      serialized.type = "Error";
-      serialized.name = error.name;
-      serialized.message = error.message;
-      serialized.stack = error.stack;
-    }
-
-    // Extract own properties
-    try {
-      const ownProps = Object.getOwnPropertyNames(error);
-      for (const key of ownProps) {
-        try {
-          const value = error[key];
-          // Skip functions but include everything else
-          if (typeof value !== "function") {
-            serialized[key] = value;
-          }
-        } catch (e) {
-          serialized[key] = "[Unable to access property]";
-        }
-      }
-    } catch (e) {
-      // Fallback: try enumerable properties
-      for (const key in error) {
-        try {
-          const value = error[key];
-          if (typeof value !== "function") {
-            serialized[key] = value;
-          }
-        } catch (e) {
-          serialized[key] = "[Unable to access property]";
-        }
-      }
-    }
-
-    // Ensure critical Supabase error properties
-    if (error.message && !serialized.message) {
-      serialized.message = error.message;
-    }
-    if (error.code && !serialized.code) {
-      serialized.code = error.code;
-    }
-    if (error.status && !serialized.status) {
-      serialized.status = error.status;
-    }
-    if ((error as any).details && !serialized.details) {
-      serialized.details = (error as any).details;
-    }
-    if ((error as any).hint && !serialized.hint) {
-      serialized.hint = (error as any).hint;
-    }
-
-    // Log as formatted JSON string to ensure proper display
-    const errorLog = JSON.stringify(serialized, null, 2);
-    console.error(label, "\n" + errorLog);
-  } catch (e) {
-    console.error(label, `Serialization failed: ${String(e)}`);
-  }
-}
-
-// ============================================================
 // AUTH
 // ============================================================
 
 export async function createUserAccount(user: INewUser) {
   try {
-    // Create auth account directly without retry on body stream errors
-    const authResult = await supabase.auth.signUp({
+    // Create auth account directly
+    const { data: authData } = await supabase.auth.signUp({
       email: user.email,
       password: user.password,
     });
-
-    const { data: authData, error: authError } = authResult;
-
-    if (authError) {
-      const errorMessage = authError.message || "Failed to create auth account";
-      logErrorDetails("Auth signup error details:", authError);
-      throw new Error(errorMessage);
-    }
 
     if (!authData.user) {
       throw new Error("Failed to create auth account: No user returned");
@@ -104,7 +21,7 @@ export async function createUserAccount(user: INewUser) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Create user profile in database using the authenticated session
-    const { data: userData, error: dbError } = await supabase
+    const { data: userData } = await supabase
       .from("users")
       .insert({
         id: authData.user.id,
@@ -117,37 +34,21 @@ export async function createUserAccount(user: INewUser) {
       .select()
       .single();
 
-    if (dbError) {
-      logErrorDetails("User profile insert error details:", dbError);
-      throw new Error(dbError.message || "Failed to create user profile");
-    }
-
     return userData;
   } catch (error) {
-    logErrorDetails("createUserAccount error details:", error);
-
-    // Note: We cannot clean up the auth account with just the anon key
-    // The auth user will remain in the system but the profile creation failed
-    // This should be handled by the user retrying signup or contacting support
-
+    const errorMessage =
+      error instanceof Error ? error.message : "Signup failed";
+    console.error("createUserAccount error:", errorMessage);
     throw error;
   }
 }
 
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const signInResult = await supabase.auth.signInWithPassword({
+    const { data } = await supabase.auth.signInWithPassword({
       email: user.email,
       password: user.password,
     });
-
-    const { data, error } = signInResult;
-
-    if (error) {
-      const errorMessage = error.message || "Sign in failed";
-      logErrorDetails("signInAccount error details:", error);
-      throw new Error(errorMessage);
-    }
 
     if (!data.session) {
       throw new Error("Sign in failed: No session returned");
@@ -155,24 +56,20 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     return data.session;
   } catch (error) {
-    logErrorDetails("signInAccount try-catch error details:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Sign in failed";
+    console.error("signInAccount error:", errorMessage);
     throw error;
   }
 }
 
 export async function getAccount() {
   try {
-    const { data, error } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
     const { user } = data;
-
-    if (error) {
-      logErrorDetails("getAccount - Auth error details:", error);
-      throw error;
-    }
-
     return user;
   } catch (error) {
-    logErrorDetails("getAccount - Error details:", error);
+    console.warn("getAccount failed");
     return null;
   }
 }
@@ -180,13 +77,7 @@ export async function getAccount() {
 export async function getCurrentUser() {
   try {
     // First, try to get the session to ensure it's loaded
-    const { data: sessionData, error: sessionError } =
-      await supabase.auth.getSession();
-
-    if (sessionError) {
-      logErrorDetails("getCurrentUser - Session error details:", sessionError);
-      return null;
-    }
+    const { data: sessionData } = await supabase.auth.getSession();
 
     if (!sessionData?.session) {
       console.warn("getCurrentUser - No session found");
@@ -194,13 +85,8 @@ export async function getCurrentUser() {
     }
 
     // Now get the user from the session
-    const { data, error: authError } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
     const { user: authUser } = data;
-
-    if (authError) {
-      logErrorDetails("getCurrentUser - Auth error details:", authError);
-      return null;
-    }
 
     if (!authUser) {
       console.warn("getCurrentUser - No authenticated user found");
@@ -223,42 +109,27 @@ export async function getCurrentUser() {
         .eq("id", authUser.id)
         .single();
 
-      try {
-        const result = await Promise.race([queryPromise, timeoutPromise]);
-        if (timeoutId) clearTimeout(timeoutId);
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      if (timeoutId) clearTimeout(timeoutId);
 
-        const { data: fetchedData, error: dbError } = result;
+      const { data: fetchedData } = result;
 
-        if (dbError) {
-          logErrorDetails("getCurrentUser - Database error details:", dbError);
-          // Return a minimal user object based on auth user if profile doesn't exist
-          return {
-            id: authUser.id,
-            email: authUser.email || "",
-            name: authUser.user_metadata?.name || "",
-            username: authUser.user_metadata?.username || "",
-            imageUrl: authUser.user_metadata?.imageUrl || "",
-            bio: authUser.user_metadata?.bio || "",
-          };
-        }
-
+      if (fetchedData) {
         return fetchedData;
-      } catch (raceError) {
-        if (timeoutId) clearTimeout(timeoutId);
-        logErrorDetails("getCurrentUser - Database query error:", raceError);
-        // Return a minimal user object based on auth user if profile doesn't exist
-        return {
-          id: authUser.id,
-          email: authUser.email || "",
-          name: authUser.user_metadata?.name || "",
-          username: authUser.user_metadata?.username || "",
-          imageUrl: authUser.user_metadata?.imageUrl || "",
-          bio: authUser.user_metadata?.bio || "",
-        };
       }
+
+      // Return a minimal user object if profile doesn't exist
+      return {
+        id: authUser.id,
+        email: authUser.email || "",
+        name: authUser.user_metadata?.name || "",
+        username: authUser.user_metadata?.username || "",
+        imageUrl: authUser.user_metadata?.imageUrl || "",
+        bio: authUser.user_metadata?.bio || "",
+      };
     } catch (error) {
-      logErrorDetails("getCurrentUser - Outer catch error:", error);
-      // Final fallback
+      console.warn("getCurrentUser - Database query failed");
+      // Return a minimal user object based on auth user if profile doesn't exist
       return {
         id: authUser.id,
         email: authUser.email || "",
@@ -269,20 +140,20 @@ export async function getCurrentUser() {
       };
     }
   } catch (error) {
-    logErrorDetails("getCurrentUser - Try-catch error details:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("getCurrentUser - Try-catch error:", errorMessage);
     return null;
   }
 }
 
 export async function signOutAccount() {
   try {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) throw error;
-
+    await supabase.auth.signOut();
     return { status: "ok" };
   } catch (error) {
-    console.log(error);
+    console.warn("signOutAccount failed");
+    return { status: "ok" };
   }
 }
 
@@ -3184,13 +3055,14 @@ export async function getSafetyAlerts() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      logErrorDetails("getSafetyAlerts - Error:", error);
+      console.error("getSafetyAlerts error:", error.message || error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    logErrorDetails("getSafetyAlerts - Catch error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getSafetyAlerts catch error:", errorMsg);
     return [];
   }
 }
@@ -3371,13 +3243,14 @@ export async function getEmergencyResources() {
       .order("resource_type", { ascending: true });
 
     if (error) {
-      logErrorDetails("getEmergencyResources - Error:", error);
+      console.error("getEmergencyResources error:", error.message || error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    logErrorDetails("getEmergencyResources - Catch error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getEmergencyResources catch error:", errorMsg);
     return [];
   }
 }

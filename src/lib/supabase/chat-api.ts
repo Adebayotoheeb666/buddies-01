@@ -43,14 +43,17 @@ export const getOrCreatePrivateChat = async (
 };
 
 export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) throw new Error("User not authenticated");
-
   try {
-    const { data, error } = await supabase
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.warn("getPrivateChats: User not authenticated");
+      return [];
+    }
+
+    const { data } = await supabase
       .from("chats")
       .select(
         `
@@ -60,22 +63,6 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
       )
       .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`)
       .order("last_message_at", { ascending: false, nullsFirst: false });
-
-    if (error) {
-      const errorDetails = {
-        code: (error as any).code || "UNKNOWN",
-        message: (error as any).message || String(error),
-        details: (error as any).details,
-        hint: (error as any).hint,
-        status: (error as any).status,
-      };
-      console.error(
-        "getPrivateChats error:",
-        JSON.stringify(errorDetails, null, 2)
-      );
-      // Return empty array on error instead of throwing to prevent infinite retries
-      return [];
-    }
 
     if (!data) return [];
 
@@ -96,8 +83,7 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
             otherUser: userData,
           };
         } catch (err) {
-          const errorMsg = err instanceof Error ? err.message : String(err);
-          console.warn("Error fetching user details for chat:", errorMsg);
+          console.warn("Error fetching user details for chat");
           return chat;
         }
       })
@@ -105,9 +91,7 @@ export const getPrivateChats = async (): Promise<ChatWithLastMessage[]> => {
 
     return chatsWithUsers;
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("getPrivateChats exception:", errorMsg);
-    // Return empty array on error instead of throwing to prevent infinite retries
+    console.warn("getPrivateChats failed");
     return [];
   }
 };
@@ -178,14 +162,17 @@ export const createGroupChat = async (
 };
 
 export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) throw new Error("User not authenticated");
-
   try {
-    const { data, error } = await supabase
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.warn("getGroupChats: User not authenticated");
+      return [];
+    }
+
+    const { data } = await supabase
       .from("group_chats")
       .select(
         `
@@ -195,27 +182,9 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
       )
       .eq("group_chat_members.user_id", user.id);
 
-    if (error) {
-      const errorDetails = {
-        code: (error as any).code || "UNKNOWN",
-        message: (error as any).message || String(error),
-        details: (error as any).details,
-        hint: (error as any).hint,
-        status: (error as any).status,
-      };
-      console.error(
-        "getGroupChats error:",
-        JSON.stringify(errorDetails, null, 2)
-      );
-      // Return empty array on error instead of throwing to prevent infinite retries
-      return [];
-    }
-
     return data || [];
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("getGroupChats exception:", errorMsg);
-    // Return empty array on error instead of throwing to prevent infinite retries
+    console.warn("getGroupChats failed");
     return [];
   }
 };
