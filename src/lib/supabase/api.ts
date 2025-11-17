@@ -4448,27 +4448,6 @@ export async function updateMemePost(
   }
 }
 
-export async function likeMemePost(
-  memeId: string,
-  likesArray: string[]
-) {
-  try {
-    const { data, error } = await supabase
-      .from("meme_posts")
-      .update({ likes: likesArray })
-      .eq("id", memeId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("likeMemePost error:", errorMsg);
-    throw error;
-  }
-}
-
 export async function updateConfessionStatus(
   confessionId: string,
   status: string
