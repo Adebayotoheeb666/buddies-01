@@ -205,7 +205,8 @@ export async function getUserSkills(userId: string) {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getUserSkills error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserSkills error:", errorMsg);
     return [];
   }
 }
@@ -220,7 +221,8 @@ export async function getProjectListings() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getProjectListings error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getProjectListings error:", errorMsg);
     return [];
   }
 }
@@ -235,7 +237,8 @@ export async function getTutoringProfiles() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getTutoringProfiles error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getTutoringProfiles error:", errorMsg);
     return [];
   }
 }
@@ -250,7 +253,8 @@ export async function getResources() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getResources error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getResources error:", errorMsg);
     return [];
   }
 }
@@ -265,7 +269,8 @@ export async function getQAQuestions() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getQAQuestions error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getQAQuestions error:", errorMsg);
     return [];
   }
 }
@@ -290,7 +295,8 @@ export async function getQuestionById(questionId: string) {
 
     return { question, answers: answers || [] };
   } catch (error) {
-    logErrorDetails("getQuestionById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getQuestionById error:", errorMsg);
     return { question: null, answers: [] };
   }
 }
@@ -315,7 +321,8 @@ export async function getUserFollowing(userId: string) {
     if (userError) throw userError;
     return following || [];
   } catch (error) {
-    logErrorDetails("getUserFollowing error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserFollowing error:", errorMsg);
     return [];
   }
 }
@@ -340,7 +347,8 @@ export async function getUserFollowers(userId: string) {
     if (userError) throw userError;
     return followers || [];
   } catch (error) {
-    logErrorDetails("getUserFollowers error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserFollowers error:", errorMsg);
     return [];
   }
 }
@@ -359,7 +367,8 @@ export async function getInterestGroups() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getInterestGroups error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getInterestGroups error:", errorMsg);
     return [];
   }
 }
@@ -375,7 +384,8 @@ export async function getInterestGroupById(groupId: string) {
     if (error) throw error;
     return data;
   } catch (error) {
-    logErrorDetails("getInterestGroupById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getInterestGroupById error:", errorMsg);
     return null;
   }
 }
