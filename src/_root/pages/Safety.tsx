@@ -1,26 +1,42 @@
 import { useEffect, useState } from "react";
 import { getSafetyAlerts, getEmergencyResources } from "@/lib/supabase/api";
 import { SafetyAlert, EmergencyResource } from "@/types/safety.types";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Safety = () => {
   const [alerts, setAlerts] = useState<SafetyAlert[]>([]);
   const [resources, setResources] = useState<EmergencyResource[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated, isLoading: authLoading } = useAuthContext();
 
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+
     const fetchData = async () => {
-      setLoading(true);
-      const [alertsData, resourcesData] = await Promise.all([
-        getSafetyAlerts(),
-        getEmergencyResources(),
-      ]);
-      setAlerts(alertsData);
-      setResources(resourcesData);
-      setLoading(false);
+      try {
+        setLoading(true);
+        setError(null);
+        const [alertsData, resourcesData] = await Promise.all([
+          getSafetyAlerts(),
+          getEmergencyResources(),
+        ]);
+        setAlerts(alertsData || []);
+        setResources(resourcesData || []);
+      } catch (err) {
+        console.error("Error fetching safety data:", err);
+        setError("Failed to load safety information. Please try again later.");
+        setAlerts([]);
+        setResources([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [authLoading]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -39,6 +55,25 @@ const Safety = () => {
     return (
       <div className="flex h-screen items-center justify-center">
         <p className="text-light-3">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold text-white">Safety & Security</h1>
+          <p className="text-light-3">Stay informed and safe on campus</p>
+        </div>
+        <div className="rounded-lg border border-danger-500 bg-danger-500/10 p-6">
+          <p className="text-danger-500">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 rounded-lg bg-danger-500 px-4 py-2 text-white hover:bg-danger-600 transition">
+            Retry
+          </button>
+        </div>
       </div>
     );
   }

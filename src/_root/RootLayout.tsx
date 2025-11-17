@@ -1,14 +1,39 @@
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/context/AuthContext";
 
 import Topbar from "@/components/shared/Topbar";
 import Bottombar from "@/components/shared/Bottombar";
 import LeftSidebar from "@/components/shared/LeftSidebar";
+import Loader from "@/components/shared/Loader";
 
 const RootLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAuthenticated, isLoading } = useAuthContext();
+  const navigate = useNavigate();
 
   const closeSidebar = () => setSidebarOpen(false);
+
+  useEffect(() => {
+    // Redirect to sign-in if not authenticated and auth is done loading
+    if (!isLoading && !isAuthenticated) {
+      navigate("/sign-in", { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  // Don't render layout if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="w-full flex flex-col md:flex min-h-screen">

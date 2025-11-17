@@ -179,6 +179,20 @@ export async function getAccount() {
 
 export async function getCurrentUser() {
   try {
+    // First, try to get the session to ensure it's loaded
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError) {
+      logErrorDetails("getCurrentUser - Session error details:", sessionError);
+      return null;
+    }
+
+    if (!sessionData?.session) {
+      console.warn("getCurrentUser - No session found");
+      return null;
+    }
+
+    // Now get the user from the session
     const { data, error: authError } = await supabase.auth.getUser();
     const { user: authUser } = data;
 
@@ -3119,11 +3133,14 @@ export async function getSafetyAlerts() {
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      logErrorDetails("getSafetyAlerts - Error:", error);
+      return [];
+    }
 
     return data || [];
   } catch (error) {
-    console.log(error);
+    logErrorDetails("getSafetyAlerts - Catch error:", error);
     return [];
   }
 }
@@ -3303,11 +3320,14 @@ export async function getEmergencyResources() {
       .select("*")
       .order("resource_type", { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      logErrorDetails("getEmergencyResources - Error:", error);
+      return [];
+    }
 
     return data || [];
   } catch (error) {
-    console.log(error);
+    logErrorDetails("getEmergencyResources - Catch error:", error);
     return [];
   }
 }

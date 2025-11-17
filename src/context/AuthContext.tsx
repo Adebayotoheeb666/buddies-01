@@ -68,27 +68,70 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    let isMounted = true;
+    let hasInitialized = false;
+
+    const initializeAuth = async () => {
+      if (hasInitialized) return;
+      hasInitialized = true;
+
+      try {
+        // Wait for session to be restored from storage
+        const { data } = await supabase.auth.getSession();
+
+        if (isMounted) {
+          if (data?.session) {
+            // Session exists, try to get user data
+            await checkAuthUser();
+          } else {
+            // No session, user is not authenticated
+            setIsAuthenticated(false);
+            setUser(INITIAL_USER);
+          }
+        }
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+        if (isMounted) {
+          setIsAuthenticated(false);
+          setUser(INITIAL_USER);
+        }
+      }
+    };
+
     // Listen for auth state changes and update context
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event: string, session: any) => {
+        if (!isMounted) return;
+
         if (event === "SIGNED_IN" && session) {
           await checkAuthUser();
         } else if (event === "SIGNED_OUT") {
           setUser(INITIAL_USER);
           setIsAuthenticated(false);
           navigate("/sign-in");
+        } else if (event === "INITIAL_SESSION") {
+          // Session has been restored from storage
+          if (session) {
+            await checkAuthUser();
+          } else {
+            setIsAuthenticated(false);
+            setUser(INITIAL_USER);
+          }
         }
       }
     );
 
     // Initial check on mount
-    checkAuthUser();
+    initializeAuth();
 
     // Cleanup listener on unmount
     return () => {
-      authListener.subscription.unsubscribe();
+      isMounted = false;
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe();
+      }
     };
-  }, []);
+  }, [navigate]);
 
   const value = {
     user,
