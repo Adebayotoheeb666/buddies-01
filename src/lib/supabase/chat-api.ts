@@ -220,7 +220,8 @@ export const getGroupChats = async (): Promise<GroupChatWithMembers[]> => {
 
     return data || [];
   } catch (error) {
-    console.error("getGroupChats exception:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getGroupChats exception:", errorMsg);
     // Return empty array on error instead of throwing to prevent infinite retries
     return [];
   }
