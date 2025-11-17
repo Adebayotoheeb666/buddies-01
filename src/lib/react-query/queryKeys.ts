@@ -104,4 +104,14 @@ export enum QUERY_KEYS {
   GET_PROFESSOR_REVIEWS = "getProfessorReviews",
   GET_TUTORING_SESSIONS = "getTutoringSessions",
   GET_TUTORING_REVIEWS = "getTutoringReviews",
+
+  // JOB KEYS
+  GET_JOB_LISTINGS = "getJobListings",
+  GET_JOB_APPLICATIONS = "getJobApplications",
+
+  // WELLNESS KEYS
+  GET_WELLNESS_EVENTS = "getWellnessEvents",
+
+  // PHOTO CONTEST KEYS
+  GET_PHOTO_CONTESTS = "getPhotoContests",
 }
