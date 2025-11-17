@@ -66,6 +66,7 @@ import {
   getMemePosts,
   getStudentOrganizations,
   getOrganizationById,
+  getOrganizationEvents,
   getAchievements,
   getUserAchievements,
   getUserPoints,
@@ -84,7 +85,7 @@ import {
   getAnonymousConfessions,
   getUserConnections,
   getStudyGroupMembers,
-  getStudyGroupMembersCount,
+  // getStudyGroupMembersCount, // Commented out as it's not used
   getInterestGroupMembers,
   getOrganizationMembers,
   getEventRSVPs,
@@ -675,9 +676,8 @@ export const useGetOrganizationEvents = (orgId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ORGANIZATION_EVENTS, orgId],
     queryFn: async () => {
-      if (!orgId) return { documents: [], total: 0 };
-      const data = await getOrganizationEvents(orgId);
-      return { documents: data, total: data.length };
+      if (!orgId) return [];
+      return await getOrganizationEvents(orgId);
     },
     enabled: !!orgId,
   });
@@ -741,9 +741,8 @@ export const useGetUserChallenges = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_CHALLENGES, userId],
     queryFn: async () => {
-      if (!userId) return { documents: [], total: 0 };
-      const data = await getUserChallengeParticipations(userId);
-      return { documents: data, total: data.length };
+      if (!userId) return [];
+      return await getUserChallengeParticipations(userId);
     },
     enabled: !!userId,
   });
@@ -1562,7 +1561,7 @@ export const useUpdateProjectListing = () => {
         status?: string;
       };
     }) => updateProjectListing(projectId, updates),
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_PROJECT_LISTINGS],
       });
@@ -1756,13 +1755,7 @@ export const useUpdateMemePost = () => {
 export const useLikeMemePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      memeId,
-      likesArray,
-    }: {
-      memeId: string;
-      likesArray: string[];
-    }) => likeMemePost(memeId, likesArray),
+    mutationFn: (postId: string) => likeMemePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_MEME_POSTS],

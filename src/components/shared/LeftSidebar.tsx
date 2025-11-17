@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button";
 import { useSignOutAccount } from "@/lib/react-query/queries";
 import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
-const LeftSidebar = () => {
+interface LeftSidebarProps {
+  isMobile?: boolean;
+  onLinkClick?: () => void;
+}
+
+const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
@@ -131,8 +136,16 @@ const LeftSidebar = () => {
                             isActive && "bg-primary-500"
                           }`}>
                           <NavLink
+                            key={link.label}
                             to={link.route}
-                            className="flex gap-4 items-center p-4">
+                            className="flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium hover:bg-dark-4"
+                            onClick={(e) => {
+                              if (isMobile && onLinkClick) {
+                                onLinkClick();
+                              }
+                              // Don't prevent default to allow navigation
+                            }}
+                          >
                             <img
                               src={link.imgURL}
                               alt={link.label}

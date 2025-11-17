@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getLibraryBooks,
   getUserCheckouts,
@@ -198,9 +198,9 @@ const LibraryServices = () => {
                               ? handleCheckout(book.id)
                               : handleHold(book.id)
                           }
-                          disabled={createReservationMutation.isPending}
+                          disabled={createReservationMutation.isLoading}
                           className="bg-purple-500 text-white px-3 py-1 text-xs rounded hover:bg-purple-600">
-                          {createReservationMutation.isPending
+                          {createReservationMutation.isLoading
                             ? "Processing..."
                             : book.available_copies > 0
                             ? "Checkout"
@@ -274,9 +274,9 @@ const LibraryServices = () => {
                         onClick={() =>
                           cancelReservationMutation.mutate(checkout.id)
                         }
-                        disabled={cancelReservationMutation.isPending}
+                        disabled={cancelReservationMutation.isLoading}
                         className="flex-1 bg-red-500/20 text-red-400 px-3 py-1 text-xs rounded hover:bg-red-500/30">
-                        {cancelReservationMutation.isPending
+                        {cancelReservationMutation.isLoading
                           ? "Cancelling..."
                           : "Return"}
                       </Button>
@@ -315,9 +315,9 @@ const LibraryServices = () => {
                         onClick={() =>
                           cancelReservationMutation.mutate(hold.id)
                         }
-                        disabled={cancelReservationMutation.isPending}
+                        disabled={cancelReservationMutation.isLoading}
                         className="w-full bg-red-500/20 text-red-400 px-3 py-1 text-xs rounded hover:bg-red-500/30">
-                        {cancelReservationMutation.isPending
+                        {cancelReservationMutation.isLoading
                           ? "Cancelling..."
                           : "Cancel Hold"}
                       </Button>

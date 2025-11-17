@@ -118,7 +118,7 @@ const CourseCommunity = () => {
                     {note.content}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {note.tags.map((tag, idx) => (
+                    {note.tags.map((tag: string, idx: number) => (
                       <span
                         key={idx}
                         className="px-2 py-1 bg-dark-4 text-light-3 rounded text-tiny">

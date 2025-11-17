@@ -8,7 +8,7 @@ const Safety = () => {
   const [resources, setResources] = useState<EmergencyResource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated, isLoading: authLoading } = useAuthContext();
+  const { isLoading: authLoading } = useAuthContext();
 
   useEffect(() => {
     if (authLoading) {
