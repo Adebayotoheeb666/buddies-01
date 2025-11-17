@@ -54,6 +54,9 @@ export const useGetPrivateChats = (enabled: boolean = true) => {
     queryFn: getPrivateChats,
     refetchInterval: 5000,
     enabled,
+    retry: 1,
+    retryDelay: 5000,
+    staleTime: 30000,
   });
 };
 
