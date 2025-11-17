@@ -3294,13 +3294,14 @@ export async function getEmergencyResources() {
       .order("resource_type", { ascending: true });
 
     if (error) {
-      logErrorDetails("getEmergencyResources - Error:", error);
+      console.error("getEmergencyResources error:", error.message || error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    logErrorDetails("getEmergencyResources - Catch error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getEmergencyResources catch error:", errorMsg);
     return [];
   }
 }
