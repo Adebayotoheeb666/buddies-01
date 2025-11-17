@@ -31,7 +31,8 @@ export async function getCourseById(courseId: string) {
     if (error) throw error;
     return data;
   } catch (error) {
-    logErrorDetails("getCourseById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseById error:", errorMsg);
     return null;
   }
 }
@@ -56,7 +57,8 @@ export async function getUserCourses(userId: string) {
     if (courseError) throw courseError;
     return courses || [];
   } catch (error) {
-    logErrorDetails("getUserCourses error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getUserCourses error:", errorMsg);
     return [];
   }
 }
@@ -71,7 +73,8 @@ export async function getStudyGroups() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getStudyGroups error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getStudyGroups error:", errorMsg);
     return [];
   }
 }
@@ -87,7 +90,8 @@ export async function getStudyGroupById(groupId: string) {
     if (error) throw error;
     return data;
   } catch (error) {
-    logErrorDetails("getStudyGroupById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getStudyGroupById error:", errorMsg);
     return null;
   }
 }
@@ -102,7 +106,8 @@ export async function getAssignments() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getAssignments error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getAssignments error:", errorMsg);
     return [];
   }
 }
@@ -118,7 +123,8 @@ export async function getAssignmentById(assignmentId: string) {
     if (error) throw error;
     return data;
   } catch (error) {
-    logErrorDetails("getAssignmentById error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getAssignmentById error:", errorMsg);
     return null;
   }
 }
@@ -134,7 +140,8 @@ export async function getCourseAssignments(courseId: string) {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getCourseAssignments error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseAssignments error:", errorMsg);
     return [];
   }
 }
@@ -149,7 +156,8 @@ export async function getSharedNotes() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getSharedNotes error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getSharedNotes error:", errorMsg);
     return [];
   }
 }
@@ -165,7 +173,8 @@ export async function getCourseSharedNotes(courseId: string) {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getCourseSharedNotes error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseSharedNotes error:", errorMsg);
     return [];
   }
 }
@@ -180,7 +189,8 @@ export async function getSkills() {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    logErrorDetails("getSkills error:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getSkills error:", errorMsg);
     return [];
   }
 }
