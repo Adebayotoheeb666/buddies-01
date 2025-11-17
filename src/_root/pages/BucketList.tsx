@@ -6,6 +6,7 @@ import {
   createBucketList,
   addBucketListItem,
   completeBucketListItem,
+  deleteBucketListItem,
 } from "@/lib/supabase/api";
 import {
   BucketList as BucketListType,
