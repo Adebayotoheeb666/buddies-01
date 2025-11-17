@@ -296,15 +296,29 @@ const LibraryServices = () => {
                     <div
                       key={hold.id}
                       className="p-4 rounded-lg bg-dark-3 border border-dark-4">
-                      <p className="font-semibold text-light-1">
-                        Book ID: {hold.book_id}
-                      </p>
-                      <p className="text-light-3 text-sm mt-1">
-                        Position in queue:{" "}
-                        <span className="font-bold">
-                          {hold.position_in_queue}
-                        </span>
-                      </p>
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <p className="font-semibold text-light-1">
+                            Book ID: {hold.book_id}
+                          </p>
+                          <p className="text-light-3 text-sm mt-1">
+                            Position in queue:{" "}
+                            <span className="font-bold">
+                              {hold.position_in_queue}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() =>
+                          cancelReservationMutation.mutate(hold.id)
+                        }
+                        disabled={cancelReservationMutation.isPending}
+                        className="w-full bg-red-500/20 text-red-400 px-3 py-1 text-xs rounded hover:bg-red-500/30">
+                        {cancelReservationMutation.isPending
+                          ? "Cancelling..."
+                          : "Cancel Hold"}
+                      </Button>
                     </div>
                   ))}
                 </div>
