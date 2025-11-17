@@ -338,6 +338,36 @@ export const useGetUserCourses = (userId?: string) => {
   });
 };
 
+export const useGetCourseClassmates = (
+  courseId?: string,
+  excludeUserId?: string
+) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_COURSE_CLASSMATES, courseId, excludeUserId],
+    queryFn: async () => {
+      if (!courseId || !excludeUserId) return { documents: [], total: 0 };
+      const data = await getCourseEnrollmentsByUserExcluding(
+        courseId,
+        excludeUserId
+      );
+      return { documents: data, total: data.length };
+    },
+    enabled: !!courseId && !!excludeUserId,
+  });
+};
+
+export const useGetCourseSharedNotes = (courseId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_COURSE_SHARED_NOTES, courseId],
+    queryFn: async () => {
+      if (!courseId) return { documents: [], total: 0 };
+      const data = await getCourseSharedNotesByCourse(courseId);
+      return { documents: data, total: data.length };
+    },
+    enabled: !!courseId,
+  });
+};
+
 // STUDY GROUPS
 export const useGetStudyGroups = () => {
   return useQuery({
