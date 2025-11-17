@@ -159,13 +159,14 @@ export async function getAccount() {
     const { user } = data;
 
     if (error) {
-      logErrorDetails("getAccount - Auth error details:", error);
+      console.error("getAccount - Auth error:", error.message);
       throw error;
     }
 
     return user;
   } catch (error) {
-    logErrorDetails("getAccount - Error details:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("getAccount - Error:", errorMessage);
     return null;
   }
 }
