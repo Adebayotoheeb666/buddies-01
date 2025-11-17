@@ -664,9 +664,19 @@ export const useGetStudentOrganizations = () => {
 export const useGetOrganizationById = (orgId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ORGANIZATION_BY_ID, orgId],
-    queryFn: () => {
-      // const org = mockStudentOrganizations.find((o: any) => o.id === orgId);
-      return Promise.resolve();
+    queryFn: async () => {
+      if (!orgId) return null;
+      const { data, error } = await supabase
+        .from("student_organizations")
+        .select("*")
+        .eq("id", orgId)
+        .single();
+
+      if (error) {
+        console.error("getOrganizationById error:", error);
+        return null;
+      }
+      return data;
     },
     enabled: !!orgId,
   });
