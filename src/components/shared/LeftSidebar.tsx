@@ -139,7 +139,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
                             key={link.label}
                             to={link.route}
                             className="flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium hover:bg-dark-4"
-                            onClick={(e) => {
+                            onClick={() => {
                               if (isMobile && onLinkClick) {
                                 onLinkClick();
                               }
