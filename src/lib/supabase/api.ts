@@ -4534,27 +4534,6 @@ export async function cancelLibraryReservation(reservationId: string) {
   }
 }
 
-export async function updateFacilityBookingStatus(
-  bookingId: string,
-  status: string
-) {
-  try {
-    const { data, error } = await supabase
-      .from("facility_bookings")
-      .update({ status })
-      .eq("id", bookingId)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error("updateFacilityBookingStatus error:", errorMsg);
-    throw error;
-  }
-}
-
 export async function cancelFacilityBooking(bookingId: string) {
   try {
     const { data, error } = await supabase
