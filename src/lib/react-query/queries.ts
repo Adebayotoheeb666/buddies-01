@@ -1758,7 +1758,7 @@ export const useLikeMemePost = () => {
   return useMutation({
     mutationFn: ({
       memeId,
-      likesArray,
+      _likesArray,
     }: {
       memeId: string;
       likesArray: string[];
