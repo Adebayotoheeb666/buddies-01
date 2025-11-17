@@ -98,7 +98,7 @@ const ClassmateFinder = () => {
                             <div className="mt-3 flex gap-2">
                               {classmate.interests
                                 ?.slice(0, 2)
-                                .map((interest, idx) => (
+                                .map((interest: string, idx: number) => (
                                   <span
                                     key={idx}
                                     className="px-2 py-1 bg-primary-500/20 text-primary-500 rounded text-tiny">
