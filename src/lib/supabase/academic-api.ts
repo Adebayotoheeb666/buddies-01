@@ -1098,10 +1098,7 @@ export async function createStudyGroup(
   }
 }
 
-export async function createCourseEnrollment(
-  userId: string,
-  courseId: string
-) {
+export async function createCourseEnrollment(userId: string, courseId: string) {
   try {
     const { data, error } = await supabase
       .from("course_enrollments")
@@ -1362,10 +1359,7 @@ export async function createTutorSession(
   }
 }
 
-export async function createPollVote(
-  pollOptionId: string,
-  userId: string
-) {
+export async function createPollVote(pollOptionId: string, userId: string) {
   try {
     const { data, error } = await supabase
       .from("poll_votes")
@@ -1817,10 +1811,7 @@ export async function updateChallengeSubmission(
   }
 }
 
-export async function updateBucketListItem(
-  itemId: string,
-  completed: boolean
-) {
+export async function updateBucketListItem(itemId: string, completed: boolean) {
   try {
     const { data, error } = await supabase
       .from("bucket_list_items")

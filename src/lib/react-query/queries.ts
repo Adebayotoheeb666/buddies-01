@@ -1014,13 +1014,8 @@ export const useCreateStudyGroup = () => {
 export const useCreateCourseEnrollment = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      userId,
-      courseId,
-    }: {
-      userId: string;
-      courseId: string;
-    }) => createCourseEnrollment(userId, courseId),
+    mutationFn: ({ userId, courseId }: { userId: string; courseId: string }) =>
+      createCourseEnrollment(userId, courseId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_COURSES],
@@ -1342,8 +1337,7 @@ export const useCreatePhotoContestSubmission = () => {
       userId: string;
       photoUrl: string;
       caption?: string;
-    }) =>
-      createPhotoContestSubmission(contestId, userId, photoUrl, caption),
+    }) => createPhotoContestSubmission(contestId, userId, photoUrl, caption),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_PHOTO_CONTESTS],
@@ -1393,13 +1387,8 @@ export const useCreateWellnessEventRsvp = () => {
 export const useJoinStudyGroup = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      groupId,
-      userId,
-    }: {
-      groupId: string;
-      userId: string;
-    }) => joinStudyGroup(groupId, userId),
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      joinStudyGroup(groupId, userId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_STUDY_GROUP_BY_ID, variables.groupId],
@@ -1414,13 +1403,8 @@ export const useJoinStudyGroup = () => {
 export const useJoinInterestGroup = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      groupId,
-      userId,
-    }: {
-      groupId: string;
-      userId: string;
-    }) => joinInterestGroup(groupId, userId),
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      joinInterestGroup(groupId, userId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_BY_ID, variables.groupId],
@@ -1435,13 +1419,8 @@ export const useJoinInterestGroup = () => {
 export const useJoinOrganization = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      orgId,
-      userId,
-    }: {
-      orgId: string;
-      userId: string;
-    }) => joinOrganization(orgId, userId),
+    mutationFn: ({ orgId, userId }: { orgId: string; userId: string }) =>
+      joinOrganization(orgId, userId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_ORGANIZATION_BY_ID, variables.orgId],
@@ -1477,13 +1456,8 @@ export const useCreateUserConnection = () => {
 export const useAddUserSkill = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      userId,
-      skillId,
-    }: {
-      userId: string;
-      skillId: string;
-    }) => addUserSkill(userId, skillId),
+    mutationFn: ({ userId, skillId }: { userId: string; skillId: string }) =>
+      addUserSkill(userId, skillId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_USER_SKILLS, variables.userId],
@@ -1520,13 +1494,8 @@ export const useUpdateStudyGroup = () => {
 export const useLeaveStudyGroup = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      groupId,
-      userId,
-    }: {
-      groupId: string;
-      userId: string;
-    }) => leaveStudyGroup(groupId, userId),
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      leaveStudyGroup(groupId, userId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_STUDY_GROUP_BY_ID, variables.groupId],
@@ -1726,13 +1695,8 @@ export const useUpdateInterestGroup = () => {
 export const useLeaveInterestGroup = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      groupId,
-      userId,
-    }: {
-      groupId: string;
-      userId: string;
-    }) => leaveInterestGroup(groupId, userId),
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      leaveInterestGroup(groupId, userId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_BY_ID, variables.groupId],
@@ -1757,7 +1721,8 @@ export const useUpdateAssignmentSubmissionStatus = () => {
       status: string;
       feedback?: string;
       grade?: number;
-    }) => updateAssignmentSubmissionStatus(submissionId, status, feedback, grade),
+    }) =>
+      updateAssignmentSubmissionStatus(submissionId, status, feedback, grade),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_ASSIGNMENTS],
@@ -1951,13 +1916,8 @@ export const useUpdateWellnessEventRsvpStatus = () => {
 export const useUpdateSharedNoteStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      noteId,
-      isPublic,
-    }: {
-      noteId: string;
-      isPublic: boolean;
-    }) => updateSharedNoteStatus(noteId, isPublic),
+    mutationFn: ({ noteId, isPublic }: { noteId: string; isPublic: boolean }) =>
+      updateSharedNoteStatus(noteId, isPublic),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_SHARED_NOTES],
