@@ -63,6 +63,54 @@ export async function getUserCourses(userId: string) {
   }
 }
 
+export async function getCourseEnrollmentsByUserExcluding(
+  courseId: string,
+  excludeUserId: string
+) {
+  try {
+    const { data, error } = await supabase
+      .from("course_enrollments")
+      .select("user_id")
+      .eq("course_id", courseId)
+      .neq("user_id", excludeUserId);
+
+    if (error) throw error;
+
+    const userIds = data?.map((e: any) => e.user_id) || [];
+    if (userIds.length === 0) return [];
+
+    const { data: users, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .in("id", userIds);
+
+    if (userError) throw userError;
+    return users || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseEnrollmentsByUserExcluding error:", errorMsg);
+    return [];
+  }
+}
+
+export async function getCourseSharedNotesByCourse(courseId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("shared_notes")
+      .select("*")
+      .eq("course_id", courseId)
+      .eq("is_public", true)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error("getCourseSharedNotesByCourse error:", errorMsg);
+    return [];
+  }
+}
+
 export async function getStudyGroups() {
   try {
     const { data, error } = await supabase
