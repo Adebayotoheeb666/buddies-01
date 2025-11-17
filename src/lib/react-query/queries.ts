@@ -961,3 +961,510 @@ export const useGetTutoringReviews = (tutorId?: string) => {
     enabled: !!tutorId,
   });
 };
+
+// ============================================================
+// CREATE MUTATIONS FOR ACADEMIC FEATURES
+// ============================================================
+
+export const useCreateStudyGroup = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      name,
+      description,
+      courseId,
+      creatorId,
+    }: {
+      name: string;
+      description: string;
+      courseId?: string;
+      creatorId?: string;
+    }) => createStudyGroup(name, description, courseId, creatorId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_STUDY_GROUPS],
+      });
+    },
+  });
+};
+
+export const useCreateCourseEnrollment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      courseId,
+    }: {
+      userId: string;
+      courseId: string;
+    }) => createCourseEnrollment(userId, courseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_COURSES],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_COURSES],
+      });
+    },
+  });
+};
+
+export const useCreateSharedNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      title,
+      content,
+      courseId,
+      creatorId,
+      isPublic,
+    }: {
+      title: string;
+      content: string;
+      courseId: string;
+      creatorId: string;
+      isPublic?: boolean;
+    }) => createSharedNote(title, content, courseId, creatorId, isPublic),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_SHARED_NOTES],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_COURSE_SHARED_NOTES],
+      });
+    },
+  });
+};
+
+export const useCreateResource = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      title,
+      description,
+      resourceUrl,
+      resourceType,
+      creatorId,
+    }: {
+      title: string;
+      description: string;
+      resourceUrl: string;
+      resourceType: string;
+      creatorId: string;
+    }) =>
+      createResource(title, description, resourceUrl, resourceType, creatorId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RESOURCES],
+      });
+    },
+  });
+};
+
+export const useCreateQAQuestion = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      title,
+      content,
+      courseId,
+      creatorId,
+    }: {
+      title: string;
+      content: string;
+      courseId: string;
+      creatorId: string;
+    }) => createQAQuestion(title, content, courseId, creatorId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_QA_QUESTIONS],
+      });
+    },
+  });
+};
+
+export const useCreateQAAnswer = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      content,
+      questionId,
+      creatorId,
+    }: {
+      content: string;
+      questionId: string;
+      creatorId: string;
+    }) => createQAAnswer(content, questionId, creatorId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_QUESTION_BY_ID, variables.questionId],
+      });
+    },
+  });
+};
+
+export const useCreateProjectListing = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      title,
+      description,
+      skills,
+      creatorId,
+      status,
+    }: {
+      title: string;
+      description: string;
+      skills: string[];
+      creatorId: string;
+      status?: string;
+    }) => createProjectListing(title, description, skills, creatorId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_PROJECT_LISTINGS],
+      });
+    },
+  });
+};
+
+export const useCreateJobListing = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      title,
+      description,
+      requirements,
+      companyName,
+      location,
+      salary,
+      creatorId,
+    }: {
+      title: string;
+      description: string;
+      requirements: string;
+      companyName: string;
+      location: string;
+      salary?: string;
+      creatorId?: string;
+    }) =>
+      createJobListing(
+        title,
+        description,
+        requirements,
+        companyName,
+        location,
+        salary,
+        creatorId
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_JOB_LISTINGS],
+      });
+    },
+  });
+};
+
+export const useCreateJobApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      jobListingId,
+      userId,
+      coverLetter,
+    }: {
+      jobListingId: string;
+      userId: string;
+      coverLetter?: string;
+    }) => createJobApplication(jobListingId, userId, coverLetter),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_JOB_APPLICATIONS],
+      });
+    },
+  });
+};
+
+export const useCreateTutorSession = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      tutorId,
+      studentId,
+      subject,
+      scheduledTime,
+      duration,
+    }: {
+      tutorId: string;
+      studentId: string;
+      subject: string;
+      scheduledTime: string;
+      duration: number;
+    }) =>
+      createTutorSession(tutorId, studentId, subject, scheduledTime, duration),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_TUTORING_SESSIONS],
+      });
+    },
+  });
+};
+
+export const useCreatePollVote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      pollOptionId,
+      userId,
+    }: {
+      pollOptionId: string;
+      userId: string;
+    }) => createPollVote(pollOptionId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CAMPUS_POLLS],
+      });
+    },
+  });
+};
+
+export const useCreateLibraryReservation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      bookId,
+      reservationDate,
+    }: {
+      userId: string;
+      bookId: string;
+      reservationDate: string;
+    }) => createLibraryReservation(userId, bookId, reservationDate),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_LIBRARY_BOOKS],
+      });
+    },
+  });
+};
+
+export const useCreateFacilityBooking = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      facilityId,
+      startTime,
+      endTime,
+      purpose,
+    }: {
+      userId: string;
+      facilityId: string;
+      startTime: string;
+      endTime: string;
+      purpose?: string;
+    }) =>
+      createFacilityBooking(userId, facilityId, startTime, endTime, purpose),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_FACILITY_BOOKINGS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_FACILITIES],
+      });
+    },
+  });
+};
+
+export const useCreateChallengeSubmission = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      challengeId,
+      userId,
+      submissionContent,
+      submissionUrl,
+    }: {
+      challengeId: string;
+      userId: string;
+      submissionContent: string;
+      submissionUrl?: string;
+    }) =>
+      createChallengeSubmission(
+        challengeId,
+        userId,
+        submissionContent,
+        submissionUrl
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CHALLENGES],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_CHALLENGES],
+      });
+    },
+  });
+};
+
+export const useCreatePhotoContestSubmission = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      contestId,
+      userId,
+      photoUrl,
+      caption,
+    }: {
+      contestId: string;
+      userId: string;
+      photoUrl: string;
+      caption?: string;
+    }) =>
+      createPhotoContestSubmission(contestId, userId, photoUrl, caption),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_PHOTO_CONTESTS],
+      });
+    },
+  });
+};
+
+export const useCreatePhotoContestVote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      submissionId,
+      userId,
+    }: {
+      submissionId: string;
+      userId: string;
+    }) => createPhotoContestVote(submissionId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_PHOTO_CONTESTS],
+      });
+    },
+  });
+};
+
+export const useCreateWellnessEventRsvp = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      eventId,
+      userId,
+      status,
+    }: {
+      eventId: string;
+      userId: string;
+      status?: string;
+    }) => createWellnessEventRsvp(eventId, userId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_WELLNESS_EVENTS],
+      });
+    },
+  });
+};
+
+export const useJoinStudyGroup = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      groupId,
+      userId,
+    }: {
+      groupId: string;
+      userId: string;
+    }) => joinStudyGroup(groupId, userId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_STUDY_GROUP_BY_ID, variables.groupId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_STUDY_GROUP_MEMBERS, variables.groupId],
+      });
+    },
+  });
+};
+
+export const useJoinInterestGroup = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      groupId,
+      userId,
+    }: {
+      groupId: string;
+      userId: string;
+    }) => joinInterestGroup(groupId, userId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_BY_ID, variables.groupId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_INTEREST_GROUP_MEMBERS, variables.groupId],
+      });
+    },
+  });
+};
+
+export const useJoinOrganization = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      orgId,
+      userId,
+    }: {
+      orgId: string;
+      userId: string;
+    }) => joinOrganization(orgId, userId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ORGANIZATION_BY_ID, variables.orgId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ORGANIZATION_MEMBERS, variables.orgId],
+      });
+    },
+  });
+};
+
+export const useCreateUserConnection = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      followerId,
+      followingId,
+    }: {
+      followerId: string;
+      followingId: string;
+    }) => createUserConnection(followerId, followingId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_FOLLOWING],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_FOLLOWERS],
+      });
+    },
+  });
+};
+
+export const useAddUserSkill = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      skillId,
+    }: {
+      userId: string;
+      skillId: string;
+    }) => addUserSkill(userId, skillId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_SKILLS, variables.userId],
+      });
+    },
+  });
+};
