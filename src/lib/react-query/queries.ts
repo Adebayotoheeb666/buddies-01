@@ -505,9 +505,8 @@ export const useGetClassYearGroups = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CLASS_YEAR_GROUPS],
     queryFn: async () => {
-      // Commented out undefined getClassYearGroups usage to fix TS2552 error.
-      // const data = await getClassYearGroups();
-      return { documents: [], total: 0 };
+      const data = await getClassYearGroups();
+      return { documents: data, total: data.length };
     },
   });
 };
@@ -517,9 +516,8 @@ export const useGetDepartmentNetworks = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_DEPARTMENT_NETWORKS],
     queryFn: async () => {
-      // Commented out undefined getDepartmentNetworks usage to fix TS2552 error.
-      // const data = await getDepartmentNetworks();
-      return { documents: [], total: 0 };
+      const data = await getDepartmentNetworks();
+      return { documents: data, total: data.length };
     },
   });
 };
