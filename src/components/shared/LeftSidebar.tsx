@@ -85,7 +85,7 @@ const LeftSidebar = ({ isMobile = false, onLinkClick }: LeftSidebarProps) => {
       className={`leftsidebar ${
         isMobile ? "flex md:hidden px-6 py-4 min-w-full flex-col h-full" : ""
       }`}>
-      <div className="flex flex-col gap-11 w-full">
+      <div className={`flex flex-col gap-11 w-full ${isMobile ? "flex-1" : ""}`}>
         {!isMobile && (
           <Link to="/" className="flex gap-3 items-center">
             <img
