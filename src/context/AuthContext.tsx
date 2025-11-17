@@ -43,7 +43,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuthUser = async () => {
     setIsLoading(true);
     try {
-      const currentAccount = await getCurrentUser();
+      // Add a timeout to prevent infinite loading
+      const timeoutPromise = new Promise<null>((resolve) => {
+        setTimeout(() => resolve(null), 10000); // 10 second timeout
+      });
+
+      const userPromise = getCurrentUser();
+      const currentAccount = await Promise.race([userPromise, timeoutPromise]);
+
       if (currentAccount) {
         setUser({
           id: currentAccount.id,
@@ -60,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return false;
     } catch (error) {
-      console.error(error);
+      console.error("checkAuthUser error:", error);
       return false;
     } finally {
       setIsLoading(false);
