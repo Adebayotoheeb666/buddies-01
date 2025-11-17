@@ -75,13 +75,7 @@ export async function getAccount() {
 export async function getCurrentUser() {
   try {
     // First, try to get the session to ensure it's loaded
-    const { data: sessionData, error: sessionError } =
-      await supabase.auth.getSession();
-
-    if (sessionError) {
-      console.error("getCurrentUser - Session error:", sessionError.message);
-      return null;
-    }
+    const { data: sessionData } = await supabase.auth.getSession();
 
     if (!sessionData?.session) {
       console.warn("getCurrentUser - No session found");
@@ -89,13 +83,8 @@ export async function getCurrentUser() {
     }
 
     // Now get the user from the session
-    const { data, error: authError } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
     const { user: authUser } = data;
-
-    if (authError) {
-      console.error("getCurrentUser - Auth error:", authError.message);
-      return null;
-    }
 
     if (!authUser) {
       console.warn("getCurrentUser - No authenticated user found");
