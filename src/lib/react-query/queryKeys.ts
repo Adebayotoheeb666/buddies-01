@@ -117,7 +117,4 @@ export enum QUERY_KEYS {
 
   // BUCKET LIST KEYS
   GET_BUCKET_LIST = "getBucketList",
-
-  // EVENT RSVP KEYS
-  GET_EVENT_RSVPS = "getEventRSVPs",
 }
