@@ -114,4 +114,10 @@ export enum QUERY_KEYS {
 
   // PHOTO CONTEST KEYS
   GET_PHOTO_CONTESTS = "getPhotoContests",
+
+  // BUCKET LIST KEYS
+  GET_BUCKET_LIST = "getBucketList",
+
+  // EVENT RSVP KEYS
+  GET_EVENT_RSVPS = "getEventRSVPs",
 }
