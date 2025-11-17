@@ -24,6 +24,8 @@ export enum QUERY_KEYS {
   GET_COURSES = "getCourses",
   GET_COURSE_BY_ID = "getCourseById",
   GET_USER_COURSES = "getUserCourses",
+  GET_COURSE_CLASSMATES = "getCourseClassmates",
+  GET_COURSE_SHARED_NOTES = "getCourseSharedNotes",
 
   // STUDY GROUP KEYS
   GET_STUDY_GROUPS = "getStudyGroups",
