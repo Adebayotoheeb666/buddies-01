@@ -356,7 +356,7 @@ export async function getUserFollowing(userId: string) {
       .select("following_id")
       .eq("follower_id", userId);
 
-    if (error) throw new Error(error.message || 'Failed to fetch following');
+    if (error) throw new Error(error.message || "Failed to fetch following");
 
     const followingIds = data?.map((c: any) => c.following_id) || [];
     if (followingIds.length === 0) return [];
@@ -366,14 +366,16 @@ export async function getUserFollowing(userId: string) {
       .select("*")
       .in("id", followingIds);
 
-    if (userError) throw new Error(userError.message || 'Failed to fetch user data');
+    if (userError)
+      throw new Error(userError.message || "Failed to fetch user data");
     return following || [];
   } catch (error) {
-    const errorMsg = error && typeof error === 'object' && 'message' in error
-      ? (error as any).message
-      : error instanceof Error
-      ? error.message
-      : 'Unknown error';
+    const errorMsg =
+      error && typeof error === "object" && "message" in error
+        ? (error as any).message
+        : error instanceof Error
+        ? error.message
+        : "Unknown error";
     console.error("getUserFollowing error:", errorMsg);
     return [];
   }
@@ -386,7 +388,7 @@ export async function getUserFollowers(userId: string) {
       .select("follower_id")
       .eq("following_id", userId);
 
-    if (error) throw new Error(error.message || 'Failed to fetch followers');
+    if (error) throw new Error(error.message || "Failed to fetch followers");
 
     const followerIds = data?.map((c: any) => c.follower_id) || [];
     if (followerIds.length === 0) return [];
@@ -396,14 +398,16 @@ export async function getUserFollowers(userId: string) {
       .select("*")
       .in("id", followerIds);
 
-    if (userError) throw new Error(userError.message || 'Failed to fetch user data');
+    if (userError)
+      throw new Error(userError.message || "Failed to fetch user data");
     return followers || [];
   } catch (error) {
-    const errorMsg = error && typeof error === 'object' && 'message' in error
-      ? (error as any).message
-      : error instanceof Error
-      ? error.message
-      : 'Unknown error';
+    const errorMsg =
+      error && typeof error === "object" && "message" in error
+        ? (error as any).message
+        : error instanceof Error
+        ? error.message
+        : "Unknown error";
     console.error("getUserFollowers error:", errorMsg);
     return [];
   }
