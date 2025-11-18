@@ -466,6 +466,7 @@ export async function getRecentPosts() {
     return { documents: data || [], total: data?.length || 0 };
   } catch (error) {
     console.log(error);
+    return { documents: [], total: 0 };
   }
 }
 
@@ -491,6 +492,7 @@ export async function getUsers(limit?: number) {
     return { documents: data || [], total: data?.length || 0 };
   } catch (error) {
     console.log(error);
+    return { documents: [], total: 0 };
   }
 }
 
