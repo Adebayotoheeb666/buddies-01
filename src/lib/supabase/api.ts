@@ -509,6 +509,7 @@ export async function getUserById(userId: string) {
     return data;
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
 
