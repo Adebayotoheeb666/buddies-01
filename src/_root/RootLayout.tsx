@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/context/AuthContext";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 import Topbar from "@/components/shared/Topbar";
 import Bottombar from "@/components/shared/Bottombar";
@@ -8,9 +9,11 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import Loader from "@/components/shared/Loader";
 
 const RootLayout = () => {
-  const { isAuthenticated, isLoading } = useAuthContext();
+  const { isAuthenticated, isLoading, error, checkAuthUser } =
+    useAuthContext();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
