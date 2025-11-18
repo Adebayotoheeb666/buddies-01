@@ -50,7 +50,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     }
 
     setLikes(likesArray);
-    likePost({ postId: post.$id, likesArray });
+    likePost({ postId: post.id, likesArray });
   };
 
   const handleSavePost = (
