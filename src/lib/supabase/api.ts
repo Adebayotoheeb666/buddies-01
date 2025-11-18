@@ -262,6 +262,7 @@ export async function searchPosts(searchTerm: string) {
     return { documents: data || [], total: data?.length || 0 };
   } catch (error) {
     console.log(error);
+    return { documents: [], total: 0 };
   }
 }
 
@@ -292,6 +293,7 @@ export async function getInfinitePosts({ pageParam }: { pageParam?: string }) {
     return { documents: data || [], total: data?.length || 0 };
   } catch (error) {
     console.log(error);
+    return { documents: [], total: 0 };
   }
 }
 
@@ -310,6 +312,7 @@ export async function getPostById(postId?: string) {
     return data;
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
 
@@ -436,7 +439,7 @@ export async function deleteSavedPost(savedRecordId: string) {
 }
 
 export async function getUserPosts(userId?: string) {
-  if (!userId) return;
+  if (!userId) return { documents: [], total: 0 };
 
   try {
     const { data, error } = await supabase
@@ -450,6 +453,7 @@ export async function getUserPosts(userId?: string) {
     return { documents: data || [], total: data?.length || 0 };
   } catch (error) {
     console.log(error);
+    return { documents: [], total: 0 };
   }
 }
 
