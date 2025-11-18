@@ -59,13 +59,15 @@ import SignupForm from "@/_auth/forms/SignupForm";
 import SigninForm from "@/_auth/forms/SigninForm";
 import EnhancedSignupForm from "@/_auth/forms/EnhancedSignupForm";
 import { Toaster } from "@/components/ui/toaster";
+import ErrorBoundary from "@/components/shared/ErrorBoundary";
 
 import "./globals.css";
 
 const App = () => {
   return (
-    <main className="flex h-screen">
-      <Routes>
+    <ErrorBoundary>
+      <main className="flex h-screen">
+        <Routes>
         {/* public routes */}
         <Route element={<AuthLayout />}>
           <Route path="/sign-in" element={<SigninForm />} />
@@ -172,10 +174,11 @@ const App = () => {
           <Route path="/bucket-list" element={<BucketList />} />
           <Route path="/photo-contests" element={<PhotoContests />} />
         </Route>
-      </Routes>
+        </Routes>
 
-      <Toaster />
-    </main>
+        <Toaster />
+      </main>
+    </ErrorBoundary>
   );
 };
 
