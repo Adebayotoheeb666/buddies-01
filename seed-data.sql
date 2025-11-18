@@ -549,14 +549,14 @@ INSERT INTO public.interest_group_members (group_id, user_id, joined_at, role) V
 INSERT INTO public.study_groups (
   id, name, description, creator_id, course_id, location, meeting_time, max_members, is_active, created_at
 ) VALUES
-('a50e8400-e29b-41d4-a716-446655440001', 'CS201 Study Group', 'Data Structures and Algorithms', '550e8400-e29b-41d4-a716-446655440001', '650e8400-e29b-41d4-a716-446655440002', 'Library 3rd Floor', now() + interval '1 day' at time '18:00', 6, true, now()),
-('a50e8400-e29b-41d4-a716-446655440002', 'Calculus Study Group', 'Math 201 collaboration', '550e8400-e29b-41d4-a716-446655440037', '650e8400-e29b-41d4-a716-446655440004', 'Math Building Study Room', now() + interval '2 days' at time '19:00', 8, true, now()),
-('a50e8400-e29b-41d4-a716-446655440003', 'Chemistry Lab Prep', 'Preparing for CHEM101 exams', '550e8400-e29b-41d4-a716-446655440015', '650e8400-e29b-41d4-a716-446655440006', 'Science Hall Lab', now() + interval '3 days' at time '17:00', 5, true, now()),
-('a50e8400-e29b-41d4-a716-446655440004', 'Biology Study Circle', 'BIO101 exam preparation', '550e8400-e29b-41d4-a716-446655440020', '650e8400-e29b-41d4-a716-446655440007', 'Science Hall Conference', now() + interval '4 days' at time '18:30', 7, true, now()),
-('a50e8400-e29b-41d4-a716-446655440005', 'Economics Study Buddies', 'ECON101 discussion group', '550e8400-e29b-41d4-a716-446655440010', '650e8400-e29b-41d4-a716-446655440008', 'Business Building Lounge', now() + interval '5 days' at time '16:00', 6, true, now()),
-('a50e8400-e29b-41d4-a716-446655440006', 'English Essay Workshop', 'Writing help for ENG101', '550e8400-e29b-41d4-a716-446655440017', '650e8400-e29b-41d4-a716-446655440009', 'Arts Building Study Area', now() + interval '6 days' at time '15:00', 8, true, now()),
-('a50e8400-e29b-41d4-a716-446655440007', 'History Document Analysis', 'HIST101 research group', '550e8400-e29b-41d4-a716-446655440018', '650e8400-e29b-41d4-a716-446655440011', 'Library Archives', now() + interval '7 days' at time '17:30', 5, true, now()),
-('a50e8400-e29b-41d4-a716-446655440008', 'Psychology Case Study Group', 'PSY101 collaboration', '550e8400-e29b-41d4-a716-446655440022', '650e8400-e29b-41d4-a716-446655440010', 'Social Sciences Building', now() + interval '8 days' at time '18:00', 7, true, now());
+('a50e8400-e29b-41d4-a716-446655440001', 'CS201 Study Group', 'Data Structures and Algorithms', '550e8400-e29b-41d4-a716-446655440001', '650e8400-e29b-41d4-a716-446655440002', 'Library 3rd Floor', now() + interval '1 day 18:00:00', 6, true, now()),
+('a50e8400-e29b-41d4-a716-446655440002', 'Calculus Study Group', 'Math 201 collaboration', '550e8400-e29b-41d4-a716-446655440037', '650e8400-e29b-41d4-a716-446655440004', 'Math Building Study Room', now() + interval '2 days 19:00:00', 8, true, now()),
+('a50e8400-e29b-41d4-a716-446655440003', 'Chemistry Lab Prep', 'Preparing for CHEM101 exams', '550e8400-e29b-41d4-a716-446655440015', '650e8400-e29b-41d4-a716-446655440006', 'Science Hall Lab', now() + interval '3 days 17:00:00', 5, true, now()),
+('a50e8400-e29b-41d4-a716-446655440004', 'Biology Study Circle', 'BIO101 exam preparation', '550e8400-e29b-41d4-a716-446655440020', '650e8400-e29b-41d4-a716-446655440007', 'Science Hall Conference', now() + interval '4 days 18:30:00', 7, true, now()),
+('a50e8400-e29b-41d4-a716-446655440005', 'Economics Study Buddies', 'ECON101 discussion group', '550e8400-e29b-41d4-a716-446655440010', '650e8400-e29b-41d4-a716-446655440008', 'Business Building Lounge', now() + interval '5 days 16:00:00', 6, true, now()),
+('a50e8400-e29b-41d4-a716-446655440006', 'English Essay Workshop', 'Writing help for ENG101', '550e8400-e29b-41d4-a716-446655440017', '650e8400-e29b-41d4-a716-446655440009', 'Arts Building Study Area', now() + interval '6 days 15:00:00', 8, true, now()),
+('a50e8400-e29b-41d4-a716-446655440007', 'History Document Analysis', 'HIST101 research group', '550e8400-e29b-41d4-a716-446655440018', '650e8400-e29b-41d4-a716-446655440011', 'Library Archives', now() + interval '7 days 17:30:00', 5, true, now()),
+('a50e8400-e29b-41d4-a716-446655440008', 'Psychology Case Study Group', 'PSY101 collaboration', '550e8400-e29b-41d4-a716-446655440022', '650e8400-e29b-41d4-a716-446655440010', 'Social Sciences Building', now() + interval '8 days 18:00:00', 7, true, now());
 
 -- =================================================================
 -- STEP 12: INSERT STUDY GROUP MEMBERS
