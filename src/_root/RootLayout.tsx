@@ -19,12 +19,18 @@ const RootLayout = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleRetry = async () => {
+    setIsRetrying(true);
+    await checkAuthUser();
+    setIsRetrying(false);
+  };
+
   useEffect(() => {
     // Redirect to sign-in if not authenticated and auth is done loading
-    if (!isLoading && !isAuthenticated) {
+    if (!isLoading && !isAuthenticated && !error) {
       navigate("/sign-in", { replace: true });
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }, [isAuthenticated, isLoading, navigate, error]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
