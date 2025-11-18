@@ -369,7 +369,11 @@ export async function getUserFollowing(userId: string) {
     if (userError) throw userError;
     return following || [];
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorMsg = error && typeof error === 'object' && 'message' in error
+      ? (error as any).message
+      : error instanceof Error
+      ? error.message
+      : 'Unknown error';
     console.error("getUserFollowing error:", errorMsg);
     return [];
   }
@@ -395,7 +399,11 @@ export async function getUserFollowers(userId: string) {
     if (userError) throw userError;
     return followers || [];
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorMsg = error && typeof error === 'object' && 'message' in error
+      ? (error as any).message
+      : error instanceof Error
+      ? error.message
+      : 'Unknown error';
     console.error("getUserFollowers error:", errorMsg);
     return [];
   }
