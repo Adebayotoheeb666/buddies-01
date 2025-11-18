@@ -18,9 +18,11 @@ const INITIAL_STATE = {
   user: INITIAL_USER,
   isLoading: false,
   isAuthenticated: false,
+  error: null,
   setUser: () => {},
   setIsAuthenticated: () => {},
   checkAuthUser: async () => false as boolean,
+  setError: () => {},
 };
 
 type IContextType = {
@@ -30,6 +32,8 @@ type IContextType = {
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   checkAuthUser: () => Promise<boolean>;
+  error: string | null;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
@@ -38,36 +42,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>(INITIAL_USER);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  let checkAuthTimeoutId: NodeJS.Timeout | null = null;
 
   const checkAuthUser = async () => {
     setIsLoading(true);
+    setError(null);
     try {
-      // Add a timeout to prevent infinite loading
-      const timeoutPromise = new Promise<null>((resolve) => {
-        setTimeout(() => resolve(null), 10000); // 10 second timeout
+      // Create a timeout promise that rejects after 10 seconds
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        checkAuthTimeoutId = setTimeout(() => {
+          reject(new Error("Authentication check timed out"));
+        }, 10000);
       });
 
-      const userPromise = getCurrentUser();
-      const currentAccount = await Promise.race([userPromise, timeoutPromise]);
+      try {
+        const currentAccount = await Promise.race([
+          getCurrentUser(),
+          timeoutPromise,
+        ]);
 
-      if (currentAccount) {
-        setUser({
-          id: currentAccount.id,
-          name: currentAccount.name,
-          username: currentAccount.username,
-          email: currentAccount.email,
-          imageUrl: currentAccount.imageUrl,
-          bio: currentAccount.bio,
-        });
-        setIsAuthenticated(true);
+        if (checkAuthTimeoutId) {
+          clearTimeout(checkAuthTimeoutId);
+          checkAuthTimeoutId = null;
+        }
 
-        return true;
+        if (currentAccount) {
+          setUser({
+            id: currentAccount.id,
+            name: currentAccount.name,
+            username: currentAccount.username,
+            email: currentAccount.email,
+            imageUrl: currentAccount.imageUrl,
+            bio: currentAccount.bio,
+          });
+          setIsAuthenticated(true);
+          setError(null);
+          return true;
+        }
+
+        return false;
+      } catch (raceError) {
+        if (checkAuthTimeoutId) {
+          clearTimeout(checkAuthTimeoutId);
+          checkAuthTimeoutId = null;
+        }
+        throw raceError;
       }
-
-      return false;
     } catch (error) {
-      console.error("checkAuthUser error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Authentication failed";
+      console.error("checkAuthUser error:", errorMessage);
+      setError(errorMessage);
+      setIsAuthenticated(false);
       return false;
     } finally {
       setIsLoading(false);
@@ -84,7 +112,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         // Wait for session to be restored from storage
-        const { data } = await supabase.auth.getSession();
+        const { data, error: sessionError } =
+          await supabase.auth.getSession();
+
+        if (sessionError) {
+          console.error("Session error:", sessionError.message);
+          if (isMounted) {
+            setError("Failed to restore session");
+            setIsAuthenticated(false);
+            setUser(INITIAL_USER);
+            setIsLoading(false);
+          }
+          return;
+        }
 
         if (isMounted) {
           if (data?.session) {
@@ -94,13 +134,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // No session, user is not authenticated
             setIsAuthenticated(false);
             setUser(INITIAL_USER);
+            setError(null);
+            setIsLoading(false);
           }
         }
       } catch (error) {
-        console.error("Auth initialization error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Initialization failed";
+        console.error("Auth initialization error:", errorMessage);
         if (isMounted) {
+          setError(errorMessage);
           setIsAuthenticated(false);
           setUser(INITIAL_USER);
+          setIsLoading(false);
         }
       }
     };
@@ -110,20 +156,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (event: string, session: any) => {
         if (!isMounted) return;
 
-        if (event === "SIGNED_IN" && session) {
-          await checkAuthUser();
-        } else if (event === "SIGNED_OUT") {
-          setUser(INITIAL_USER);
-          setIsAuthenticated(false);
-          navigate("/sign-in");
-        } else if (event === "INITIAL_SESSION") {
-          // Session has been restored from storage
-          if (session) {
+        try {
+          if (event === "SIGNED_IN" && session) {
             await checkAuthUser();
-          } else {
-            setIsAuthenticated(false);
+          } else if (event === "SIGNED_OUT") {
             setUser(INITIAL_USER);
+            setIsAuthenticated(false);
+            setError(null);
+            navigate("/sign-in", { replace: true });
+          } else if (event === "INITIAL_SESSION") {
+            // Session has been restored from storage
+            if (session) {
+              await checkAuthUser();
+            } else {
+              setIsAuthenticated(false);
+              setUser(INITIAL_USER);
+              setError(null);
+              setIsLoading(false);
+            }
+          } else if (event === "USER_UPDATED") {
+            // User data was updated, refresh context
+            await checkAuthUser();
           }
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : "Auth state change error";
+          console.error("Auth state change error:", errorMessage);
+          setError(errorMessage);
         }
       }
     );
@@ -134,6 +193,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Cleanup listener on unmount
     return () => {
       isMounted = false;
+      if (checkAuthTimeoutId) {
+        clearTimeout(checkAuthTimeoutId);
+      }
       if (authListener?.subscription) {
         authListener.subscription.unsubscribe();
       }
@@ -147,6 +209,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated,
     setIsAuthenticated,
     checkAuthUser,
+    error,
+    setError,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
