@@ -75,33 +75,49 @@ export async function getAccount() {
 }
 
 export async function getCurrentUser() {
+  let timeoutId: NodeJS.Timeout | null = null;
+
   try {
     // First, try to get the session to ensure it's loaded
-    const { data: sessionData } = await supabase.auth.getSession();
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
+
+    if (sessionError) {
+      console.error("getCurrentUser - Session error:", sessionError.message);
+      return null;
+    }
 
     if (!sessionData?.session) {
-      console.warn("getCurrentUser - No session found");
+      console.debug("getCurrentUser - No session found");
       return null;
     }
 
     // Now get the user from the session
-    const { data } = await supabase.auth.getUser();
+    const { data, error: userError } = await supabase.auth.getUser();
     const { user: authUser } = data;
 
+    if (userError) {
+      console.error("getCurrentUser - Auth user error:", userError.message);
+      return null;
+    }
+
     if (!authUser) {
-      console.warn("getCurrentUser - No authenticated user found");
+      console.debug("getCurrentUser - No authenticated user found");
       return null;
     }
 
     // Attempt to get user profile with timeout
     try {
-      let timeoutId: NodeJS.Timeout | null = null;
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        timeoutId = setTimeout(
-          () => reject(new Error("Database query timeout after 5 seconds")),
-          5000
-        );
-      });
+      const timeoutPromise = new Promise<{ data: any; error: null }>(
+        (resolve) => {
+          timeoutId = setTimeout(() => {
+            resolve({
+              data: null,
+              error: new Error("Database query timeout after 5 seconds"),
+            });
+          }, 5000);
+        }
+      );
 
       const queryPromise = supabase
         .from("users")
@@ -110,12 +126,30 @@ export async function getCurrentUser() {
         .single();
 
       const result = await Promise.race([queryPromise, timeoutPromise]);
-      if (timeoutId) clearTimeout(timeoutId);
 
-      const { data: fetchedData } = result;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
 
-      if (fetchedData) {
-        return fetchedData;
+      if (result.error) {
+        console.debug(
+          "getCurrentUser - Database query error:",
+          result.error.message
+        );
+        // Return a minimal user object based on auth user if profile doesn't exist
+        return {
+          id: authUser.id,
+          email: authUser.email || "",
+          name: authUser.user_metadata?.name || "",
+          username: authUser.user_metadata?.username || "",
+          imageUrl: authUser.user_metadata?.imageUrl || "",
+          bio: authUser.user_metadata?.bio || "",
+        };
+      }
+
+      if (result.data) {
+        return result.data;
       }
 
       // Return a minimal user object if profile doesn't exist
@@ -127,8 +161,11 @@ export async function getCurrentUser() {
         imageUrl: authUser.user_metadata?.imageUrl || "",
         bio: authUser.user_metadata?.bio || "",
       };
-    } catch (error) {
-      console.warn("getCurrentUser - Database query failed");
+    } catch (dbError) {
+      console.error(
+        "getCurrentUser - Database operation failed:",
+        dbError instanceof Error ? dbError.message : "Unknown error"
+      );
       // Return a minimal user object based on auth user if profile doesn't exist
       return {
         id: authUser.id,
@@ -140,9 +177,12 @@ export async function getCurrentUser() {
       };
     }
   } catch (error) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
-    console.error("getCurrentUser - Try-catch error:", errorMessage);
+    console.error("getCurrentUser - Fatal error:", errorMessage);
     return null;
   }
 }
