@@ -52,8 +52,51 @@ const RootLayout = () => {
   // Show loading state while checking authentication
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader />
+      <div className="flex h-screen items-center justify-center bg-dark-1">
+        <div className="flex flex-col items-center gap-4">
+          <Loader />
+          <p className="text-light-2 text-sm">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if authentication failed
+  if (error && !isAuthenticated) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-dark-1 p-4">
+        <div className="max-w-md w-full bg-dark-2 rounded-lg p-6 text-center">
+          <div className="flex justify-center mb-4">
+            <AlertCircle className="w-12 h-12 text-red-500" />
+          </div>
+          <h2 className="text-xl font-bold text-light-1 mb-2">
+            Authentication Error
+          </h2>
+          <p className="text-light-2 mb-4">{error}</p>
+          <div className="flex gap-3">
+            <button
+              onClick={handleRetry}
+              disabled={isRetrying}
+              className="flex-1 px-4 py-2 bg-primary-500 hover:bg-primary-600 disabled:opacity-50 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+              {isRetrying ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-4 h-4" />
+                  Retry
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => navigate("/sign-in", { replace: true })}
+              className="flex-1 px-4 py-2 bg-dark-3 hover:bg-dark-4 text-light-1 rounded-lg font-medium transition-colors">
+              Sign In
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
